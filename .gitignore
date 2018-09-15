@@ -11,3 +11,4 @@ lib/
 jre/
 build/
 dist/
+/nbproject/private/

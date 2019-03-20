@@ -44,25 +44,23 @@ public class MainWindow extends javax.swing.JFrame
     
     public MainWindow(String arg) throws IOException
     {
-        setTitle("SpeakerSim (" + Project.VERSION + ")");
+        setTitle("SpeakerSim (" + Project.currentVersion() + ")");
         
-        URL iconURL = Main.class.getResource("SpeakerSim.png");
+        URL iconURL = getClass().getClassLoader().getResource("SpeakerSim.png");
         setIconImage(new ImageIcon(iconURL).getImage());
 
         if (arg != null)
         {
             file = new File(arg);
             project = new Project(file);
-            Project.setInstance(project);
             
-            setTitle("SpeakerSim - " + file.getName() + " (" + Project.VERSION + " Beta)");
+            setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersion() + " Beta)");
         }
         else
         {
-            setTitle("SpeakerSim (" + Project.VERSION + " Beta)");
+            setTitle("SpeakerSim (" + Project.currentVersion() + " Beta)");
             
-            project = new Project(Main.class.getResourceAsStream("default.ssim"));
-            Project.setInstance(project);
+            project = new Project(getClass().getClassLoader().getResourceAsStream("default.ssim"));
         }
         
         initComponents();
@@ -833,7 +831,7 @@ public class MainWindow extends javax.swing.JFrame
             Picture picture = null;
             try
             {
-                picture = new Picture(Main.class.getResourceAsStream(filter.getClass().getSimpleName() + ".png"));
+                picture = new Picture(getClass().getClassLoader().getResourceAsStream(filter.getClass().getSimpleName() + ".png"));
             }
             catch (IOException ex)
             {
@@ -926,7 +924,7 @@ public class MainWindow extends javax.swing.JFrame
             Picture picture = null;
             try
             {
-                picture = new Picture(Main.class.getResourceAsStream("LPad.png"));
+                picture = new Picture(getClass().getClassLoader().getResourceAsStream("LPad.png"));
             }
             catch (IOException ex)
             {
@@ -980,7 +978,7 @@ public class MainWindow extends javax.swing.JFrame
             Picture picture = null;
             try
             {
-                picture = new Picture(Main.class.getResourceAsStream("Zobel.png"));
+                picture = new Picture(getClass().getClassLoader().getResourceAsStream("Zobel.png"));
             }
             catch (IOException ex)
             {
@@ -1160,7 +1158,7 @@ public class MainWindow extends javax.swing.JFrame
                 {
                     for (int i = 0; i < freq.length; i++)
                     {
-                        writer.print(String.format(Locale.US, "%s\t%s\t%s\r\n", freq[i], response[i], responsePhase[i]));
+                        writer.print(new ResponseEntry(freq[i], response[i], responsePhase[i]).toString());
                     }
 
                     writer.close();
@@ -1197,7 +1195,7 @@ public class MainWindow extends javax.swing.JFrame
                 {
                     for (int i = 0; i < freq.length; i++)
                     {
-                        writer.print(String.format(Locale.US, "%s\t%s\t%s\r\n", freq[i], impedance[i], impedancePhase[i]));
+                        writer.print(new ResponseEntry(freq[i], impedance[i], impedancePhase[i]).toString());
                     }
 
                     writer.close();
@@ -1579,7 +1577,7 @@ public class MainWindow extends javax.swing.JFrame
                             impedance[i] = z.abs();
                             impedancePhase[i] = z.phase();
                             maxPower[i] = item.maxPower(f);
-                            maxSPL[i] = Fnc.toDecibels(item.response1W(f).multiply(baffleResponse).multiply(roomResponse).abs()) + Math.log10(maxPower[i]) * 10;
+                            maxSPL[i] = Fnc.toDecibels(item.response1W(f).multiply(baffleResponse).multiply(roomResponse).abs()) + Fnc.powerToDecibels(maxPower[i]);
                             excursion[i] = item.excursion(f, Double.MAX_VALUE);
                             groupDelay[i] = Math.abs((Math.abs(Math.toDegrees(totalResponse(item, f + 0.1).phase())) - Math.abs(responsePhase[i])) / (360 * 0.1)) * 1000;
                             filter[i] = Fnc.toDecibels(item.filter(f).abs());
@@ -2077,7 +2075,7 @@ public class MainWindow extends javax.swing.JFrame
             {
                 file = fc.getSelectedFile();
                 
-                setTitle("SpeakerSim - " + file.getName() + " (" + Project.VERSION + ")");
+                setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersion() + ")");
                 
                 project.save(file);
                 return true;
@@ -2123,10 +2121,9 @@ public class MainWindow extends javax.swing.JFrame
                 {
                     file = fc.getSelectedFile();
                     
-                    setTitle("SpeakerSim - " + file.getName() + " (" + Project.VERSION + ")");
+                    setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersion() + ")");
                     
                     project = new Project(file);
-                    Project.setInstance(project);
                     load();
                 }
             }
@@ -2170,11 +2167,10 @@ public class MainWindow extends javax.swing.JFrame
             {
                 if (new EnvironmentWindow(this, p.Environment, p.Settings.RoomSimulation).showDialog())
                 {
-                    setTitle("SpeakerSim (" + Project.VERSION + ")");
+                    setTitle("SpeakerSim (" + Project.currentVersion() + ")");
                     
                     file = null;
                     project = p;
-                    Project.setInstance(p);
                     load();
                     refresh();
                     
@@ -2184,6 +2180,14 @@ public class MainWindow extends javax.swing.JFrame
                         addItem(amp, (DefaultMutableTreeNode) tree.getModel().getRoot());
                     }
                 }
+                else
+                {
+                    Environment.setInstance(project.Environment);
+                }
+            }
+            else
+            {
+                Project.setInstance(project);
             }
         }
     }//GEN-LAST:event_menuFileNewActionPerformed

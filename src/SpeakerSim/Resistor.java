@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import SpeakerSim.GUI.UI;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -65,6 +64,6 @@ public class Resistor extends Filter
     @Override
     public String toString()
     {
-        return "Resistor (" + UI.format(R) + "Ω)";
+        return "Resistor (" + Fnc.decimalFormat(R) + "Ω)";
     }
 }

@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import SpeakerSim.GUI.UI;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -91,6 +90,6 @@ public class Zobel extends Filter
     @Override
     public String toString()
     {
-        return "Zobel (" + UI.format(C * 1000000) + "μF / " + UI.format(R) + "Ω)";
+        return "Zobel (" + Fnc.decimalFormat(C * 1000000) + "μF / " + Fnc.decimalFormat(R) + "Ω)";
     }
 }

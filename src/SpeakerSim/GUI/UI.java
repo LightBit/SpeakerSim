@@ -16,6 +16,7 @@
 
 package SpeakerSim.GUI;
 
+import SpeakerSim.Fnc;
 import SpeakerSim.HandledException;
 import SpeakerSim.Project;
 
@@ -31,22 +32,11 @@ import java.text.*;
 
 public final class UI
 {
-    private final static DecimalFormat FORMAT = new DecimalFormat("#.###");
-    public final static DefaultFormatterFactory FORMATTER = new DefaultFormatterFactory(new NumberFormatter(FORMAT));
-
+    public final static DefaultFormatterFactory FORMATTER = new DefaultFormatterFactory(new NumberFormatter(Fnc.DECIMAL_FORMAT));
+    
     private UI()
     {
         
-    }
-    
-    public static String format(double x)
-    {
-        return FORMAT.format(x);
-    }
-    
-    public static Number parseNumber(String x) throws ParseException
-    {
-        return FORMAT.parse(x);
     }
     
     public static PropertyChangeListener validator()
@@ -209,40 +199,6 @@ public final class UI
         button.setEnabled(false);
     }
     
-    public static void setButton(JButton button, String value, double calcValue)
-    {
-        if (!Double.isNaN(calcValue) && !Double.isInfinite(calcValue) && calcValue > 0)
-        {
-            String text = format(calcValue);
-            if (!text.equals(value))
-            {
-                button.setText(text);
-                button.setOpaque(true);
-                button.setContentAreaFilled(true);
-                button.setBorderPainted(true);
-                button.setEnabled(true);
-                return;
-            }
-        }
-        
-        hideButton(button);
-    }
-    
-    public static void copyFromButtonToField(JButton button, JFormattedTextField field)
-    {
-        try
-        {
-            field.setValue(parseNumber(button.getText()));
-            field.requestFocusInWindow();
-        }
-        catch (ParseException ex)
-        {
-            exception(null, ex); // TODO: parent
-        }
-        
-        hideButton(button);
-    }
-    
     public static void setPanelEnabled(JPanel panel, Boolean isEnabled)
     {
         panel.setEnabled(isEnabled);
@@ -255,7 +211,10 @@ public final class UI
             {
                 setPanelEnabled((JPanel) component, isEnabled);
             }
-            component.setEnabled(isEnabled);
+            if (component != null)
+            {
+                component.setEnabled(isEnabled);
+            }
         }
     }
     
@@ -279,7 +238,7 @@ public final class UI
     {
         //Runtime runtime = Runtime.getRuntime();
         
-        String stackTrace = "SpeakerSim " + Project.VERSION
+        String stackTrace = "SpeakerSim " + Project.currentVersion()
                 + "\r\n" + System.getProperty("java.runtime.name")
                 + " " + System.getProperty("java.runtime.version")
                 + " on " + System.getProperty("os.name")

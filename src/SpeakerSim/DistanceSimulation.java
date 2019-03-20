@@ -23,7 +23,10 @@ public class DistanceSimulation
     
     public DistanceSimulation(double distance, double speedOfSound)
     {
-        distance = Math.max(Math.abs(distance), 0.0000001);
+        if (Math.abs(distance) < 0.0000001)
+        {
+            distance = 0.0000001;
+        }
         
         amplitude = 1 / distance;
         phase = -distance / speedOfSound * 2 * Math.PI;
@@ -32,6 +35,11 @@ public class DistanceSimulation
     public DistanceSimulation(double distance, Environment env)
     {
         this(distance, env.SpeedOfSound);
+    }
+    
+    public DistanceSimulation(double distance)
+    {
+        this(distance, Environment.getInstance());
     }
     
     public DistanceSimulation(Position sourcePos, Position listeningPos, double speedOfSound)

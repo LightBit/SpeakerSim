@@ -403,7 +403,7 @@ public class AmplifierWindow extends javax.swing.JDialog
         else if (item instanceof Delay)
         {
             final Delay filter = (Delay) item;
-            final double speedOfSound = Project.getInstance().Environment.SpeedOfSound;
+            final double speedOfSound = Environment.getInstance().SpeedOfSound;
             
             final JFormattedTextField timeField = new JFormattedTextField();
             timeField.setFormatterFactory(UI.FORMATTER);

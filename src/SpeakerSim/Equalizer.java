@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import SpeakerSim.GUI.UI;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -91,7 +90,7 @@ public class Equalizer implements IActiveFilter
     @Override
     public String toString()
     {
-        return "Equalizer (" + UI.format(getDecibels()) + "dB at " + UI.format(getF()) + "Hz)";
+        return "Equalizer (" + Fnc.decimalFormat(getDecibels()) + "dB at " + Fnc.decimalFormat(getF()) + "Hz)";
     }
     
     @Override

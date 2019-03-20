@@ -18,41 +18,46 @@ package SpeakerSim;
 
 import java.util.Locale;
 
-public class FrdEntry implements Comparable
+public class ResponseEntry implements Comparable<ResponseEntry>
 {
     public double frequency;
     public double amplitude;
     public double phase;
 
-    public FrdEntry(double frequency, double amplitude, double phase)
+    public ResponseEntry(double frequency, double amplitude, double phase)
     {
         this.frequency = frequency;
         this.amplitude = amplitude;
         this.phase = phase;
     }
     
-    public FrdEntry(String line)
+    public ResponseEntry(String line)
     {
-        String[] entry = line.split("\\s+");
+        String[] entry = line.split("\\s+|;"); //[^(\d|\-|\.|,)]+
         
-        if (entry.length < 2)
+        if (entry.length != 2 && entry.length != 3)
         {
-            throw new HandledException("FRD or ZMA file is invalid!");
+            entry = line.split(",");
+
+            if (entry.length != 2 && entry.length != 3)
+            {
+                throw new HandledException("FRD or ZMA file is invalid!");
+            }
         }
 
         frequency = Fnc.parseDouble(entry[0]);
         amplitude = Fnc.parseDouble(entry[1]);
-        phase = entry.length >= 3 ? Fnc.parseDouble(entry[2]) : 0;
+        phase = entry.length == 3 ? Fnc.parseDouble(entry[2]) : 0;
     }
     
     @Override
-    public int compareTo(Object o)
+    public int compareTo(ResponseEntry o)
     {
-        if (frequency < ((FrdEntry)o).frequency)
+        if (frequency < o.frequency)
         {
             return -1;
         }
-        else if (frequency > ((FrdEntry)o).frequency)
+        else if (frequency > o.frequency)
         {
             return 1;
         }
@@ -62,6 +67,6 @@ public class FrdEntry implements Comparable
     @Override
     public String toString()
     {
-        return String.format(Locale.US, "%s\t%s\t%s", frequency, amplitude, phase);
+        return String.format(Locale.US, "%s\t%s\t%s\r\n", frequency, amplitude, phase);
     }
 }

@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import SpeakerSim.GUI.UI;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -86,6 +85,6 @@ public class LPad extends Filter
     @Override
     public String toString()
     {
-        return "L pad (" + UI.format(Rs) + "Ω / " + UI.format(Rp) + "Ω)";
+        return "L pad (" + Fnc.decimalFormat(Rs) + "Ω / " + Fnc.decimalFormat(Rp) + "Ω)";
     }
 }

@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import SpeakerSim.GUI.UI;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonValue;
 
@@ -53,7 +52,7 @@ public class Delay implements IActiveFilter
     @Override
     public String toString()
     {
-        return "Delay (" + UI.format(time * 1000) + "ms)";
+        return "Delay (" + Fnc.decimalFormat(time * 1000) + "ms)";
     }
     
     @Override

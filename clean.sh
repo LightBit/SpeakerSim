@@ -1,5 +1,7 @@
 #!/bin/sh
 
+mvn clean
+
 rm -rf ./build
 rm -rf ./bin
 rm -rf ./dist

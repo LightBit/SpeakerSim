@@ -50,7 +50,7 @@ public class PassFilterWindow extends javax.swing.JDialog
             gbc.fill = GridBagConstraints.BOTH;
             gbc.weightx = 1.0;
             gbc.weighty = 1.0;
-            getContentPane().add(new Picture(Main.class.getResourceAsStream(filter.getClass().getSimpleName() + ".png")), gbc);
+            getContentPane().add(new Picture(getClass().getClassLoader().getResourceAsStream(filter.getClass().getSimpleName() + ".png")), gbc);
             pack();
         }
         catch (IOException ex)

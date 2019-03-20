@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import SpeakerSim.GUI.UI;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
@@ -154,6 +153,6 @@ public class Amplifier extends Filter
     @Override
     public String toString()
     {
-        return "Amplifier (" + UI.format(Pe) + "W)";
+        return "Amplifier (" + Fnc.decimalFormat(Pe) + "W)";
     }
 }

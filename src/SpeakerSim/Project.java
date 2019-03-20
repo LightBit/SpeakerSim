@@ -22,11 +22,10 @@ import com.eclipsesource.json.JsonValue;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
 public class Project extends Item
 {
-    public static String VERSION = "2018-09-15";
-    
     public String Version;
     public Settings Settings;
     public Environment Environment;
@@ -36,6 +35,7 @@ public class Project extends Item
     private boolean modified;
     
     private static Project instance;
+    private static String currentVersion;
     
     public static Project getInstance()
     {
@@ -57,11 +57,29 @@ public class Project extends Item
         modified = true;
     }
     
+    public static String currentVersion()
+    {
+        if (currentVersion == null)
+        {
+            try
+            {
+                final Properties properties = new Properties();
+                properties.load(Project.class.getClassLoader().getResourceAsStream("project.properties"));
+                currentVersion = properties.getProperty("version");
+            }
+            catch (IOException ex)
+            {
+            }
+        }
+        
+        return currentVersion;
+    }
+    
     public Project()
     {
         super();
         
-        Version = VERSION;
+        Version = currentVersion();
         Settings = new Settings();
         Environment = new Environment();
         ListeningPosition = new Position();
@@ -69,6 +87,7 @@ public class Project extends Item
         ListeningPosition.Y = 1.866;
         
         modified = false;
+        instance = this;
     }
     
     public Project(JsonValue json)
@@ -84,10 +103,11 @@ public class Project extends Item
 
             modified = false;
             super.fromJSON(json);
+            instance = this;
         }
         catch (Exception e)
         {
-            if (Version.compareTo(VERSION) > 0)
+            if (Version.compareTo(currentVersion()) > 0)
             {
                 throw new HandledException("Can't open project file that was created with newer version!");
             }
@@ -113,7 +133,7 @@ public class Project extends Item
     {
         JsonObject json = Json.object();
         
-        json.add("Version", VERSION);
+        json.add("Version", currentVersion());
         json.add("Settings", Settings.toJSON());
         json.add("Environment", Environment.toJSON());
         json.add("ListeningPosition", ListeningPosition.toJSON());

@@ -28,7 +28,11 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
+import java.text.ParseException;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -81,15 +85,11 @@ public class DriverWindow extends javax.swing.JDialog
         
         if (driver.hasFRD())
         {
-            FRDButton.setText("Remove");
-            FRDExportButton.setEnabled(true);
             CrossStartField.setEnabled(true);
             CrossEndField.setEnabled(true);
         }
         else
         {
-            FRDButton.setText("Import");
-            FRDExportButton.setEnabled(false);
             CrossStartField.setEnabled(driver.hasZMA());
             CrossEndField.setEnabled(driver.hasZMA());
         }
@@ -514,6 +514,7 @@ public class DriverWindow extends javax.swing.JDialog
     private void renderGraphs()
     {
         String selectedTab = UI.getSelectedTab(tabs);
+        boolean cross = !closedCheckBox.isSelected();
         tabs.removeAll();
         
         Graph spl = new Graph("Frequency response", "Hz", "dB");
@@ -523,7 +524,7 @@ public class DriverWindow extends javax.swing.JDialog
         
         for (double f = project.Settings.StartFrequency; f <= project.Settings.EndFrequency; f *= project.Settings.multiplier())
         {
-            Complex r = drv.response(f);
+            Complex r = cross ? drv.normResponse(f) : drv.response(f);
             spl.add(Fnc.toDecibels(r.abs()), f);
             phase.add(Math.toDegrees(r.phase()), f);
             
@@ -534,56 +535,61 @@ public class DriverWindow extends javax.swing.JDialog
         
         spl.setYRange(spl.getMaxY() - project.Settings.dBRange, spl.getMaxY() + 1);
         
+        if (cross)
+        {
+            spl.addXMark(UI.getDouble(CrossStartField), "Cross start");
+            spl.addXMark(UI.getDouble(CrossEndField), "Cross end");
+
+            phase.addXMark(UI.getDouble(CrossStartField), "Cross start");
+            phase.addXMark(UI.getDouble(CrossEndField), "Cross end");
+        }
+        
         tabs.addTab("Frequency response", spl.getGraph());
         tabs.addTab("Phase", phase.getGraph());
         tabs.addTab("Impedance", impedance.getGraph());
         tabs.addTab("Impedance phase", impedancePhase.getGraph());
-        
-        if (!closedCheckBox.isSelected())
-        {
-            Graph FRDcross = new Graph("FRD cross", "Hz", "dB");
-            Graph FRDcrossPhase = new Graph("FRD cross phase", "Hz", "");
-
-            for (double f = project.Settings.StartFrequency; f <= project.Settings.EndFrequency; f *= project.Settings.multiplier())
-            {
-                Complex r = drv.normResponse(f);
-                FRDcross.add(Fnc.toDecibels(r.abs()), f);
-                FRDcrossPhase.add(Math.toDegrees(r.phase()), f);
-            }
-
-            FRDcross.setYRange(FRDcross.getMaxY() - project.Settings.dBRange, FRDcross.getMaxY() + 1);
-            FRDcross.addXMark(UI.getDouble(CrossStartField), "Cross start");
-            FRDcross.addXMark(UI.getDouble(CrossEndField), "Cross end");
-
-            FRDcrossPhase.addXMark(UI.getDouble(CrossStartField), "Cross start");
-            FRDcrossPhase.addXMark(UI.getDouble(CrossEndField), "Cross end");
-
-            tabs.addTab("FRD cross", FRDcross.getGraph());
-            tabs.addTab("FRD cross phase", FRDcrossPhase.getGraph());
-        }
         
         UI.setSelectedTab(tabs, selectedTab);
     }
     
     private void refresh()
     {
-        UI.setButton(VasButton, VasField.getText(), drv.calcVas(project.Environment.AirDensity, project.Environment.SpeedOfSound) * 1000);
-        UI.setButton(FsButton, FsField.getText(), drv.calcFs());
-        UI.setButton(QesButton, QesField.getText(), drv.calcQes());
-        UI.setButton(QmsButton, QmsField.getText(), drv.calcQms());
-        UI.setButton(QtsButton, QtsField.getText(), drv.calcQts());
-        UI.setButton(BLButton, BLField.getText(), drv.calcBl());
-        UI.setButton(SdButton, SdField.getText(), drv.calcSd() * 10000);
-        UI.setButton(DiaButton, DiaField.getText(), drv.calcDia() * 1000);
-        UI.setButton(VdButton, VdField.getText(), drv.calcVd() * 1000000);
-        UI.setButton(CmsButton, CmsField.getText(), drv.calcCms(project.Environment.AirDensity, project.Environment.SpeedOfSound) * 1000);
-        UI.setButton(MmsButton, MmsField.getText(), drv.calcMms() * 1000);
-        UI.setButton(RmsButton, RmsField.getText(), drv.calcRms());
-        UI.setButton(n0Button, n0Field.getText(), drv.calcN0(project.Environment.AirDensity, project.Environment.SpeedOfSound) * 100);
-        UI.setButton(SPL_1WButton, SPL_1WField.getText(), drv.calcSPL_1W());
-        UI.setButton(SPL_2_83VButton, SPL_2_83VField.getText(), drv.calcSPL_2_83V());
+        setButton(VasButton, VasField.getText(), drv.calcVas(project.Environment.AirDensity, project.Environment.SpeedOfSound) * 1000);
+        setButton(FsButton, FsField.getText(), drv.calcFs());
+        setButton(QesButton, QesField.getText(), drv.calcQes());
+        setButton(QmsButton, QmsField.getText(), drv.calcQms());
+        setButton(QtsButton, QtsField.getText(), drv.calcQts());
+        setButton(BLButton, BLField.getText(), drv.calcBl());
+        setButton(SdButton, SdField.getText(), drv.calcSd() * 10000);
+        setButton(DiaButton, DiaField.getText(), drv.calcDia() * 1000);
+        setButton(VdButton, VdField.getText(), drv.calcVd() * 1000000);
+        setButton(CmsButton, CmsField.getText(), drv.calcCms(project.Environment.AirDensity, project.Environment.SpeedOfSound) * 1000);
+        setButton(MmsButton, MmsField.getText(), drv.calcMms() * 1000);
+        setButton(RmsButton, RmsField.getText(), drv.calcRms());
+        setButton(n0Button, n0Field.getText(), drv.calcN0(project.Environment.AirDensity, project.Environment.SpeedOfSound) * 100);
+        setButton(SPL_1WButton, SPL_1WField.getText(), drv.calcSPL_1W());
+        setButton(SPL_2_83VButton, SPL_2_83VField.getText(), drv.calcSPL_2_83V());
 
         renderGraphs();
+    }
+    
+    private static void setButton(JButton button, String value, double calcValue)
+    {
+        if (!Double.isNaN(calcValue) && !Double.isInfinite(calcValue) && calcValue > 0)
+        {
+            String text = Fnc.roundedDecimalFormat(calcValue);
+            if (!text.equals(value))
+            {
+                button.setText(text);
+                button.setOpaque(true);
+                button.setContentAreaFilled(true);
+                button.setBorderPainted(true);
+                button.setEnabled(true);
+                return;
+            }
+        }
+        
+        UI.hideButton(button);
     }
     
     @SuppressWarnings("unchecked")
@@ -668,7 +674,6 @@ public class DriverWindow extends javax.swing.JDialog
         CrossEndField = new javax.swing.JFormattedTextField();
         lblFs = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        FRDExportButton = new javax.swing.JButton();
         ZMAExportButton = new javax.swing.JButton();
         PeFField = new javax.swing.JFormattedTextField();
         lblPeF = new javax.swing.JLabel();
@@ -749,10 +754,10 @@ public class DriverWindow extends javax.swing.JDialog
         jScrollPane1.setPreferredSize(new java.awt.Dimension(380, 700));
 
         propertiesPanel.setMinimumSize(new java.awt.Dimension(300, 780));
-        propertiesPanel.setPreferredSize(new java.awt.Dimension(300, 780));
+        propertiesPanel.setPreferredSize(new java.awt.Dimension(300, 700));
         java.awt.GridBagLayout propertiesPanelLayout = new java.awt.GridBagLayout();
-        propertiesPanelLayout.columnWidths = new int[] {0, 5, 0, 5, 0};
-        propertiesPanelLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
+        propertiesPanelLayout.columnWidths = new int[] {0, 5, 0, 5, 0, 5, 0};
+        propertiesPanelLayout.rowHeights = new int[] {0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0};
         propertiesPanel.setLayout(propertiesPanelLayout);
 
         lblName.setText("Name:");
@@ -765,7 +770,7 @@ public class DriverWindow extends javax.swing.JDialog
         lblCrossStart.setText("Cross start (Hz):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 54;
+        gridBagConstraints.gridy = 58;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblCrossStart, gridBagConstraints);
 
@@ -775,7 +780,7 @@ public class DriverWindow extends javax.swing.JDialog
         ReField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 16;
         propertiesPanel.add(ReField, gridBagConstraints);
 
         FsButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
@@ -796,7 +801,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(FsButton, gridBagConstraints);
 
@@ -806,13 +811,13 @@ public class DriverWindow extends javax.swing.JDialog
         FsField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 8;
         propertiesPanel.add(FsField, gridBagConstraints);
 
         lblVas.setText("Vas (l):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblVas, gridBagConstraints);
 
@@ -834,14 +839,14 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(QmsButton, gridBagConstraints);
 
         lblQes.setText("Qes:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblQes, gridBagConstraints);
 
@@ -863,7 +868,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 16;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(ReButton, gridBagConstraints);
 
@@ -873,13 +878,13 @@ public class DriverWindow extends javax.swing.JDialog
         QmsField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 12;
         propertiesPanel.add(QmsField, gridBagConstraints);
 
         lblQms.setText("Qms:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblQms, gridBagConstraints);
 
@@ -889,7 +894,7 @@ public class DriverWindow extends javax.swing.JDialog
         LeField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 16;
+        gridBagConstraints.gridy = 20;
         propertiesPanel.add(LeField, gridBagConstraints);
 
         LeButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
@@ -910,14 +915,14 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 16;
+        gridBagConstraints.gridy = 20;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(LeButton, gridBagConstraints);
 
         lblQts.setText("Qts:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 14;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblQts, gridBagConstraints);
 
@@ -927,7 +932,7 @@ public class DriverWindow extends javax.swing.JDialog
         DiaField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 22;
+        gridBagConstraints.gridy = 26;
         propertiesPanel.add(DiaField, gridBagConstraints);
 
         DiaButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
@@ -948,49 +953,49 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 22;
+        gridBagConstraints.gridy = 26;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(DiaButton, gridBagConstraints);
 
         lblSPL_2_83V.setText("SPL at 2.83V/1m (dB):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 42;
+        gridBagConstraints.gridy = 46;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblSPL_2_83V, gridBagConstraints);
 
         lblBL.setText("BL (Tm):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 14;
+        gridBagConstraints.gridy = 18;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblBL, gridBagConstraints);
 
         lblLe.setText("Le (mH):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 16;
+        gridBagConstraints.gridy = 20;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblLe, gridBagConstraints);
 
         lblXmax.setText("Xmax (mm):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 18;
+        gridBagConstraints.gridy = 22;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblXmax, gridBagConstraints);
 
         lblDia.setText("Dia (mm):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 22;
+        gridBagConstraints.gridy = 26;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblDia, gridBagConstraints);
 
         lblSd.setText("Sd (cm²):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 28;
+        gridBagConstraints.gridy = 32;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblSd, gridBagConstraints);
 
@@ -1000,7 +1005,7 @@ public class DriverWindow extends javax.swing.JDialog
         VdField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 30;
+        gridBagConstraints.gridy = 34;
         propertiesPanel.add(VdField, gridBagConstraints);
 
         MmsField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
@@ -1009,7 +1014,7 @@ public class DriverWindow extends javax.swing.JDialog
         MmsField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 34;
+        gridBagConstraints.gridy = 38;
         propertiesPanel.add(MmsField, gridBagConstraints);
 
         n0Field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
@@ -1018,7 +1023,7 @@ public class DriverWindow extends javax.swing.JDialog
         n0Field.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 38;
+        gridBagConstraints.gridy = 42;
         propertiesPanel.add(n0Field, gridBagConstraints);
 
         PeField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
@@ -1027,7 +1032,7 @@ public class DriverWindow extends javax.swing.JDialog
         PeField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 44;
+        gridBagConstraints.gridy = 48;
         propertiesPanel.add(PeField, gridBagConstraints);
 
         VasField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
@@ -1036,7 +1041,7 @@ public class DriverWindow extends javax.swing.JDialog
         VasField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 6;
         propertiesPanel.add(VasField, gridBagConstraints);
 
         QesField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
@@ -1045,7 +1050,7 @@ public class DriverWindow extends javax.swing.JDialog
         QesField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 10;
         propertiesPanel.add(QesField, gridBagConstraints);
 
         QtsField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
@@ -1054,7 +1059,7 @@ public class DriverWindow extends javax.swing.JDialog
         QtsField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 14;
         propertiesPanel.add(QtsField, gridBagConstraints);
 
         BLField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
@@ -1063,7 +1068,7 @@ public class DriverWindow extends javax.swing.JDialog
         BLField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 14;
+        gridBagConstraints.gridy = 18;
         propertiesPanel.add(BLField, gridBagConstraints);
 
         XmaxField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
@@ -1072,7 +1077,7 @@ public class DriverWindow extends javax.swing.JDialog
         XmaxField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 18;
+        gridBagConstraints.gridy = 22;
         propertiesPanel.add(XmaxField, gridBagConstraints);
 
         SdField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
@@ -1081,7 +1086,7 @@ public class DriverWindow extends javax.swing.JDialog
         SdField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 28;
+        gridBagConstraints.gridy = 32;
         propertiesPanel.add(SdField, gridBagConstraints);
 
         CmsField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
@@ -1090,7 +1095,7 @@ public class DriverWindow extends javax.swing.JDialog
         CmsField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 32;
+        gridBagConstraints.gridy = 36;
         propertiesPanel.add(CmsField, gridBagConstraints);
 
         RmsField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
@@ -1099,7 +1104,7 @@ public class DriverWindow extends javax.swing.JDialog
         RmsField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 36;
+        gridBagConstraints.gridy = 40;
         propertiesPanel.add(RmsField, gridBagConstraints);
 
         SPL_1WField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
@@ -1108,7 +1113,7 @@ public class DriverWindow extends javax.swing.JDialog
         SPL_1WField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 40;
+        gridBagConstraints.gridy = 44;
         propertiesPanel.add(SPL_1WField, gridBagConstraints);
 
         VasButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
@@ -1129,7 +1134,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(VasButton, gridBagConstraints);
 
@@ -1151,7 +1156,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 30;
+        gridBagConstraints.gridy = 34;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(VdButton, gridBagConstraints);
 
@@ -1173,7 +1178,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 34;
+        gridBagConstraints.gridy = 38;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(MmsButton, gridBagConstraints);
 
@@ -1195,7 +1200,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 38;
+        gridBagConstraints.gridy = 42;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(n0Button, gridBagConstraints);
 
@@ -1217,7 +1222,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(QesButton, gridBagConstraints);
 
@@ -1239,7 +1244,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 14;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(QtsButton, gridBagConstraints);
 
@@ -1261,7 +1266,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 14;
+        gridBagConstraints.gridy = 18;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(BLButton, gridBagConstraints);
 
@@ -1283,7 +1288,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 18;
+        gridBagConstraints.gridy = 22;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(XmaxButton, gridBagConstraints);
 
@@ -1305,7 +1310,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 28;
+        gridBagConstraints.gridy = 32;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(SdButton, gridBagConstraints);
 
@@ -1327,7 +1332,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 32;
+        gridBagConstraints.gridy = 36;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(CmsButton, gridBagConstraints);
 
@@ -1349,7 +1354,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 36;
+        gridBagConstraints.gridy = 40;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(RmsButton, gridBagConstraints);
 
@@ -1371,60 +1376,60 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 40;
+        gridBagConstraints.gridy = 44;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(SPL_1WButton, gridBagConstraints);
 
         lblVd.setText("Vd (cm³):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 30;
+        gridBagConstraints.gridy = 34;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblVd, gridBagConstraints);
 
         lblCms.setText("Cms (cm/N):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 32;
+        gridBagConstraints.gridy = 36;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblCms, gridBagConstraints);
 
         lblMms.setText("Mms (g):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 34;
+        gridBagConstraints.gridy = 38;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblMms, gridBagConstraints);
 
         lblRms.setText("Rms (Nm/s):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 36;
+        gridBagConstraints.gridy = 40;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblRms, gridBagConstraints);
 
         lblN0.setText("n0 (%):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 38;
+        gridBagConstraints.gridy = 42;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblN0, gridBagConstraints);
 
         lblSPL_1W.setText("SPL at 1W/1m (dB):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 40;
+        gridBagConstraints.gridy = 44;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblSPL_1W, gridBagConstraints);
 
         lblPowerFilter.setText("Power filter:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 46;
+        gridBagConstraints.gridy = 50;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblPowerFilter, gridBagConstraints);
 
-        FRDButton.setText("Import");
+        FRDButton.setText("Edit");
         FRDButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -1434,14 +1439,15 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 50;
+        gridBagConstraints.gridy = 54;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         propertiesPanel.add(FRDButton, gridBagConstraints);
 
-        lblZMA.setText("ZMA:");
+        lblZMA.setText("Impedance (.ZMA):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 52;
+        gridBagConstraints.gridy = 56;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblZMA, gridBagConstraints);
 
@@ -1451,13 +1457,13 @@ public class DriverWindow extends javax.swing.JDialog
         SPL_2_83VField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 42;
+        gridBagConstraints.gridy = 46;
         propertiesPanel.add(SPL_2_83VField, gridBagConstraints);
 
-        lblFRD.setText("FRD:");
+        lblFRD.setText("Response (.FRD):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 50;
+        gridBagConstraints.gridy = 54;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblFRD, gridBagConstraints);
 
@@ -1471,14 +1477,14 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 52;
+        gridBagConstraints.gridy = 56;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         propertiesPanel.add(ZMAButton, gridBagConstraints);
 
         lblRe.setText("Re (Ω):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 16;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblRe, gridBagConstraints);
 
@@ -1486,7 +1492,7 @@ public class DriverWindow extends javax.swing.JDialog
         invertedCheckBox.setToolTipText("Switch + and - terminals");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 60;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         propertiesPanel.add(invertedCheckBox, gridBagConstraints);
@@ -1502,7 +1508,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 58;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         propertiesPanel.add(closedCheckBox, gridBagConstraints);
@@ -1520,13 +1526,13 @@ public class DriverWindow extends javax.swing.JDialog
         CrossStartField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 54;
+        gridBagConstraints.gridy = 58;
         propertiesPanel.add(CrossStartField, gridBagConstraints);
 
         lblCrossEnd.setText("Cross end (Hz):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 56;
+        gridBagConstraints.gridy = 60;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblCrossEnd, gridBagConstraints);
 
@@ -1537,13 +1543,13 @@ public class DriverWindow extends javax.swing.JDialog
         CrossEndField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 56;
+        gridBagConstraints.gridy = 60;
         propertiesPanel.add(CrossEndField, gridBagConstraints);
 
         lblFs.setText("Fs (Hz):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblFs, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1554,21 +1560,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
         propertiesPanel.add(jPanel1, gridBagConstraints);
-
-        FRDExportButton.setText("Export");
-        FRDExportButton.setEnabled(false);
-        FRDExportButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                FRDExportButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 50;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        propertiesPanel.add(FRDExportButton, gridBagConstraints);
 
         ZMAExportButton.setText("Export");
         ZMAExportButton.setEnabled(false);
@@ -1581,7 +1572,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 52;
+        gridBagConstraints.gridy = 56;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         propertiesPanel.add(ZMAExportButton, gridBagConstraints);
 
@@ -1591,31 +1582,31 @@ public class DriverWindow extends javax.swing.JDialog
         PeFField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 48;
+        gridBagConstraints.gridy = 52;
         propertiesPanel.add(PeFField, gridBagConstraints);
 
         lblPeF.setText("Pe defined at (Hz):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 48;
+        gridBagConstraints.gridy = 52;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblPeF, gridBagConstraints);
 
         lblPe.setText("Pe (W):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 44;
+        gridBagConstraints.gridy = 48;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblPe, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 46;
+        gridBagConstraints.gridy = 50;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         propertiesPanel.add(powerFilterComboBox, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 20;
+        gridBagConstraints.gridy = 24;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         propertiesPanel.add(shapeComboBox, gridBagConstraints);
@@ -1623,7 +1614,7 @@ public class DriverWindow extends javax.swing.JDialog
         lblShape.setText("Shape:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 20;
+        gridBagConstraints.gridy = 24;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblShape, gridBagConstraints);
 
@@ -1633,13 +1624,13 @@ public class DriverWindow extends javax.swing.JDialog
         HeightField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 26;
+        gridBagConstraints.gridy = 30;
         propertiesPanel.add(HeightField, gridBagConstraints);
 
         lblHeight.setText("Height (mm):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 26;
+        gridBagConstraints.gridy = 30;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblHeight, gridBagConstraints);
 
@@ -1649,13 +1640,13 @@ public class DriverWindow extends javax.swing.JDialog
         WidthField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 24;
+        gridBagConstraints.gridy = 28;
         propertiesPanel.add(WidthField, gridBagConstraints);
 
         lblWidth.setText("Width (mm):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 24;
+        gridBagConstraints.gridy = 28;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblWidth, gridBagConstraints);
 
@@ -1677,7 +1668,7 @@ public class DriverWindow extends javax.swing.JDialog
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 42;
+        gridBagConstraints.gridy = 46;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(SPL_2_83VButton, gridBagConstraints);
 
@@ -1707,118 +1698,115 @@ public class DriverWindow extends javax.swing.JDialog
         dispose();
     }//GEN-LAST:event_CancelButtonActionPerformed
 
+    private void copyFromButtonToField(JButton button, JFormattedTextField field)
+    {
+        try
+        {
+            field.setValue(Fnc.parseNumber(button.getText()));
+            field.requestFocusInWindow();
+        }
+        catch (ParseException ex)
+        {
+            UI.exception(this, ex);
+        }
+        
+        UI.hideButton(button);
+    }
+    
     private void QtsButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_QtsButtonActionPerformed
     {//GEN-HEADEREND:event_QtsButtonActionPerformed
-        UI.copyFromButtonToField(QtsButton, QtsField);
+        copyFromButtonToField(QtsButton, QtsField);
     }//GEN-LAST:event_QtsButtonActionPerformed
 
     private void VasButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_VasButtonActionPerformed
     {//GEN-HEADEREND:event_VasButtonActionPerformed
-        UI.copyFromButtonToField(VasButton, VasField);
+        copyFromButtonToField(VasButton, VasField);
     }//GEN-LAST:event_VasButtonActionPerformed
 
     private void FsButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_FsButtonActionPerformed
     {//GEN-HEADEREND:event_FsButtonActionPerformed
-        UI.copyFromButtonToField(FsButton, FsField);
+        copyFromButtonToField(FsButton, FsField);
     }//GEN-LAST:event_FsButtonActionPerformed
 
     private void QesButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_QesButtonActionPerformed
     {//GEN-HEADEREND:event_QesButtonActionPerformed
-        UI.copyFromButtonToField(QesButton, QesField);
+        copyFromButtonToField(QesButton, QesField);
     }//GEN-LAST:event_QesButtonActionPerformed
 
     private void QmsButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_QmsButtonActionPerformed
     {//GEN-HEADEREND:event_QmsButtonActionPerformed
-        UI.copyFromButtonToField(QmsButton, QmsField);
+        copyFromButtonToField(QmsButton, QmsField);
     }//GEN-LAST:event_QmsButtonActionPerformed
 
     private void ReButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_ReButtonActionPerformed
     {//GEN-HEADEREND:event_ReButtonActionPerformed
-        UI.copyFromButtonToField(ReButton, ReField);
+        copyFromButtonToField(ReButton, ReField);
     }//GEN-LAST:event_ReButtonActionPerformed
 
     private void BLButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_BLButtonActionPerformed
     {//GEN-HEADEREND:event_BLButtonActionPerformed
-        UI.copyFromButtonToField(BLButton, BLField);
+        copyFromButtonToField(BLButton, BLField);
     }//GEN-LAST:event_BLButtonActionPerformed
 
     private void LeButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_LeButtonActionPerformed
     {//GEN-HEADEREND:event_LeButtonActionPerformed
-        UI.copyFromButtonToField(LeButton, LeField);
+        copyFromButtonToField(LeButton, LeField);
     }//GEN-LAST:event_LeButtonActionPerformed
 
     private void XmaxButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_XmaxButtonActionPerformed
     {//GEN-HEADEREND:event_XmaxButtonActionPerformed
-        UI.copyFromButtonToField(XmaxButton, XmaxField);
+        copyFromButtonToField(XmaxButton, XmaxField);
     }//GEN-LAST:event_XmaxButtonActionPerformed
 
     private void DiaButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_DiaButtonActionPerformed
     {//GEN-HEADEREND:event_DiaButtonActionPerformed
-        UI.copyFromButtonToField(DiaButton, DiaField);
+        copyFromButtonToField(DiaButton, DiaField);
     }//GEN-LAST:event_DiaButtonActionPerformed
 
     private void SdButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_SdButtonActionPerformed
     {//GEN-HEADEREND:event_SdButtonActionPerformed
-        UI.copyFromButtonToField(SdButton, SdField);
+        copyFromButtonToField(SdButton, SdField);
     }//GEN-LAST:event_SdButtonActionPerformed
 
     private void VdButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_VdButtonActionPerformed
     {//GEN-HEADEREND:event_VdButtonActionPerformed
-        UI.copyFromButtonToField(VdButton, VdField);
+        copyFromButtonToField(VdButton, VdField);
     }//GEN-LAST:event_VdButtonActionPerformed
 
     private void CmsButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_CmsButtonActionPerformed
     {//GEN-HEADEREND:event_CmsButtonActionPerformed
-        UI.copyFromButtonToField(CmsButton, CmsField);
+        copyFromButtonToField(CmsButton, CmsField);
     }//GEN-LAST:event_CmsButtonActionPerformed
 
     private void MmsButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_MmsButtonActionPerformed
     {//GEN-HEADEREND:event_MmsButtonActionPerformed
-        UI.copyFromButtonToField(MmsButton, MmsField);
+        copyFromButtonToField(MmsButton, MmsField);
     }//GEN-LAST:event_MmsButtonActionPerformed
 
     private void RmsButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_RmsButtonActionPerformed
     {//GEN-HEADEREND:event_RmsButtonActionPerformed
-        UI.copyFromButtonToField(RmsButton, RmsField);
+        copyFromButtonToField(RmsButton, RmsField);
     }//GEN-LAST:event_RmsButtonActionPerformed
 
     private void n0ButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_n0ButtonActionPerformed
     {//GEN-HEADEREND:event_n0ButtonActionPerformed
-        UI.copyFromButtonToField(n0Button, n0Field);
+        copyFromButtonToField(n0Button, n0Field);
     }//GEN-LAST:event_n0ButtonActionPerformed
 
     private void SPL_1WButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_SPL_1WButtonActionPerformed
     {//GEN-HEADEREND:event_SPL_1WButtonActionPerformed
-        UI.copyFromButtonToField(SPL_1WButton, SPL_1WField);
+        copyFromButtonToField(SPL_1WButton, SPL_1WField);
     }//GEN-LAST:event_SPL_1WButtonActionPerformed
 
     private void FRDButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_FRDButtonActionPerformed
     {//GEN-HEADEREND:event_FRDButtonActionPerformed
         try
         {
-            if (drv.hasFRD())
-            {
-                drv.removeFRD();
-                FRDButton.setText("Import");
-                FRDExportButton.setEnabled(false);
-                boolean cross = drv.hasZMA();
-                CrossStartField.setEnabled(cross);
-                CrossEndField.setEnabled(cross);
-            }
-            else
-            {
-                FileSelector fc = new FileSelector(".frd");
-                fc.setFileFilter(new FileNameExtensionFilter("Frequency Response Data", "frd"));
-
-                if (fc.showOpenDialog(this) == FileSelector.APPROVE_OPTION)
-                {
-                    drv.importFRD(fc.getSelectedFile());
-                    FRDButton.setText("Remove");
-                    FRDExportButton.setEnabled(true);
-                    CrossStartField.setEnabled(true);
-                    CrossEndField.setEnabled(true);
-                }
-            }
+            new ResponsesWindow((java.awt.Frame) SwingUtilities.getWindowAncestor(this), drv).setVisible(true);
+            
+            boolean cross = drv.hasZMA() || drv.hasFRD();
+            CrossStartField.setEnabled(cross);
+            CrossEndField.setEnabled(cross);
         }
         catch (Exception ex)
         {
@@ -1907,24 +1895,6 @@ public class DriverWindow extends javax.swing.JDialog
         renderGraphs();
     }//GEN-LAST:event_closedCheckBoxStateChanged
 
-    private void FRDExportButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_FRDExportButtonActionPerformed
-    {//GEN-HEADEREND:event_FRDExportButtonActionPerformed
-        try
-        {
-            FileSelector fs = new FileSelector(".frd");
-            fs.setFileFilter(new FileNameExtensionFilter("Frequency Response Data", "frd"));
-
-            if (fs.showSaveDialog(this) == FileSelector.APPROVE_OPTION)
-            {
-                drv.exportFRD(fs.getSelectedFile());
-            }
-        }
-        catch (Exception ex)
-        {
-            UI.throwable(this, ex);
-        }
-    }//GEN-LAST:event_FRDExportButtonActionPerformed
-
     private void ZMAExportButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_ZMAExportButtonActionPerformed
     {//GEN-HEADEREND:event_ZMAExportButtonActionPerformed
         try
@@ -1945,7 +1915,7 @@ public class DriverWindow extends javax.swing.JDialog
 
     private void SPL_2_83VButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_SPL_2_83VButtonActionPerformed
     {//GEN-HEADEREND:event_SPL_2_83VButtonActionPerformed
-        UI.copyFromButtonToField(SPL_2_83VButton, SPL_2_83VField);
+        copyFromButtonToField(SPL_2_83VButton, SPL_2_83VField);
     }//GEN-LAST:event_SPL_2_83VButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1960,7 +1930,6 @@ public class DriverWindow extends javax.swing.JDialog
     private javax.swing.JFormattedTextField DiaField;
     private javax.swing.JButton ExportButton;
     private javax.swing.JButton FRDButton;
-    private javax.swing.JButton FRDExportButton;
     private javax.swing.JButton FsButton;
     private javax.swing.JFormattedTextField FsField;
     private javax.swing.JFormattedTextField HeightField;

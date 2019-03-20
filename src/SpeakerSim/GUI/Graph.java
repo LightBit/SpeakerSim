@@ -57,33 +57,14 @@ public class Graph
         plot = new XYPlot();
         plot.setRenderer(renderer);
         
-        plot.addDomainMarker(new ValueMarker(20));
-        plot.addDomainMarker(new ValueMarker(30));
-        plot.addDomainMarker(new ValueMarker(40));
-        plot.addDomainMarker(new ValueMarker(50));
-        plot.addDomainMarker(new ValueMarker(60));
-        plot.addDomainMarker(new ValueMarker(70));
-        plot.addDomainMarker(new ValueMarker(80));
-        plot.addDomainMarker(new ValueMarker(90));
-        plot.addDomainMarker(new ValueMarker(100));
-        plot.addDomainMarker(new ValueMarker(200));
-        plot.addDomainMarker(new ValueMarker(300));
-        plot.addDomainMarker(new ValueMarker(400));
-        plot.addDomainMarker(new ValueMarker(500));
-        plot.addDomainMarker(new ValueMarker(600));
-        plot.addDomainMarker(new ValueMarker(700));
-        plot.addDomainMarker(new ValueMarker(800));
-        plot.addDomainMarker(new ValueMarker(900));
-        plot.addDomainMarker(new ValueMarker(1000));
-        plot.addDomainMarker(new ValueMarker(2000));
-        plot.addDomainMarker(new ValueMarker(3000));
-        plot.addDomainMarker(new ValueMarker(4000));
-        plot.addDomainMarker(new ValueMarker(5000));
-        plot.addDomainMarker(new ValueMarker(6000));
-        plot.addDomainMarker(new ValueMarker(7000));
-        plot.addDomainMarker(new ValueMarker(8000));
-        plot.addDomainMarker(new ValueMarker(9000));
-        plot.addDomainMarker(new ValueMarker(10000));
+        for (int x = 1, step = 1; x < 100000; step *= 10)
+        {
+            for (int i = 1; i < 10; i++)
+            {
+                plot.addDomainMarker(new ValueMarker(x));
+                x += step;
+            }
+        }
     }
     
     public Graph(String graphTitle, String xAxis, double[] x, String yAxis, double[] y)

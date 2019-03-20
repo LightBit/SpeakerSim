@@ -33,6 +33,18 @@ public class Environment implements JSONable
     public double RoomY;
     public double RoomZ;
     
+    private static Environment instance;
+    
+    public static Environment getInstance()
+    {
+        return instance;
+    }
+    
+    public static void setInstance(Environment env)
+    {
+        instance = env;
+    }
+    
     public static double calcAirPressure(double Temperature, double Altitude)
     {
         return 101325 * Math.exp(-((0.284043733 * Altitude) / (8.31447 * (Temperature + 273.15))));
@@ -62,6 +74,8 @@ public class Environment implements JSONable
         RoomX = 5;
         RoomY = 6;
         RoomZ = 2.5;
+        
+        instance = this;
     }
     
     public Environment(JsonValue json)
@@ -77,6 +91,8 @@ public class Environment implements JSONable
         RoomX = JSON.getDouble(jsonObj, "RoomX", 5);
         RoomY = JSON.getDouble(jsonObj, "RoomY", 6);
         RoomZ = JSON.getDouble(jsonObj, "RoomZ", 2.5);
+        
+        instance = this;
     }
 
     @Override

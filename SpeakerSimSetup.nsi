@@ -19,7 +19,6 @@ VIAddVersionKey "LegalCopyright" ""
 VIAddVersionKey "FileVersion" "1.0.0"
 VIProductVersion "1.0.0.0"
 
-!define JAR "SpeakerSim.jar"
 !define PRODUCT_NAME "SpeakerSim"
 !define INSTALLSIZE 3000
 
@@ -43,8 +42,6 @@ SetCompressor /SOLID zlib
 
 Section
   SetOutPath $INSTDIR
-  
-  File "SpeakerSim.jar"
   File "SpeakerSim.exe"
 
   WriteUninstaller "$INSTDIR\uninstall.exe"

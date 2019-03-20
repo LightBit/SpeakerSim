@@ -320,7 +320,7 @@ public class SettingsWindow extends javax.swing.JDialog
             result = true;
             
             String smoothing = (String)smoothingComboBox.getSelectedItem();
-            settings.Smoothing = smoothing == "None" ? 0 : UI.parseNumber(smoothing.split("/")[1]).intValue();
+            settings.Smoothing = smoothing == "None" ? 0 : Fnc.parseNumber(smoothing.split("/")[1]).intValue();
             
             settings.StartFrequency = UI.getInt(startFrequencyField);
             settings.EndFrequency = UI.getInt(endFrequencyField);

@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import SpeakerSim.GUI.UI;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -77,6 +76,6 @@ public class Capacitor extends Filter
     @Override
     public String toString()
     {
-        return "Capacitor (" + UI.format(C * 1000000) + "μF)";
+        return "Capacitor (" + Fnc.decimalFormat(C * 1000000) + "μF)";
     }
 }

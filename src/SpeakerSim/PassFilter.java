@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import SpeakerSim.GUI.UI;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -199,27 +198,27 @@ public abstract class PassFilter extends Filter
         {
             if (C2 != 0)
             {
-                s += UI.format(C2 * 1000000) + "μF / ";
+                s += Fnc.decimalFormat(C2 * 1000000) + "μF / ";
             }
             
             if (L2 != 0)
             {
-                s += UI.format(L2 * 1000) + "mH / ";
+                s += Fnc.decimalFormat(L2 * 1000) + "mH / ";
             }
             
             if (C1 != 0)
             {
-                s += UI.format(C1 * 1000000) + "μF / ";
+                s += Fnc.decimalFormat(C1 * 1000000) + "μF / ";
             }
             
             if (L1 != 0)
             {
-                s += UI.format(L1 * 1000) + "mH";
+                s += Fnc.decimalFormat(L1 * 1000) + "mH";
             }
         }
         else
         {
-            s += getTypeString() + " at " + UI.format(getFrequency()) + "Hz";
+            s += getTypeString() + " at " + Fnc.decimalFormat(getFrequency()) + "Hz";
         }
         
         return s + ")";

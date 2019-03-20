@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import SpeakerSim.GUI.UI;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -122,7 +121,7 @@ public abstract class ActivePassFilter implements IActiveFilter
     {
         String s = name() + " (";
         
-        s += getTypeString() + " at " + UI.format(getFrequency()) + "Hz";
+        s += getTypeString() + " at " + Fnc.decimalFormat(getFrequency()) + "Hz";
         
         return s + ")";
     }

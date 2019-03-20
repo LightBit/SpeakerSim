@@ -1,44 +1,39 @@
 #!/bin/sh
 
-ant
+# Make icon with ImageMagick
+#convert -background transparent resources/SpeakerSim.png -define icon:auto-resize=16,24,32,48,64,72,96,128 SpeakerSim.ico
 
-rm -rf ./SpeakerSim.jar
-rm -rf ./build/*
+# Build using Maven
+mvn package
 
-mkdir ./build
-cd ./build
+# Copy final jar
+cp ./target/SpeakerSim-jar-with-dependencies.jar ./SpeakerSim.jar
 
-jar xf ../dist/lib/minimal-json-0.9.5.jar
-jar xf ../dist/lib/jfreechart-1.5.0.jar
+# Compress jar
+#rm -rf ./target/jar
+#unzip ./target/SpeakerSim-jar-with-dependencies.jar -d ./target/jar
+#cd ./target/jar
+#7za a -tzip -mx=9 ../../SpeakerSim.jar
+#cd ../../
 
-jar xf ../dist/SpeakerSim.jar
-
-echo "Manifest-Version: 1.0" > ./META-INF/MANIFEST.MF
-echo "Main-Class: SpeakerSim.GUI.Main" >> ./META-INF/MANIFEST.MF
-
-jar cfm0 ../SpeakerSim.jar ./META-INF/MANIFEST.MF ./*
-#pack200 -rG ../SpeakerSim.jar
-
-cd ../
-
-#convert -density 384 -background transparent graphics/SpeakerSim.svg -define icon:auto-resize -colors 256 SpeakerSim.ico
-makensis ./SpeakerSim.nsi
+# Windows setup
 makensis ./SpeakerSimSetup.nsi
 
 # Windows portable (.zip)
-cd ./build
-rm -rf ./*
-mkdir ./SpeakerSim
-cp ../SpeakerSim.jar ./SpeakerSim/
-cp ../SpeakerSim.exe ./SpeakerSim/
-cp -r ../jre ./SpeakerSim/
-7za a -tzip -mx=9 ../SpeakerSim.zip
-
-# Compress JAR
-rm -rf ./*
-jar xf ../SpeakerSim.jar
-rm ../SpeakerSim.jar
-7za a -tzip -mx=9 ../SpeakerSim.jar
-
-cd ../
-rm -rf ./build
+#OPENJDK_WINDOWS_FILE=OpenJDK8U-jre_x86-32_windows_hotspot_8u202b08.zip
+#mkdir -r ./build/SpeakerSim
+#cd ./build/SpeakerSim
+#
+#if [ ! -d ./jre ]; then
+#	if [ ! -f $OPENJDK_WINDOWS_FILE ]; then
+#		wget https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u202-b08/$OPENJDK_WINDOWS_FILE
+#	fi
+#	
+#	unzip $OPENJDK_WINDOWS_FILE
+#	mv ./jdk8u202-b08-jre ./jre
+#fi
+#
+#cp ../../SpeakerSim.jar ./
+#cp ../../SpeakerSim.exe ./
+#7za a -tzip -mx=9 ../SpeakerSim.zip
+#cd ../../

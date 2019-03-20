@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import SpeakerSim.GUI.UI;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -89,17 +88,17 @@ public abstract class NotchFilter extends Filter
         
         if (L != 0)
         {
-            s += UI.format(L * 1000) + "mH / ";
+            s += Fnc.decimalFormat(L * 1000) + "mH / ";
         }
 
         if (C != 0)
         {
-            s += UI.format(C * 1000000) + "μF / ";
+            s += Fnc.decimalFormat(C * 1000000) + "μF / ";
         }
 
         if (R != 0)
         {
-            s += UI.format(R) + "Ω / ";
+            s += Fnc.decimalFormat(R) + "Ω / ";
         }
 
         if (L == 0 && C == 0 && R == 0)

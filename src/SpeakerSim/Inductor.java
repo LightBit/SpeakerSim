@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import SpeakerSim.GUI.UI;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -78,6 +77,6 @@ public class Inductor extends Filter
     @Override
     public String toString()
     {
-        return "Inductor (" + UI.format(L * 1000) + "mH)";
+        return "Inductor (" + Fnc.decimalFormat(L * 1000) + "mH)";
     }
 }

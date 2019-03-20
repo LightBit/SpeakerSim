@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import SpeakerSim.GUI.UI;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonValue;
 
@@ -43,7 +42,7 @@ public class Gain implements IActiveFilter
     @Override
     public String toString()
     {
-        return "Gain (" + UI.format(dB) + "dB)";
+        return "Gain (" + Fnc.decimalFormat(dB) + "dB)";
     }
     
     @Override

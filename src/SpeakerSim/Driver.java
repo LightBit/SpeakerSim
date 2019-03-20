@@ -20,17 +20,14 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Driver implements JSONable
 {
@@ -69,9 +66,10 @@ public class Driver implements JSONable
     public boolean Inverted; // if polarity is inverted
     public double CrossStart;
     public double CrossEnd;
-    
-    private FrdEntry[] FRD;
-    private FrdEntry[] ZMA;
+    public ResponseData FRD;
+    public ResponseData[] hFRD;
+    public ResponseData[] vFRD;
+    public ResponseEntry[] ZMA;
     
     public Driver()
     {
@@ -129,6 +127,8 @@ public class Driver implements JSONable
         dst.Closed = src.Closed;
         dst.Inverted = src.Inverted;
         dst.FRD = src.FRD;
+        dst.hFRD = src.hFRD;
+        dst.vFRD = src.vFRD;
         dst.ZMA = src.ZMA;
     }
     
@@ -137,132 +137,6 @@ public class Driver implements JSONable
         Driver drv = new Driver();
         copy(this, drv);
         return drv;
-    }
-    
-    private static FrdEntry[] importTable(File file, boolean dB) throws IOException
-    {
-        List<FrdEntry> frd = new ArrayList<FrdEntry>();
-        boolean hasPhase = false;
-        
-        try (BufferedReader r = new BufferedReader(new FileReader(file)))
-        {
-            String line;
-            
-            while ((line = r.readLine()) != null)
-            {
-                line = line.trim();
-                
-                if (!line.isEmpty() && Character.isDigit(line.charAt(0)))
-                {
-                    FrdEntry entry = new FrdEntry(line);
-                    frd.add(entry);
-                    
-                    if (entry.phase != 0)
-                    {
-                        hasPhase = true;
-                    }
-                }
-            }
-            
-            r.close();
-        }
-        
-        if (frd.isEmpty())
-        {
-            return null;
-        }
-        
-        // sort by frequency
-        Collections.sort(frd);
-        
-        // average value of duplicate frequencies
-        for (int i = 0; i < frd.size(); i++)
-        {
-            FrdEntry entry = frd.get(i);
-            int next = i + 1;
-            
-            for (int dups = 1; next < frd.size(); dups++)
-            {
-                FrdEntry dup = frd.get(next);
-                
-                if (entry.compareTo(dup) == 0)
-                {
-                    entry.amplitude += dup.amplitude;
-                    entry.phase += dup.phase;
-                    frd.remove(next);
-                }
-                else
-                {
-                    if (dups > 1)
-                    {
-                        entry.amplitude /= dups;
-                        entry.phase /= dups;
-                        frd.set(i, entry);
-                    }
-                    break;
-                }
-            }
-        }
-        
-        // no phase -> calculate phase from amplitude
-        if (!hasPhase)
-        {
-            double[] frequency = new double[frd.size()];
-            double[] amplitude = new double[frequency.length];
-            
-            int i = 0;
-            for (FrdEntry entry : frd)
-            {
-                frequency[i] = entry.frequency;
-                amplitude[i] = entry.amplitude;
-                i++;
-            }
-            
-            double slopeLo = Fnc.calcSlopeLo(frequency, amplitude);
-            double slopeHi = Fnc.calcSlopeHi(frequency, amplitude);
-            
-            if (dB)
-            {
-                for (i = 0; i < amplitude.length; i++)
-                {
-                    amplitude[i] = Fnc.toAmplitude(amplitude[i]);
-                }
-            }
-            
-            double[] phase = Fnc.calcPhase(frequency, amplitude, slopeLo, slopeHi);
-            
-            FrdEntry[] array = new FrdEntry[frequency.length];
-            i = 0;
-            for (FrdEntry entry : frd)
-            {
-                entry.phase = Math.toDegrees(phase[i]);
-                array[i] = entry;
-                i++;
-            }
-            
-            return array;
-        }
-        
-        FrdEntry[] array = new FrdEntry[frd.size()];
-        for (int i = 0; i < array.length; i++)
-        {
-            array[i] = frd.get(i);
-        }
-        
-        return array;
-    }
-    
-    private static void exportTable(FrdEntry[] frd, File file) throws FileNotFoundException, UnsupportedEncodingException
-    {
-        try (PrintWriter writer = new PrintWriter(file, "UTF-8"))
-        {
-            for (FrdEntry entry : frd)
-            {
-                writer.print(entry.toString() + "\r\n");
-            }
-
-            writer.close();
-        }
     }
     
     public boolean hasFRD()
@@ -275,29 +149,14 @@ public class Driver implements JSONable
         return ZMA != null;
     }
     
-    public void importFRD(File file) throws IOException
-    {
-        FRD = importTable(file, true);
-    }
-    
     public void importZMA(File file) throws IOException
     {
-        ZMA = importTable(file, false);
-    }
-    
-    public void exportFRD(File file) throws FileNotFoundException, UnsupportedEncodingException
-    {
-        exportTable(FRD, file);
+        ZMA = ResponseData.ImportData(file, false);
     }
     
     public void exportZMA(File file) throws FileNotFoundException, UnsupportedEncodingException
     {
-        exportTable(ZMA, file);
-    }
-    
-    public void removeFRD()
-    {
-        FRD = null;
+        ResponseData.ExportData(ZMA, file);
     }
     
     public void removeZMA()
@@ -384,30 +243,9 @@ public class Driver implements JSONable
     
     public Complex response(double f)
     {
-        if (FRD != null)
+        if (hasFRD())
         {
-            FrdEntry prev = FRD[0];
-            
-            // no lower value
-            if (prev.frequency > f)
-            {
-                return Fnc.toComplex(Double.MIN_NORMAL, 0); // TODO: use predicted slope
-            }
-
-            for (FrdEntry entry : FRD)
-            {
-                if (entry.frequency >= f)
-                {
-                    double amplitude = Fnc.interpolate(prev.frequency, prev.amplitude, entry.frequency, entry.amplitude, f) + (SPL_2_83V - SPL_1W); // TODO: support 2.83V
-                    double phase = Fnc.interpolate(prev.frequency, prev.phase, entry.frequency, entry.phase, f);
-                    return Fnc.toComplex(Fnc.toAmplitude(amplitude), Math.toRadians(phase));
-                }
-                
-                prev = entry;
-            }
-            
-            // no higher value
-            return Fnc.toComplex(Double.MIN_NORMAL, 0); // TODO: use predicted slope
+            return FRD.response(f, SPL_2_83V - SPL_1W);
         }
         else
         {
@@ -454,9 +292,9 @@ public class Driver implements JSONable
         }
     }
     
-    private double offAxisSim(double f, double horizontalAngle, double verticalAngle, boolean dipole)
+    private double relativeOffAxisSim(double f, double horizontalAngle, double verticalAngle, boolean dipole)
     {
-        double x = Math.PI * f / Project.getInstance().Environment.SpeedOfSound;
+        double x = Math.PI * f / Environment.getInstance().SpeedOfSound;
         horizontalAngle = Math.abs(horizontalAngle);
         verticalAngle = Math.abs(verticalAngle);
         
@@ -473,9 +311,60 @@ public class Driver implements JSONable
         }
     }
     
+    private double horizontalAxis(double f, double horizontalAngle)
+    {
+        double SPLdiff = SPL_2_83V - SPL_1W;
+            
+            // no lower value
+            if (hFRD[0].horizontalAngle > horizontalAngle)
+            {
+                return hFRD[0].response(f, SPLdiff).abs();
+            }
+
+            for (int i = 1; i < hFRD.length; i++)
+            {
+                if (hFRD[i].horizontalAngle >= horizontalAngle)
+                {
+                    return Fnc.interpolate(hFRD[i - 1].horizontalAngle, hFRD[i - 1].response(f, SPLdiff).abs(), hFRD[i].horizontalAngle, hFRD[i].response(f, SPLdiff).abs(), horizontalAngle);
+                }
+            }
+
+            // no higher value
+            return hFRD[0].response(f, SPLdiff).abs();
+    }
+    
+    private double verticalAxis(double f, double verticalAngle)
+    {
+        double SPLdiff = SPL_2_83V - SPL_1W;
+            
+            // no lower value
+            if (vFRD[0].verticalAngle > verticalAngle)
+            {
+                return vFRD[0].response(f, SPLdiff).abs();
+            }
+
+            for (int i = 1; i < vFRD.length; i++)
+            {
+                if (vFRD[i].verticalAngle >= verticalAngle)
+                {
+                    return Fnc.interpolate(vFRD[i - 1].verticalAngle, vFRD[i - 1].response(f, SPLdiff).abs(), vFRD[i].verticalAngle, vFRD[i].response(f, SPLdiff).abs(), verticalAngle);
+                }
+            }
+
+            // no higher value
+            return vFRD[0].response(f, SPLdiff).abs();
+    }
+    
     public double relativeOffAxis(double f, double horizontalAngle, double verticalAngle, boolean dipole)
     {
-        return offAxisSim(f, horizontalAngle, verticalAngle, dipole); // TODO: from FRD
+        if (hasFRD() && (hFRD != null || vFRD != null))
+        {
+            double SPLdiff = SPL_2_83V - SPL_1W;
+            // TODO: dipole and sign tricks
+            return Math.min(horizontalAxis(f, horizontalAngle), verticalAxis(f, verticalAngle)) / FRD.response(f, SPLdiff).abs();
+        }
+        
+        return relativeOffAxisSim(f, horizontalAngle, verticalAngle, dipole);
     }
     
     public double excursion(double f, double Pe)
@@ -510,9 +399,9 @@ public class Driver implements JSONable
     
     public Complex impedance(double f)
     {
-        if (ZMA != null)
+        if (hasZMA())
         {
-            FrdEntry prev = ZMA[0];
+            ResponseEntry prev = ZMA[0];
             
             // no lower value
             if (prev.frequency > f)
@@ -520,7 +409,7 @@ public class Driver implements JSONable
                 return Fnc.toComplex(prev.amplitude, Math.toRadians(prev.phase)); // TODO: use predicted slope
             }
 
-            for (FrdEntry entry : ZMA)
+            for (ResponseEntry entry : ZMA)
             {
                 if (entry.frequency >= f)
                 {
@@ -600,23 +489,45 @@ public class Driver implements JSONable
         json.add("Closed", Json.value(Closed));
         json.add("Inverted", Json.value(Inverted));
         
-        if (FRD != null)
+        if (FRD != null || hFRD != null || vFRD != null)
         {
             JsonArray array = Json.array().asArray();
             
-            for (FrdEntry entry : FRD)
+            if (FRD != null)
             {
-                array.add(Json.array(entry.frequency, entry.amplitude, entry.phase));
+                array.add(FRD.toJSON());
             }
             
-            json.add("FRD", array);
+            if (hFRD != null)
+            {
+                for (ResponseData d : hFRD)
+                {
+                    if (d != FRD)
+                    {
+                        array.add(d.toJSON());
+                    }
+                }
+            }
+            
+            if (vFRD != null)
+            {
+                for (ResponseData d : vFRD)
+                {
+                    if (d != FRD)
+                    {
+                        array.add(d.toJSON());
+                    }
+                }
+            }
+            
+            json.add("FRDS", array);
         }
         
         if (ZMA != null)
         {
             JsonArray array = Json.array().asArray();
             
-            for (FrdEntry entry : ZMA)
+            for (ResponseEntry entry : ZMA)
             {
                 array.add(Json.array(entry.frequency, entry.amplitude, entry.phase));
             }
@@ -665,16 +576,67 @@ public class Driver implements JSONable
         Inverted = jsonObj.get("Inverted").asBoolean();
         
         FRD = null;
-        JsonValue frd = jsonObj.get("FRD");
-        if (frd != null)
+        hFRD = null;
+        vFRD = null;
+        JsonValue frds = jsonObj.get("FRDS");
+        if (frds != null)
         {
-            JsonArray array = frd.asArray();
-            FRD = new FrdEntry[array.size()];
-            
-            int i = 0;
+            JsonArray array = frds.asArray();
+            List<ResponseData> hfrd = new ArrayList<ResponseData>();
+            List<ResponseData> vfrd = new ArrayList<ResponseData>();
+
             for (JsonValue entry : array)
             {
-                FRD[i++] = new FrdEntry(entry.asArray().get(0).asDouble(), entry.asArray().get(1).asDouble(), entry.asArray().get(2).asDouble());
+                ResponseData rd = new ResponseData(entry);
+                if (rd.horizontalAngle == 0 && rd.verticalAngle == 0)
+                {
+                    FRD = rd;
+                    hfrd.add(rd);
+                    vfrd.add(rd);
+                }
+                else if (rd.verticalAngle == 0)
+                {
+                    hfrd.add(rd);
+                }
+                else if (rd.horizontalAngle == 0)
+                {
+                    vfrd.add(rd);
+                }
+                else
+                {
+                    //TODO: throw exception
+                }
+            }
+
+            if (hfrd.size() > 0)
+            {
+                Collections.sort(hfrd);
+                hFRD = new ResponseData[hfrd.size()];
+                hFRD = hfrd.toArray(hFRD);
+            }
+
+            if (vfrd.size() > 0)
+            {
+                Collections.sort(vfrd);
+                vFRD = new ResponseData[vfrd.size()];
+                vFRD = vfrd.toArray(vFRD);
+            }
+        }
+        else
+        {
+            JsonValue frd = jsonObj.get("FRD");
+            if (frd != null)
+            {
+                JsonArray array = frd.asArray();
+                
+                FRD = new ResponseData(null);
+                FRD.data = new ResponseEntry[array.size()];
+
+                int i = 0;
+                for (JsonValue entry : array)
+                {
+                    FRD.data[i++] = new ResponseEntry(entry.asArray().get(0).asDouble(), entry.asArray().get(1).asDouble(), entry.asArray().get(2).asDouble());
+                }
             }
         }
         
@@ -683,12 +645,12 @@ public class Driver implements JSONable
         if (zma != null)
         {
             JsonArray array = zma.asArray();
-            ZMA = new FrdEntry[array.size()];
+            ZMA = new ResponseEntry[array.size()];
             
             int i = 0;
             for (JsonValue entry : array)
             {
-                ZMA[i++] = new FrdEntry(entry.asArray().get(0).asDouble(), entry.asArray().get(1).asDouble(), entry.asArray().get(2).asDouble());
+                ZMA[i++] = new ResponseEntry(entry.asArray().get(0).asDouble(), entry.asArray().get(1).asDouble(), entry.asArray().get(2).asDouble());
             }
         }
     }
@@ -776,12 +738,12 @@ public class Driver implements JSONable
         
     public static double calcSPL_1W(double n0)
     {
-        return 112.1 + Math.log10(n0) * 10;
+        return 112.1 + Fnc.powerToDecibels(n0);
     }
     
     public static double calcSPL_2_83V(double SPL_1W, double Re)
     {
-        return SPL_1W + Math.log10(8 / Re) * 10;
+        return SPL_1W + Fnc.powerToDecibels(8 / Re);
     }
     
     public double calcFs()

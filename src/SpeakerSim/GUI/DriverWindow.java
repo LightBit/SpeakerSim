@@ -1497,7 +1497,7 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         propertiesPanel.add(invertedCheckBox, gridBagConstraints);
 
-        closedCheckBox.setText("Closed back");
+        closedCheckBox.setText("Enclosed");
         closedCheckBox.setToolTipText("Enclosed in it's own enclousure (tweeter)");
         closedCheckBox.addChangeListener(new javax.swing.event.ChangeListener()
         {

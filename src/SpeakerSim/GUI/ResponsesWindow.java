@@ -50,8 +50,13 @@ public class ResponsesWindow extends JDialog
         {
             model.addAll(driver.vFRD);
         }
-       
+        
         list.setModel(model);
+        
+        if (model.getSize() > 0)
+        {
+            list.setSelectedIndex(0);
+        }
        
         list.getSelectionModel().addListSelectionListener(new ListSelectionListener()
         {
@@ -67,7 +72,7 @@ public class ResponsesWindow extends JDialog
             @Override
             public void mouseClicked(MouseEvent evt)
             {
-                if (evt.getClickCount() == 2)
+                if (evt.getClickCount() == 2 && list.getSelectedIndices().length == 1)
                 {
                     edit();
                 }
@@ -198,6 +203,7 @@ public class ResponsesWindow extends JDialog
                         if (rd != null)
                         {
                             model.addElement(rd);
+                            list.setSelectedValue(rd, true);
                         }
                         refresh();
                     }

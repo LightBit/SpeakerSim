@@ -290,17 +290,12 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
     @Override
     public int compareTo(ResponseData o)
     {
-        /*if (horizontalAngle == 0 && verticalAngle == 0)
-        {
-            return -1;
-        }
-        
-        if (o.horizontalAngle == 0 && o.verticalAngle == 0)
+        if (horizontalAngle > o.horizontalAngle)
         {
             return 1;
-        }*/
+        }
         
-        if (horizontalAngle > o.horizontalAngle)
+        if (verticalAngle > o.verticalAngle)
         {
             return 1;
         }
@@ -308,11 +303,6 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
         if (horizontalAngle < o.horizontalAngle)
         {
             return -1;
-        }
-        
-        if (verticalAngle > o.verticalAngle)
-        {
-            return 1;
         }
         
         if (verticalAngle < o.verticalAngle)

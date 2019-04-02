@@ -1221,7 +1221,7 @@
             </Component>
             <Component class="javax.swing.JCheckBox" name="closedCheckBox">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Closed back"/>
+                <Property name="text" type="java.lang.String" value="Enclosed"/>
                 <Property name="toolTipText" type="java.lang.String" value="Enclosed in it&apos;s own enclousure (tweeter)"/>
               </Properties>
               <Events>

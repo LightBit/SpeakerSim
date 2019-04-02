@@ -361,6 +361,8 @@ public class Driver implements JSONable
         {
             double SPLdiff = SPL_2_83V - SPL_1W;
             // TODO: dipole and sign tricks
+            horizontalAngle = Math.abs(horizontalAngle);
+            verticalAngle = Math.abs(verticalAngle);
             return Math.min(horizontalAxis(f, horizontalAngle), verticalAxis(f, verticalAngle)) / FRD.response(f, SPLdiff).abs();
         }
         

@@ -1451,7 +1451,7 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblZMA, gridBagConstraints);
 
-        SPL_2_83VField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        SPL_2_83VField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         SPL_2_83VField.setToolTipText("Reference sound pressure level at 2.83V/1m");
         SPL_2_83VField.setMinimumSize(new java.awt.Dimension(80, 19));
         SPL_2_83VField.setPreferredSize(new java.awt.Dimension(80, 19));

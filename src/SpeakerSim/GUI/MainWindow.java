@@ -44,8 +44,6 @@ public class MainWindow extends javax.swing.JFrame
     
     public MainWindow(String arg) throws IOException
     {
-        setTitle("SpeakerSim (" + Project.currentVersion() + ")");
-        
         URL iconURL = getClass().getClassLoader().getResource("SpeakerSim.png");
         setIconImage(new ImageIcon(iconURL).getImage());
 
@@ -53,6 +51,8 @@ public class MainWindow extends javax.swing.JFrame
         {
             file = new File(arg);
             project = new Project(file);
+            
+            versionCheck();
             
             setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersion() + " Beta)");
         }
@@ -267,6 +267,14 @@ public class MainWindow extends javax.swing.JFrame
                 }
             }
         });
+    }
+    
+    private void versionCheck()
+    {
+        if (project.Version.compareTo(Project.currentVersion()) > 0)
+        {
+            UI.warning("Project file was created with newer version. It may not work correctly!");
+        }
     }
     
     private IItem getSelectedItem()
@@ -2120,11 +2128,12 @@ public class MainWindow extends javax.swing.JFrame
                 if (fc.showOpenDialog(this) == FileSelector.APPROVE_OPTION)
                 {
                     file = fc.getSelectedFile();
+                    project = new Project(file);
+                    
+                    versionCheck();
+                    load();
                     
                     setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersion() + ")");
-                    
-                    project = new Project(file);
-                    load();
                 }
             }
         }

@@ -27,10 +27,12 @@ public abstract class PassFilter extends Filter
     
     public double C1;
     public double C2;
+    public double RC1;
+    public double RC2;
     public double L1;
     public double L2;
-    public double R1;
-    public double R2;
+    public double RL1;
+    public double RL2;
     
     public final static String[] TYPES =
     {
@@ -88,22 +90,22 @@ public abstract class PassFilter extends Filter
     
     protected Complex zC1(double f)
     {
-        return Fnc.zC(C1, f);
+        return Fnc.zC(C1, f).add(RC1);
     }
     
     protected Complex zC2(double f)
     {
-        return Fnc.zC(C2, f);
+        return Fnc.zC(C2, f).add(RC2);
     }
     
     protected Complex zL1(double f)
     {
-        return Fnc.zL(L1, f).add(R1);
+        return Fnc.zL(L1, f).add(RL1);
     }
     
     protected Complex zL2(double f)
     {
-        return Fnc.zL(L2, f).add(R2);
+        return Fnc.zL(L2, f).add(RL2);
     }
     
     public PassFilter()
@@ -128,8 +130,11 @@ public abstract class PassFilter extends Filter
             L2 = JSON.getDouble(jsonObj, "L2");
         }
         
-        R1 = JSON.getDouble(jsonObj, "R1");
-        R2 = JSON.getDouble(jsonObj, "R2");
+        RC1 = JSON.getDouble(jsonObj, "RC1");
+        RC2 = JSON.getDouble(jsonObj, "RC2");
+        RL1 = JSON.getDouble(jsonObj, "RL1", JSON.getDouble(jsonObj, "R1"));
+        RL2 = JSON.getDouble(jsonObj, "RL2", JSON.getDouble(jsonObj, "R2"));
+        
         super.fromJSON(json);
     }
     
@@ -240,8 +245,11 @@ public abstract class PassFilter extends Filter
             JSON.add(json, "L2", L2);
         }
         
-        JSON.add(json, "R1", R1);
-        JSON.add(json, "R2", R2);
+        JSON.add(json, "RC1", RC1);
+        JSON.add(json, "RC2", RC2);
+        JSON.add(json, "RL1", RL1);
+        JSON.add(json, "RL2", RL2);
+        
         json.add("Children", Item.childrenToJSON(children));
         
         return json;

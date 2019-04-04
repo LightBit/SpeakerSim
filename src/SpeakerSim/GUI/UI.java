@@ -28,7 +28,6 @@ import javax.swing.filechooser.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
-import java.text.*;
 
 public final class UI
 {
@@ -216,6 +215,11 @@ public final class UI
                 component.setEnabled(isEnabled);
             }
         }
+    }
+    
+    public static void warning(String message)
+    {
+        JOptionPane.showMessageDialog(null, message, "Warning", JOptionPane.WARNING_MESSAGE);
     }
     
     public static void error(String message)

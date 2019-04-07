@@ -22,6 +22,7 @@ import com.eclipsesource.json.JsonValue;
 
 public class Baffle implements JSONable
 {
+    public boolean Enabled;
     public double Width;
     public double Height;
     public double X;
@@ -30,6 +31,7 @@ public class Baffle implements JSONable
     
     public Baffle()
     {
+        Enabled = true;
         Width = 0.3;
         Height = 0.7;
         X = 0.15;
@@ -38,6 +40,7 @@ public class Baffle implements JSONable
     
     public Baffle(double width, double height, double x, double y, double edgeRadius)
     {
+        Enabled = true;
         Width = width;
         Height = height;
         X = x;
@@ -49,6 +52,7 @@ public class Baffle implements JSONable
     {
         JsonObject jsonObj = json.asObject();
 
+        Enabled = JSON.getBoolean(jsonObj, "Enabled", true);
         Width = JSON.getDouble(jsonObj, "Width");
         Height = JSON.getDouble(jsonObj, "Height");
         X = JSON.getDouble(jsonObj, "X");
@@ -61,6 +65,7 @@ public class Baffle implements JSONable
     {
         JsonObject json = Json.object();
         
+        json.add("Enabled", Enabled);
         json.add("Width", Width);
         json.add("Height", Height);
         json.add("X", X);

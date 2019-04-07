@@ -21,6 +21,7 @@ public class BaffleSimulation
     private final double horizontalAngle;
     private final double verticalAngle;
     private final double angle;
+    private final boolean enabled;
     private final double[] mean;
     private final double[] length;
     private final double averageWavelength;
@@ -50,17 +51,20 @@ public class BaffleSimulation
         this.dipole = dipole;
         angle = Math.max(Math.abs(horizontalAngle), Math.abs(verticalAngle));
         
-        if (baffle == null)
+        if (baffle == null || !baffle.Enabled)
         {
             mean = null;
             length = null;
             averageWavelength = 0;
             edge = 0;
+            enabled = baffle == null;
+            
             return;
         }
         
-        double[] edges = new double[36];
+        enabled = true;
         
+        double[] edges = new double[36];
         edges[0] = edgeDistance(90, baffle.X, baffle.Y); // 0
         edges[1] = edgeDistance(80, baffle.X, baffle.Y); // 10
         edges[2] = edgeDistance(70, baffle.X, baffle.Y); // 20
@@ -169,7 +173,7 @@ public class BaffleSimulation
     
     public Complex response(double f)
     {
-        Complex x = Fnc.toComplex(0.5 * offAxis(f, horizontalAngle, verticalAngle) * diffraction(f), 0);
+        Complex x = Fnc.toComplex((enabled ? 0.5 : 1) * offAxis(f, horizontalAngle, verticalAngle) * diffraction(f), 0);
         
         // invert phase, if behind dipole
         if (dipole && (angle < 270 && angle > 90))

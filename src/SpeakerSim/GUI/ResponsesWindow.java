@@ -92,6 +92,7 @@ public class ResponsesWindow extends JDialog
                     if (frd != null)
                     {
                         model.removeElement(frd);
+                        list.clearSelection();
                         refresh();
                     }
                 }
@@ -122,6 +123,8 @@ public class ResponsesWindow extends JDialog
                 List<ResponseData> hfrd = new ArrayList<ResponseData>();
                 List<ResponseData> vfrd = new ArrayList<ResponseData>();
                 Iterator iter = model.iterator();
+                
+                drv.FRD = null;
 
                 while (iter.hasNext())
                 {
@@ -140,25 +143,15 @@ public class ResponsesWindow extends JDialog
                     {
                         vfrd.add(rd);
                     }
-                    else
-                    {
-                        //TODO: throw exception
-                    }
                 }
 
-                if (hfrd.size() > 0)
-                {
-                    Collections.sort(hfrd);
-                    drv.hFRD = new ResponseData[hfrd.size()];
-                    drv.hFRD = hfrd.toArray(drv.hFRD);
-                }
+                Collections.sort(hfrd);
+                drv.hFRD = new ResponseData[hfrd.size()];
+                drv.hFRD = hfrd.toArray(drv.hFRD);
 
-                if (vfrd.size() > 0)
-                {
-                    Collections.sort(vfrd);
-                    drv.vFRD = new ResponseData[vfrd.size()];
-                    drv.vFRD = vfrd.toArray(drv.vFRD);
-                }
+                Collections.sort(vfrd);
+                drv.vFRD = new ResponseData[vfrd.size()];
+                drv.vFRD = vfrd.toArray(drv.vFRD);
             }
         });
        
@@ -181,6 +174,7 @@ public class ResponsesWindow extends JDialog
                 {
                     model.removeElement(e);
                 }
+                list.clearSelection();
                 refresh();
             }
         });

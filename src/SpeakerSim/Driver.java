@@ -314,56 +314,87 @@ public class Driver implements JSONable
     private double horizontalAxis(double f, double horizontalAngle)
     {
         double SPLdiff = SPL_2_83V - SPL_1W;
-            
-            // no lower value
-            if (hFRD[0].horizontalAngle > horizontalAngle)
-            {
-                return hFRD[0].response(f, SPLdiff).abs();
-            }
 
-            for (int i = 1; i < hFRD.length; i++)
-            {
-                if (hFRD[i].horizontalAngle >= horizontalAngle)
-                {
-                    return Fnc.interpolate(hFRD[i - 1].horizontalAngle, hFRD[i - 1].response(f, SPLdiff).abs(), hFRD[i].horizontalAngle, hFRD[i].response(f, SPLdiff).abs(), horizontalAngle);
-                }
-            }
+        // no lower value
+        if (hFRD[0].horizontalAngle > horizontalAngle)
+        {
+            return -hFRD[0].response(f, SPLdiff).abs();
+        }
 
-            // no higher value
-            return hFRD[0].response(f, SPLdiff).abs();
+        for (int i = 1; i < hFRD.length; i++)
+        {
+            if (hFRD[i].horizontalAngle >= horizontalAngle)
+            {
+                return Fnc.interpolate
+                (
+                        hFRD[i - 1].horizontalAngle,
+                        hFRD[i - 1].response(f, SPLdiff).abs(),
+                        hFRD[i].horizontalAngle,
+                        hFRD[i].response(f, SPLdiff).abs(),
+                        horizontalAngle
+                );
+            }
+        }
+
+        // no higher value
+        return -hFRD[vFRD.length - 1].response(f, SPLdiff).abs();
     }
     
     private double verticalAxis(double f, double verticalAngle)
     {
         double SPLdiff = SPL_2_83V - SPL_1W;
-            
-            // no lower value
-            if (vFRD[0].verticalAngle > verticalAngle)
-            {
-                return vFRD[0].response(f, SPLdiff).abs();
-            }
 
-            for (int i = 1; i < vFRD.length; i++)
-            {
-                if (vFRD[i].verticalAngle >= verticalAngle)
-                {
-                    return Fnc.interpolate(vFRD[i - 1].verticalAngle, vFRD[i - 1].response(f, SPLdiff).abs(), vFRD[i].verticalAngle, vFRD[i].response(f, SPLdiff).abs(), verticalAngle);
-                }
-            }
+        // no lower value
+        if (vFRD[0].verticalAngle > verticalAngle)
+        {
+            return -vFRD[0].response(f, SPLdiff).abs();
+        }
 
-            // no higher value
-            return vFRD[0].response(f, SPLdiff).abs();
+        for (int i = 1; i < vFRD.length; i++)
+        {
+            if (vFRD[i].verticalAngle >= verticalAngle)
+            {
+                return Fnc.interpolate
+                (
+                    vFRD[i - 1].verticalAngle,
+                    vFRD[i - 1].response(f, SPLdiff).abs(),
+                    vFRD[i].verticalAngle,
+                    vFRD[i].response(f, SPLdiff).abs(),
+                    verticalAngle
+                );
+            }
+        }
+
+        // no higher value
+        return -vFRD[vFRD.length - 1].response(f, SPLdiff).abs();
     }
     
     public double relativeOffAxis(double f, double horizontalAngle, double verticalAngle, boolean dipole)
     {
         if (hasFRD() && (hFRD != null || vFRD != null))
         {
-            double SPLdiff = SPL_2_83V - SPL_1W;
             // TODO: dipole and sign tricks
             horizontalAngle = Math.abs(horizontalAngle);
             verticalAngle = Math.abs(verticalAngle);
-            return Math.min(horizontalAxis(f, horizontalAngle), verticalAxis(f, verticalAngle)) / FRD.response(f, SPLdiff).abs();
+            
+            double axial = FRD.response(f, SPL_2_83V - SPL_1W).abs();
+            double horizontal = horizontalAxis(f, horizontalAngle);
+            double vertical = verticalAxis(f, verticalAngle);
+            
+            if (horizontal < 0 && vertical < 0)
+            {
+                return Math.min(relativeOffAxisSim(f, horizontalAngle, verticalAngle, dipole), Math.min(-horizontal, -vertical) / axial);
+            }
+            else if (horizontal < 0)
+            {
+                horizontal = Math.min(relativeOffAxisSim(f, horizontalAngle, 0, dipole) * axial, -horizontal);
+            }
+            else if (vertical < 0)
+            {
+                vertical = Math.min(relativeOffAxisSim(f, 0, verticalAngle, dipole) * axial, -vertical);
+            }
+            
+            return Math.min(horizontal, vertical) / axial;
         }
         
         return relativeOffAxisSim(f, horizontalAngle, verticalAngle, dipole);

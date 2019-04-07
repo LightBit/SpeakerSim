@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>SpeakerSim</groupId>
     <artifactId>SpeakerSim</artifactId>
-    <version>2019-04-04</version>
+    <version>2019-04-07</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>

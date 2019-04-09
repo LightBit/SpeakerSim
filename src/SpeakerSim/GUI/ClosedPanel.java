@@ -77,10 +77,23 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
     Graph box;
     
     @Override
-    public void refresh(Speaker speaker)
+    public void show(Speaker speaker)
     {
         this.speaker = speaker;
         
+        listen = false;
+        
+        vbField.setValue(speaker.ClosedBox.Vb * 1000);
+        qlField.setValue(speaker.ClosedBox.Ql);
+        qaField.setValue(speaker.ClosedBox.Qa);
+        qtcField.setValue(ClosedBoxSimulation.calcQtc(speaker.ClosedBox.Vb, speaker.Driver.Vas, speaker.Driver.Qts));
+        
+        listen = true;
+    }
+    
+    @Override
+    public void addGraphs(final JTabbedPane tabs)
+    {
         ClosedBoxSimulation sim = (ClosedBoxSimulation) speaker.getSimulation();
         
         box = new Graph("Enclosure response", "Hz", "dB");
@@ -91,21 +104,8 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         }
         
         box.setYRange(box.getMaxY() - main.project.Settings.dBRange, box.getMaxY() + 1);
-    }
-    
-    @Override
-    public void addGraphs(final JTabbedPane tabs)
-    {
-        listen = false;
-        
-        vbField.setValue(speaker.ClosedBox.Vb * 1000);
-        qlField.setValue(speaker.ClosedBox.Ql);
-        qaField.setValue(speaker.ClosedBox.Qa);
-        qtcField.setValue(ClosedBoxSimulation.calcQtc(speaker.ClosedBox.Vb, speaker.Driver.Vas, speaker.Driver.Qts));
         
         tabs.addTab("Enclosure response", box.getGraph());
-        
-        listen = true;
     }
     
     @SuppressWarnings("unchecked")

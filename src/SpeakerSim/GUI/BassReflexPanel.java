@@ -152,10 +152,28 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
     Graph port;
     
     @Override
-    public void refresh(Speaker speaker)
+    public void show(Speaker speaker)
     {
         this.speaker = speaker;
         
+        listen = false;
+        
+        vbField.setValue(speaker.BassReflex.Vb * 1000);
+        fbField.setValue(speaker.BassReflex.Fb);
+        qlField.setValue(speaker.BassReflex.Ql);
+        qaField.setValue(speaker.BassReflex.Qa);
+        qpField.setValue(speaker.BassReflex.Qp);
+        portPositionXField.setValue(speaker.BassReflex.PortPosition.X * 100);
+        portPositionYField.setValue(speaker.BassReflex.PortPosition.Y * 100);
+        portPositionZField.setValue(speaker.BassReflex.PortPosition.Z * 100);
+        portPositionDistanceField.setValue(main.project.ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
+        
+        listen = true;
+    }
+    
+    @Override
+    public void addGraphs(final JTabbedPane tabs)
+    {
         BassReflexSimulation sim = (BassReflexSimulation) speaker.getSimulation();
         
         box = new Graph("Enclosure response", "Hz", "dB");
@@ -172,28 +190,10 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         box.setYRange(box.getMaxY() - main.project.Settings.dBRange, box.getMaxY() + 1);
         cone.setYRange(cone.getMaxY() - main.project.Settings.dBRange, cone.getMaxY() + 1);
         port.setYRange(port.getMaxY() - main.project.Settings.dBRange, port.getMaxY() + 1);
-    }
-    
-    @Override
-    public void addGraphs(final JTabbedPane tabs)
-    {
-        listen = false;
-        
-        vbField.setValue(speaker.BassReflex.Vb * 1000);
-        fbField.setValue(speaker.BassReflex.Fb);
-        qlField.setValue(speaker.BassReflex.Ql);
-        qaField.setValue(speaker.BassReflex.Qa);
-        qpField.setValue(speaker.BassReflex.Qp);
-        portPositionXField.setValue(speaker.BassReflex.PortPosition.X * 100);
-        portPositionYField.setValue(speaker.BassReflex.PortPosition.Y * 100);
-        portPositionZField.setValue(speaker.BassReflex.PortPosition.Z * 100);
-        portPositionDistanceField.setValue(main.project.ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
         
         tabs.addTab("Enclosure response", box.getGraph());
         tabs.addTab("Cone response", cone.getGraph());
         tabs.addTab("Port response", port.getGraph());
-        
-        listen = true;
     }
 
     @SuppressWarnings("unchecked")

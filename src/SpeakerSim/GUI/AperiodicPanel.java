@@ -127,10 +127,26 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
     Graph vent;
     
     @Override
-    public void refresh(Speaker speaker)
+    public void show(Speaker speaker)
     {
         this.speaker = speaker;
         
+        listen = false;
+        
+        vbField.setValue(speaker.Aperiodic.Vb * 1000);
+        qlField.setValue(speaker.Aperiodic.Ql);
+        qaField.setValue(speaker.Aperiodic.Qa);
+        portPositionXField.setValue(speaker.Aperiodic.VentPosition.X * 100);
+        portPositionYField.setValue(speaker.Aperiodic.VentPosition.Y * 100);
+        portPositionZField.setValue(speaker.Aperiodic.VentPosition.Z * 100);
+        portPositionDistanceField.setValue(main.project.ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
+        
+        listen = true;
+    }
+    
+    @Override
+    public void addGraphs(final JTabbedPane tabs)
+    {
         BassReflexSimulation sim = (BassReflexSimulation) speaker.getSimulation();
         
         box = new Graph("Enclosure response", "Hz", "dB");
@@ -147,26 +163,10 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         box.setYRange(box.getMaxY() - main.project.Settings.dBRange, box.getMaxY() + 1);
         cone.setYRange(cone.getMaxY() - main.project.Settings.dBRange, cone.getMaxY() + 1);
         vent.setYRange(vent.getMaxY() - main.project.Settings.dBRange, vent.getMaxY() + 1);
-    }
-    
-    @Override
-    public void addGraphs(final JTabbedPane tabs)
-    {
-        listen = false;
-        
-        vbField.setValue(speaker.Aperiodic.Vb * 1000);
-        qlField.setValue(speaker.Aperiodic.Ql);
-        qaField.setValue(speaker.Aperiodic.Qa);
-        portPositionXField.setValue(speaker.Aperiodic.VentPosition.X * 100);
-        portPositionYField.setValue(speaker.Aperiodic.VentPosition.Y * 100);
-        portPositionZField.setValue(speaker.Aperiodic.VentPosition.Z * 100);
-        portPositionDistanceField.setValue(main.project.ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
         
         tabs.addTab("Enclosure response", box.getGraph());
         tabs.addTab("Cone response", cone.getGraph());
         tabs.addTab("Vent response", vent.getGraph());
-        
-        listen = true;
     }
 
     @SuppressWarnings("unchecked")

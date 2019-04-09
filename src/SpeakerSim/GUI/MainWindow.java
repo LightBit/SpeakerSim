@@ -1525,6 +1525,29 @@ public class MainWindow extends javax.swing.JFrame
     
     private void showNode(final DefaultMutableTreeNode node)
     {
+        // update properties panel
+        final IItem item = (IItem) node.getUserObject();
+        showPanels(item);
+
+        if (bafflePanel != null)
+        {
+            ((BafflePanel) bafflePanel).show(((Speaker) item).Baffle);
+        }
+
+        if (driverPositionPanel != null)
+        {
+            ((DriverPositionPanel) driverPositionPanel).show(((Speaker) item).Position);
+        }
+
+        if (enclosurePanel != null)
+        {
+            ((ISpeakerPanel) enclosurePanel).show((Speaker) item);
+        }
+        
+        propertiesPanel.revalidate();
+        propertiesPanel.repaint();
+
+        // stop worker, if running
         if (worker != null && worker.isAlive())
         {
             worker.interrupt();
@@ -1667,27 +1690,14 @@ public class MainWindow extends javax.swing.JFrame
                                 {
                                     tabs.addTab("Impedance", graphImpedance.getGraph());
                                 }
-                                
-                                showPanels(item);
-
-                                if (bafflePanel != null)
-                                {
-                                    ((BafflePanel) bafflePanel).show(((Speaker) item).Baffle);
-                                }
-
-                                if (driverPositionPanel != null)
-                                {
-                                    ((DriverPositionPanel) driverPositionPanel).show(((Speaker) item).Position);
-                                }
 
                                 if (enclosurePanel != null)
                                 {
-                                    ((ISpeakerPanel) enclosurePanel).refresh((Speaker) item); // shoud be done in worker thread (without invoke)?
-                                    ((ISpeakerPanel) enclosurePanel).addGraphs(tabs);
+                                    ((ISpeakerPanel) enclosurePanel).addGraphs(tabs); // graphs shoud be done in worker thread?
                                 }
 
-                                rightPanel.revalidate();
-                                rightPanel.repaint();
+                                tabs.revalidate();
+                                tabs.repaint();
                                 UI.setSelectedTab(tabs, selectedTab);
                             }
                         });
@@ -1716,10 +1726,8 @@ public class MainWindow extends javax.swing.JFrame
                                     tabs.addTab("Impedance", graphImpedance.getGraph());
                                 }
 
-                                showPanels(item);
-
-                                rightPanel.revalidate();
-                                rightPanel.repaint();
+                                tabs.revalidate();
+                                tabs.repaint();
                                 UI.setSelectedTab(tabs, selectedTab);
                             }
                         });

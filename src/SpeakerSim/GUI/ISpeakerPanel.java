@@ -22,6 +22,6 @@ import javax.swing.JTabbedPane;
 
 public interface ISpeakerPanel
 {
-    public void refresh(Speaker speaker);
+    public void show(Speaker speaker);
     public void addGraphs(JTabbedPane tabs);
 }

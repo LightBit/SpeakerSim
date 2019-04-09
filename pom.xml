@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>SpeakerSim</groupId>
     <artifactId>SpeakerSim</artifactId>
-    <version>2019-04-07</version>
+    <version>2019-04-09</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -75,7 +75,8 @@
                         </goals>
                         <configuration>
                             <headerType>gui</headerType>
-                            <jar>target/SpeakerSim-jar-with-dependencies.jar</jar>
+                            <jar>SpeakerSim.jar</jar>
+                            <dontWrapJar>true</dontWrapJar>
                             <outfile>SpeakerSim.exe</outfile>
                             <downloadUrl>http://java.com/download</downloadUrl>
                             <classPath>
@@ -83,18 +84,19 @@
                             </classPath>
                             <icon>SpeakerSim.ico</icon>
                             <jre>
-                                <bundledJre64Bit>false</bundledJre64Bit>
-                                <bundledJreAsFallback>false</bundledJreAsFallback>
                                 <minVersion>1.7.0</minVersion>
                                 <jdkPreference>preferJre</jdkPreference>
+                                <path>jre</path>
+                                <bundledJreAsFallback>true</bundledJreAsFallback>
+                                <bundledJre64Bit>false</bundledJre64Bit>
                             </jre>
                             <versionInfo>
-                                <fileVersion>1.0.0.0</fileVersion>
+                                <fileVersion>0.0.0.0</fileVersion>
+                                <productVersion>0.0.0.0</productVersion>
+                                <txtProductVersion>${project.version}</txtProductVersion>
                                 <txtFileVersion>${project.version}</txtFileVersion>
                                 <fileDescription>${project.name}</fileDescription>
                                 <copyright>Copyright 2019 Gregor Pintar</copyright>
-                                <productVersion>1.0.0.0</productVersion>
-                                <txtProductVersion>1.0.0.0</txtProductVersion>
                                 <productName>${project.name}</productName>
                                 <internalName>SpeakerSim</internalName>
                                 <originalFilename>SpeakerSim.exe</originalFilename>

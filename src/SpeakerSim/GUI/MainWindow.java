@@ -54,11 +54,11 @@ public class MainWindow extends javax.swing.JFrame
             
             versionCheck();
             
-            setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersion() + " Beta)");
+            setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersion() + ")");
         }
         else
         {
-            setTitle("SpeakerSim (" + Project.currentVersion() + " Beta)");
+            setTitle("SpeakerSim (" + Project.currentVersion() + ")");
             
             project = new Project(getClass().getClassLoader().getResourceAsStream("default.ssim"));
         }

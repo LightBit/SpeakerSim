@@ -480,6 +480,8 @@ public class MainWindow extends javax.swing.JFrame
                 });
                 popup.add(mi);
                 
+                popup.addSeparator();
+                
                 if (!(node.getUserObject() instanceof Amplifier))
                 {
                     JMenu addAboveMenu = new JMenu("Add above");
@@ -491,7 +493,21 @@ public class MainWindow extends javax.swing.JFrame
                 submenuAdd(addBelowMenu, node, false);
                 popup.add(addBelowMenu);
                 
-                mi = new JMenuItem("Delete");
+                popup.addSeparator();
+                
+                mi = new JMenuItem("Remove");
+                mi.addActionListener(new ActionListener()
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        removeItem();
+                    }
+                });
+                mi.setEnabled(canRemoveItem());
+                popup.add(mi);
+                
+                mi = new JMenuItem("Delete subtree");
                 mi.addActionListener(new ActionListener()
                 {
                     @Override
@@ -1064,20 +1080,55 @@ public class MainWindow extends javax.swing.JFrame
         }
     }
     
-    protected void deleteItem()
+    protected boolean canRemoveItem()
+    {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+        Enumeration<DefaultMutableTreeNode> children = node.children();
+        while (children.hasMoreElements())
+        {
+            if (!canMoveLeftItem(children.nextElement()))
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    protected void removeItem(DefaultMutableTreeNode node)
+    {
+        Enumeration<DefaultMutableTreeNode> children = node.children();
+        while (children.hasMoreElements())
+        {
+            moveLeftItem(children.nextElement());
+        }
+        
+        deleteItem(node);
+    }
+    
+    protected void removeItem()
+    {
+        removeItem((DefaultMutableTreeNode) tree.getLastSelectedPathComponent());
+    }
+    
+    protected void deleteItem(DefaultMutableTreeNode node)
     {
         DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+        DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
+        
+        ((IItem) parent.getUserObject()).getChildren().remove((IItem) node.getUserObject());
+        
+        selectNode(parent);
+        model.removeNodeFromParent(node);
+        project.setModified();
+    }
+    
+    protected void deleteItem()
+    {
         TreePath[] paths = tree.getSelectionPaths();
         for (TreePath path : paths)
         {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-            DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
-            
-            ((IItem) parent.getUserObject()).getChildren().remove((IItem) node.getUserObject());
-            
-            selectNode(parent);
-            model.removeNodeFromParent(node);
-            project.setModified();
+            deleteItem((DefaultMutableTreeNode) path.getLastPathComponent());
         }
     }
     
@@ -1228,13 +1279,17 @@ public class MainWindow extends javax.swing.JFrame
         return node.getNextSibling() != null;
     }
     
-    protected boolean canMoveLeftItem()
+    protected boolean canMoveLeftItem(DefaultMutableTreeNode node)
     {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
         Object item = node.getUserObject();
         Object target = ((DefaultMutableTreeNode) node.getParent()).getUserObject();
         
         return !(item instanceof Amplifier || target instanceof Amplifier);
+    }
+    
+    protected boolean canMoveLeftItem()
+    {
+        return canMoveLeftItem((DefaultMutableTreeNode) tree.getLastSelectedPathComponent());
     }
     
     protected boolean canMoveRightItem()
@@ -1287,10 +1342,9 @@ public class MainWindow extends javax.swing.JFrame
         project.setModified();
     }
     
-    protected void moveLeftItem()
+    protected void moveLeftItem(DefaultMutableTreeNode node)
     {
         DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
         DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
         
         DefaultMutableTreeNode target = (DefaultMutableTreeNode) parent.getParent();
@@ -1302,7 +1356,12 @@ public class MainWindow extends javax.swing.JFrame
         
         model.removeNodeFromParent(node);
         model.insertNodeInto(node, target, pos);
-        
+    }
+    
+    protected void moveLeftItem()
+    {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+        moveLeftItem(node);
         selectNode(node);
         project.setModified();
     }

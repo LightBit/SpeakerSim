@@ -7,6 +7,7 @@
 *.zip
 *.tar.gz
 *.rar
+*.exe
 lib/
 jre/
 build/

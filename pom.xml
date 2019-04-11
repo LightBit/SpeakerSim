@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>SpeakerSim</groupId>
     <artifactId>SpeakerSim</artifactId>
-    <version>2019-04-09</version>
+    <version>2019-04-11</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -46,9 +46,9 @@
                             <mainClass>SpeakerSim.GUI.Main</mainClass>
                         </manifest>
                     </archive>
-                    <!--<archiverConfig>
+                    <archiverConfig>
                         <compress>false</compress>
-                    </archiverConfig>-->
+                    </archiverConfig>
                 </configuration>
                 <executions>
                     <execution>

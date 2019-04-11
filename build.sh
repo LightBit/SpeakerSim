@@ -6,10 +6,13 @@
 # Build using Maven
 mvn package
 
-# Copy final jar
-cp ./target/SpeakerSim-jar-with-dependencies.jar ./SpeakerSim.jar
+# Move final jar
+mv ./target/SpeakerSim-jar-with-dependencies.jar ./SpeakerSim.jar
 
-# Compress jar
+# Zip jar
+7za a -tzip -mx=9 SpeakerSim.zip SpeakerSim.jar
+
+# Recompress jar
 #rm -rf ./target/jar
 #unzip ./target/SpeakerSim-jar-with-dependencies.jar -d ./target/jar
 #cd ./target/jar

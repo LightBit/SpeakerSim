@@ -9,23 +9,25 @@
 ; You should have received a copy of the CC0 Public Domain Dedication.
 ; If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
-Name "SpeakerSim"
-Caption "SpeakerSim Setup"
-OutFile "SpeakerSimSetup.exe"
-
-VIAddVersionKey "ProductName" "SpeakerSim"
-VIAddVersionKey "FileDescription" "SpeakerSim"
-VIAddVersionKey "LegalCopyright" ""
-VIAddVersionKey "FileVersion" "0.0.0.0"
-VIProductVersion "0.0.0.0"
+SetCompressor /SOLID lzma
 
 !define PRODUCT_NAME "SpeakerSim"
 
+Name "${PRODUCT_NAME}"
+Caption "${PRODUCT_NAME} Setup"
+OutFile "${PRODUCT_NAME}Setup.exe"
+
+VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
+VIAddVersionKey "FileDescription" "Speaker simulation software"
+VIAddVersionKey "LegalCopyright" ""
+VIAddVersionKey "FileVersion" ""
+VIProductVersion "0.0.0.0"
+
+InstallDir "$APPDATA\${PRODUCT_NAME}"
 RequestExecutionLevel user
-AutoCloseWindow true
-InstallDir "$APPDATA\SpeakerSim"
 XPStyle on
-SetCompressor /SOLID zlib
+BrandingText "Nullsoft Install System"
+ShowInstDetails show
 
 !include "MUI2.nsh"
 

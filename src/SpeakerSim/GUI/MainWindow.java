@@ -29,7 +29,7 @@ import javax.swing.event.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.*;
 
-public class MainWindow extends javax.swing.JFrame
+public final class MainWindow extends javax.swing.JFrame
 {
     private File file;
     private final FileSelector fc;
@@ -52,7 +52,7 @@ public class MainWindow extends javax.swing.JFrame
             file = new File(arg);
             project = new Project(file);
             
-            versionCheck();
+            projectVersionCheck();
             
             setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersion() + ")");
         }
@@ -267,14 +267,56 @@ public class MainWindow extends javax.swing.JFrame
                 }
             }
         });
+        
+        newerVersionCheck();
     }
     
-    private void versionCheck()
+    private void projectVersionCheck()
     {
         if (project.Version.compareTo(Project.currentVersion()) > 0)
         {
             UI.warning("Project file was created with newer version. It may not work correctly!");
         }
+    }
+    
+    private static void newerVersionCheck()
+    {
+        (new Thread()
+        {
+            @Override
+            public void run()
+            {
+                try (InputStream in = new URL("https://gitlab.com/LightBit/SpeakerSim/snippets/1850994/raw").openStream())
+                {
+                    try (InputStreamReader reader = new InputStreamReader(in, "UTF-8"))
+                    {
+                        char[] buf = new char[100];
+                        int c = reader.read(buf, 0, 100);
+                        String version = new String(buf, 0, c).trim();
+                        String prefix = "SpeakerSim version ";
+
+                        if (version.startsWith(prefix) && version.replaceFirst(prefix, "").compareTo(Project.currentVersion()) > 0)
+                        {
+                            SwingUtilities.invokeLater(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    if (UI.ask(null, "New version is available. Would you like to update?"))
+                                    {
+                                        UI.openURL("https://gitlab.com/LightBit/SpeakerSim/releases");
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // ignore
+                }
+            }
+        }).start();
     }
     
     private IItem getSelectedItem()
@@ -2197,7 +2239,7 @@ public class MainWindow extends javax.swing.JFrame
                     file = fc.getSelectedFile();
                     project = new Project(file);
                     
-                    versionCheck();
+                    projectVersionCheck();
                     load();
                     
                     setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersion() + ")");

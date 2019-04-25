@@ -28,6 +28,7 @@ import javax.swing.filechooser.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
+import java.net.URI;
 
 public final class UI
 {
@@ -368,6 +369,39 @@ public final class UI
             if (tabs.getTitleAt(i) == tab)
             {
                 tabs.setSelectedIndex(i);
+            }
+        }
+    }
+    
+    public static void openURL(String url)
+    {
+        try
+        {
+            Desktop.getDesktop().browse(new URI(url));
+        }
+        catch (Exception ex)
+        {
+            try
+            {
+                String os = System.getProperty("os.name").toLowerCase();
+                Runtime rt = Runtime.getRuntime();
+
+                if (os.contains("win"))
+                {
+                    rt.exec("rundll32 url.dll,FileProtocolHandler " + url);
+                }
+                else if (os.contains("nux"))
+                {
+                    rt.exec("xdg-open " + url);
+                }
+                else if (os.contains("mac"))
+                {
+                    rt.exec("open " + url);
+                }
+            }
+            catch (Exception e)
+            {
+                
             }
         }
     }

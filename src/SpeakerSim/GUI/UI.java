@@ -19,6 +19,7 @@ package SpeakerSim.GUI;
 import SpeakerSim.Fnc;
 import SpeakerSim.HandledException;
 import SpeakerSim.Project;
+import io.sentry.Sentry;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -28,7 +29,14 @@ import javax.swing.filechooser.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URI;
+import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Enumeration;
 
 public final class UI
 {
@@ -241,13 +249,12 @@ public final class UI
     
     public static void exception(Component parent, Throwable e)
     {
-        //Runtime runtime = Runtime.getRuntime();
+        Sentry.capture(e);
         
-        String stackTrace = "SpeakerSim " + Project.currentVersion()
+        String stackTrace = "SpeakerSim " + Project.currentVersionString()
                 + "\r\n" + System.getProperty("java.runtime.name")
                 + " " + System.getProperty("java.runtime.version")
                 + " on " + System.getProperty("os.name")
-                //+ "\r\nMemory usage: " + runtime.totalMemory() / 1024 / 1024 + "/" + runtime.maxMemory() / 1024 / 1024
                 + "\r\n\r\nException:\r\n" + e.toString() 
                 + "\r\n\r\nStack trace:\r\n" + stackTraceToString(e);
 
@@ -329,6 +336,11 @@ public final class UI
         }
     }
     
+    public static void throwable(Throwable e)
+    {
+        throwable(null, e);
+    }
+    
     public static boolean ask(Component parent, String question)
     {
         int dialogButton = JOptionPane.showConfirmDialog(null, question, "Warning", JOptionPane.YES_NO_OPTION);
@@ -401,8 +413,59 @@ public final class UI
             }
             catch (Exception e)
             {
-                
+                // ignore
             }
+        }
+    }
+    
+    public static byte[] machineId()
+    {
+        try
+        {
+            MessageDigest hash = MessageDigest.getInstance("SHA-256");
+            
+            hash.update(System.getProperty("os.arch").getBytes());
+            hash.update(System.getProperty("os.name").getBytes());
+            
+            try
+            {
+                Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
+                while (nis.hasMoreElements())
+                {
+                    NetworkInterface ni = nis.nextElement();
+                    try
+                    {
+                        byte[] mac = ni.getHardwareAddress();
+                        if (mac != null)
+                        {
+                            hash.update(mac);
+                        }
+                    }
+                    catch (SocketException ex)
+                    {
+                        // ignore
+                    }
+                }
+            }
+            catch (SocketException ex)
+            {
+                // ignore
+            }
+            
+            try
+            {
+                hash.update(InetAddress.getLocalHost().getHostName().getBytes());
+            }
+            catch (UnknownHostException ex)
+            {
+                // ignore
+            }
+            
+            return hash.digest();
+        }
+        catch (NoSuchAlgorithmException ex)
+        {
+            return new byte[0];
         }
     }
 }

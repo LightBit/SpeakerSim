@@ -22,11 +22,14 @@ import com.eclipsesource.json.JsonValue;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 public class Project extends Item
 {
-    public String Version;
+    public Date Version;
     public Settings Settings;
     public Environment Environment;
     public Position CenterPosition;
@@ -35,7 +38,8 @@ public class Project extends Item
     private boolean modified;
     
     private static Project instance;
-    private static String currentVersion;
+    private static Date currentVersion;
+    private static final SimpleDateFormat verFormat = new SimpleDateFormat("yyyy-MM-dd");
     
     public static Project getInstance()
     {
@@ -57,7 +61,7 @@ public class Project extends Item
         modified = true;
     }
     
-    public static String currentVersion()
+    public static Date currentVersion()
     {
         if (currentVersion == null)
         {
@@ -65,14 +69,20 @@ public class Project extends Item
             {
                 final Properties properties = new Properties();
                 properties.load(Project.class.getClassLoader().getResourceAsStream("project.properties"));
-                currentVersion = properties.getProperty("version");
+                currentVersion = verFormat.parse(properties.getProperty("version"));
             }
-            catch (IOException ex)
+            catch (IOException | ParseException ex)
             {
+                currentVersion = new Date(0);
             }
         }
         
         return currentVersion;
+    }
+    
+    public static String currentVersionString()
+    {
+        return verFormat.format(currentVersion());
     }
     
     public Project()
@@ -93,7 +103,14 @@ public class Project extends Item
     public Project(JsonValue json)
     {
         JsonObject jsonObj = json.asObject();
-        Version = jsonObj.getString("Version", "");
+        try
+        {
+            Version = verFormat.parse(jsonObj.getString("Version", ""));
+        }
+        catch (ParseException ex)
+        {
+            Version = new Date(0);
+        }
         
         try
         {
@@ -133,7 +150,7 @@ public class Project extends Item
     {
         JsonObject json = Json.object();
         
-        json.add("Version", currentVersion());
+        json.add("Version", currentVersionString());
         json.add("Settings", Settings.toJSON());
         json.add("Environment", Environment.toJSON());
         json.add("ListeningPosition", ListeningPosition.toJSON());

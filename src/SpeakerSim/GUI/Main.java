@@ -16,10 +16,13 @@
 
 package SpeakerSim.GUI;
 
+import SpeakerSim.Project;
 import java.awt.*;
 import java.beans.*;
 import java.lang.reflect.*;
 import javax.swing.*;
+import io.sentry.Sentry;
+import java.util.Base64;
 
 public class Main
 {
@@ -30,9 +33,18 @@ public class Main
             @Override
             public void uncaughtException(Thread t, Throwable e)
             {
-                UI.throwable(null, e);
+                UI.throwable(e);
             }
         });
+        
+        Sentry.init();
+        Sentry.getContext().addTag("version", Project.currentVersionString());
+        Sentry.getContext().addTag("machine_id", Base64.getEncoder().encodeToString(UI.machineId()));
+        Sentry.getContext().addTag("arch", System.getProperty("os.arch"));
+        Sentry.getContext().addTag("os", System.getProperty("os.name"));
+        Sentry.getContext().addTag("os_version", System.getProperty("os.version"));
+        Sentry.getContext().addTag("java_runtime", System.getProperty("java.runtime.name"));
+        Sentry.getContext().addTag("java_version", System.getProperty("java.runtime.version"));
 
         try
         {
@@ -43,7 +55,7 @@ public class Main
         }
         catch (Exception ex)
         {
-
+            // ignore - non critical
         }
         
         try
@@ -55,7 +67,7 @@ public class Main
         }
         catch (Exception ex)
         {
-
+            // ignore - non critical
         }
         
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("permanentFocusOwner", new PropertyChangeListener()
@@ -93,7 +105,7 @@ public class Main
         }
         catch (Throwable ex)
         {
-            UI.throwable(null, ex);
+            UI.throwable(ex);
             System.exit(-1);
         }
     }

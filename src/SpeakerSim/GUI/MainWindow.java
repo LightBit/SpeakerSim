@@ -17,12 +17,14 @@
 package SpeakerSim.GUI;
 
 import SpeakerSim.*;
+import io.sentry.Sentry;
 import java.awt.Component;
 import java.awt.Rectangle;
 import java.awt.event.*;
 import java.beans.*;
 import java.io.*;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -54,11 +56,11 @@ public final class MainWindow extends javax.swing.JFrame
             
             projectVersionCheck();
             
-            setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersion() + ")");
+            setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersionString() + ")");
         }
         else
         {
-            setTitle("SpeakerSim (" + Project.currentVersion() + ")");
+            setTitle("SpeakerSim (" + Project.currentVersionString() + ")");
             
             project = new Project(getClass().getClassLoader().getResourceAsStream("default.ssim"));
         }
@@ -293,27 +295,33 @@ public final class MainWindow extends javax.swing.JFrame
                         char[] buf = new char[100];
                         int c = reader.read(buf, 0, 100);
                         String version = new String(buf, 0, c).trim();
-                        String prefix = "SpeakerSim version ";
-
-                        if (version.startsWith(prefix) && version.replaceFirst(prefix, "").compareTo(Project.currentVersion()) > 0)
+                        final String prefix = "SpeakerSim version ";
+                        
+                        if (version.startsWith(prefix))
                         {
-                            SwingUtilities.invokeLater(new Runnable()
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                            Date latest = sdf.parse(version.replaceFirst(prefix, ""));
+                            
+                            if (latest.compareTo(Project.currentVersion()) > 0)
                             {
-                                @Override
-                                public void run()
+                                SwingUtilities.invokeLater(new Runnable()
                                 {
-                                    if (UI.ask(null, "New version is available. Would you like to update?"))
+                                    @Override
+                                    public void run()
                                     {
-                                        UI.openURL("https://gitlab.com/LightBit/SpeakerSim/releases");
+                                        if (UI.ask(null, "New version is available. Would you like to update?"))
+                                        {
+                                            UI.openURL("https://gitlab.com/LightBit/SpeakerSim/releases");
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    // ignore
+                    Sentry.capture(ex);
                 }
             }
         }).start();
@@ -1125,10 +1133,10 @@ public final class MainWindow extends javax.swing.JFrame
     protected boolean canRemoveItem()
     {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-        Enumeration<DefaultMutableTreeNode> children = node.children();
+        Enumeration children = node.children();
         while (children.hasMoreElements())
         {
-            if (!canMoveLeftItem(children.nextElement()))
+            if (!canMoveLeftItem((DefaultMutableTreeNode) children.nextElement()))
             {
                 return false;
             }
@@ -1139,10 +1147,10 @@ public final class MainWindow extends javax.swing.JFrame
     
     protected void removeItem(DefaultMutableTreeNode node)
     {
-        Enumeration<DefaultMutableTreeNode> children = node.children();
+        Enumeration children = node.children();
         while (children.hasMoreElements())
         {
-            moveLeftItem(children.nextElement());
+            moveLeftItem((DefaultMutableTreeNode) children.nextElement());
         }
         
         deleteItem(node);

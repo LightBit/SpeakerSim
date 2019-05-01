@@ -105,17 +105,20 @@
                             <jar>SpeakerSim.jar</jar>
                             <dontWrapJar>true</dontWrapJar>
                             <outfile>SpeakerSim.exe</outfile>
-                            <downloadUrl>http://java.com/download</downloadUrl>
+                            <downloadUrl>https://adoptopenjdk.net/?jvmVariant=openj9</downloadUrl>
                             <classPath>
                                 <mainClass>SpeakerSim.GUI.Main</mainClass>
                             </classPath>
                             <icon>SpeakerSim.ico</icon>
                             <jre>
                                 <minVersion>1.7.0</minVersion>
-                                <jdkPreference>preferJre</jdkPreference>
                                 <path>jre</path>
-                                <bundledJreAsFallback>true</bundledJreAsFallback>
-                                <bundledJre64Bit>false</bundledJre64Bit>
+                                <opts>
+                                    <opt>-client</opt>
+                                    <opt>-XX:+IgnoreUnrecognizedVMOptions</opt>
+                                    <opt>-Xquickstart</opt>
+                                    <opt>-Xshareclasses</opt>
+                                </opts>
                             </jre>
                             <versionInfo>
                                 <fileVersion>0.0.0.0</fileVersion>

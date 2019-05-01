@@ -12,31 +12,33 @@ mv ./target/SpeakerSim-jar-with-dependencies.jar ./SpeakerSim.jar
 # Zip jar
 7za a -tzip -mx=9 SpeakerSim.zip SpeakerSim.jar
 
-# Recompress jar
-#rm -rf ./target/jar
-#unzip ./target/SpeakerSim-jar-with-dependencies.jar -d ./target/jar
-#cd ./target/jar
-#7za a -tzip -mx=9 ../../SpeakerSim.jar
-#cd ../../
+# Download OpenJDK with OpenJ9 for Windows 32-bit
+OPENJDK_WINDOWS_FILE=OpenJDK8U-jre_x86-32_windows_openj9_8u212b03_openj9-0.14.0.zip
+if [ ! -d ./jre ]; then
+	if [ ! -f $OPENJDK_WINDOWS_FILE ]; then
+		wget https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u212-b03_openj9-0.14.0/$OPENJDK_WINDOWS_FILE
+	fi
+	
+	unzip $OPENJDK_WINDOWS_FILE
+	mv ./jdk8u212-b03-jre ./jre
+fi
 
 # Windows setup
 makensis ./SpeakerSimSetup.nsi
 
 # Windows portable (.zip)
-#OPENJDK_WINDOWS_FILE=OpenJDK8U-jre_x86-32_windows_hotspot_8u202b08.zip
-#mkdir -r ./build/SpeakerSim
+#mkdir -p ./build/SpeakerSim
 #cd ./build/SpeakerSim
-#
-#if [ ! -d ./jre ]; then
-#	if [ ! -f $OPENJDK_WINDOWS_FILE ]; then
-#		wget https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u202-b08/$OPENJDK_WINDOWS_FILE
-#	fi
-#	
-#	unzip $OPENJDK_WINDOWS_FILE
-#	mv ./jdk8u202-b08-jre ./jre
-#fi
-#
+#cp -r ../../jre ./
 #cp ../../SpeakerSim.jar ./
 #cp ../../SpeakerSim.exe ./
-#7za a -tzip -mx=9 ../SpeakerSim.zip
+#cd ../
+#7za a -tzip -mx=9 ../SpeakerSimWindows.zip SpeakerSim
+#cd ../
+
+# Recompress jar
+#rm -rf ./target/jar
+#unzip ./target/SpeakerSim-jar-with-dependencies.jar -d ./target/jar
+#cd ./target/jar
+#7za a -tzip -mx=9 ../../SpeakerSim.jar
 #cd ../../

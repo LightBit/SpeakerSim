@@ -115,10 +115,10 @@ public class ResponsesWindow extends JDialog
             }
         });
         
-        this.addWindowListener(new WindowAdapter()
+        okButton.addActionListener(new ActionListener()
         {
             @Override
-            public void windowClosing(WindowEvent e)
+            public void actionPerformed(ActionEvent evt)
             {
                 List<ResponseData> hfrd = new ArrayList<ResponseData>();
                 List<ResponseData> vfrd = new ArrayList<ResponseData>();
@@ -152,8 +152,28 @@ public class ResponsesWindow extends JDialog
                 Collections.sort(vfrd);
                 drv.vFRD = new ResponseData[vfrd.size()];
                 drv.vFRD = vfrd.toArray(drv.vFRD);
+                
+                dispose();
             }
         });
+        
+        cancelButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent evt)
+            {
+                dispose();
+            }
+        });
+        
+        /*this.addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                
+            }
+        });*/
        
         editButton.addActionListener(new ActionListener()
         {
@@ -386,6 +406,9 @@ public class ResponsesWindow extends JDialog
         editButton = new javax.swing.JButton();
         exportButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
+        controlPanel = new javax.swing.JPanel();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Frequency response data");
@@ -440,13 +463,28 @@ public class ResponsesWindow extends JDialog
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         getContentPane().add(removeButton, gridBagConstraints);
 
+        okButton.setText("OK");
+        controlPanel.add(okButton);
+
+        cancelButton.setText("Cancel");
+        controlPanel.add(cancelButton);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 2;
+        getContentPane().add(controlPanel, gridBagConstraints);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JPanel controlPanel;
     private javax.swing.JButton editButton;
     private javax.swing.JButton exportButton;
     private javax.swing.JButton importButton;
     private javax.swing.JList<ResponseData> list;
+    private javax.swing.JButton okButton;
     private javax.swing.JButton removeButton;
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JTabbedPane tabs;

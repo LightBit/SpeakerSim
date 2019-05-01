@@ -604,7 +604,7 @@ public class DriverWindow extends javax.swing.JDialog
         CancelButton = new javax.swing.JButton();
         ImportButton = new javax.swing.JButton();
         ExportButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        scrollPane = new javax.swing.JScrollPane();
         propertiesPanel = new javax.swing.JPanel();
         lblName = new javax.swing.JLabel();
         lblCrossStart = new javax.swing.JLabel();
@@ -691,12 +691,9 @@ public class DriverWindow extends javax.swing.JDialog
         setTitle("Driver");
         setMinimumSize(new java.awt.Dimension(800, 600));
         setPreferredSize(new java.awt.Dimension(1000, 800));
-        java.awt.GridBagLayout layout1 = new java.awt.GridBagLayout();
-        layout1.columnWidths = new int[] {0, 5, 0};
-        layout1.rowHeights = new int[] {0, 5, 0};
-        getContentPane().setLayout(layout1);
+        getContentPane().setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.2;
@@ -745,13 +742,13 @@ public class DriverWindow extends javax.swing.JDialog
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         getContentPane().add(controlPanel, gridBagConstraints);
 
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setMinimumSize(new java.awt.Dimension(380, 400));
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(380, 700));
+        scrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setMinimumSize(new java.awt.Dimension(380, 400));
+        scrollPane.setPreferredSize(new java.awt.Dimension(380, 700));
 
         propertiesPanel.setMinimumSize(new java.awt.Dimension(300, 780));
         propertiesPanel.setPreferredSize(new java.awt.Dimension(300, 700));
@@ -1672,13 +1669,13 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(SPL_2_83VButton, gridBagConstraints);
 
-        jScrollPane1.setViewportView(propertiesPanel);
+        scrollPane.setViewportView(propertiesPanel);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        getContentPane().add(jScrollPane1, gridBagConstraints);
+        getContentPane().add(scrollPane, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -1971,7 +1968,6 @@ public class DriverWindow extends javax.swing.JDialog
     private javax.swing.JPanel controlPanel;
     private javax.swing.JCheckBox invertedCheckBox;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBL;
     private javax.swing.JLabel lblCms;
     private javax.swing.JLabel lblCrossEnd;
@@ -2005,6 +2001,7 @@ public class DriverWindow extends javax.swing.JDialog
     private javax.swing.JFormattedTextField n0Field;
     private javax.swing.JComboBox<String> powerFilterComboBox;
     private javax.swing.JPanel propertiesPanel;
+    private javax.swing.JScrollPane scrollPane;
     private javax.swing.JComboBox<String> shapeComboBox;
     private javax.swing.JTabbedPane tabs;
     // End of variables declaration//GEN-END:variables

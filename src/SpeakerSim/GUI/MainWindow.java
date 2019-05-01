@@ -288,7 +288,7 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void run()
             {
-                try (InputStream in = new URL("https://gitlab.com/LightBit/SpeakerSim/snippets/1850994/raw").openStream())
+                try (InputStream in = new URL("https://lightbit.gitlab.io/file/speakersim-version").openStream())
                 {
                     try (InputStreamReader reader = new InputStreamReader(in, "UTF-8"))
                     {
@@ -299,7 +299,7 @@ public final class MainWindow extends javax.swing.JFrame
                         
                         if (version.startsWith(prefix))
                         {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                             Date latest = sdf.parse(version.replaceFirst(prefix, ""));
                             
                             if (latest.compareTo(Project.currentVersion()) > 0)

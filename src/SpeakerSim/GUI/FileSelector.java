@@ -26,9 +26,15 @@ public class FileSelector extends JFileChooser
     
     public FileSelector(String defaultExtention)
     {
+        this(defaultExtention, false);
+    }
+    
+    public FileSelector(String defaultExtention, boolean allowOther)
+    {
         super();
         
         defaultExt = defaultExtention;
+        setAcceptAllFileFilterUsed(allowOther);
     }
     
     @Override

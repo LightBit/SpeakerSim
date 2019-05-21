@@ -21,8 +21,13 @@ import java.awt.*;
 import java.beans.*;
 import java.lang.reflect.*;
 import javax.swing.*;
-import io.sentry.Sentry;
 import java.util.Base64;
+import io.sentry.Sentry;
+import io.sentry.SentryClientFactory;
+import io.sentry.DefaultSentryClientFactory;
+import io.sentry.context.ContextManager;
+import io.sentry.context.SingletonContextManager;
+import io.sentry.dsn.Dsn;
 
 public class Main
 {
@@ -37,7 +42,15 @@ public class Main
             }
         });
         
-        Sentry.init();
+        SentryClientFactory scf = new DefaultSentryClientFactory()
+        {
+            @Override
+            protected ContextManager getContextManager(Dsn dsn)
+            {
+                return new SingletonContextManager();
+            }
+        };
+        Sentry.init(scf);
         Sentry.getContext().addTag("version", Project.currentVersionString());
         Sentry.getContext().addTag("machine_id", Base64.getEncoder().encodeToString(UI.machineId()));
         Sentry.getContext().addTag("arch", System.getProperty("os.arch"));

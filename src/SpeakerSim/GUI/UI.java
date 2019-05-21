@@ -362,6 +362,11 @@ public final class UI
         return JOptionPane.showConfirmDialog(parent, content, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION;
     }
     
+    public static boolean dialog(String title, Object content)
+    {
+        return JOptionPane.showConfirmDialog(null, content, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION;
+    }
+    
     public static String getSelectedTab(JTabbedPane tabs)
     {
         int index = tabs.getSelectedIndex();

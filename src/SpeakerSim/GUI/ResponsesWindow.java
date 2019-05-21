@@ -204,26 +204,15 @@ public class ResponsesWindow extends JDialog
             @Override
             public void actionPerformed(ActionEvent evt)
             {
-                FileSelector fc = new FileSelector(".frd");
-                fc.setFileFilter(new FileNameExtensionFilter("Frequency Response Data", "frd", "txt", "csv"));
-
-                if (fc.showOpenDialog(null) == FileSelector.APPROVE_OPTION)
+                ResponseData rd = importFRD();
+                if (rd != null)
                 {
-                    try
+                    rd = edit(rd, model.getSize() > 0, false);
+                    if (rd != null)
                     {
-                        ResponseData rd = new ResponseData(null);
-                        rd.importData(fc.getSelectedFile(), true);
-                        rd = edit(rd, false);
-                        if (rd != null)
-                        {
-                            model.addElement(rd);
-                            list.setSelectedValue(rd, true);
-                        }
+                        model.addElement(rd);
+                        list.setSelectedValue(rd, true);
                         refresh();
-                    }
-                    catch (IOException ex)
-                    {
-                        UI.throwable(null, ex);
                     }
                 }
             }
@@ -291,8 +280,30 @@ public class ResponsesWindow extends JDialog
             UI.setSelectedTab(tabs, selectedTab);
         }
     }
+    
+    public static ResponseData importFRD()
+    {
+        FileSelector fc = new FileSelector(".frd");
+        fc.setFileFilter(new FileNameExtensionFilter("Frequency Response Data", "frd", "txt", "csv"));
+
+        if (fc.showOpenDialog(null) == FileSelector.APPROVE_OPTION)
+        {
+            try
+            {
+                ResponseData rd = new ResponseData();
+                rd.importData(fc.getSelectedFile(), true);
+                return rd;
+            }
+            catch (IOException ex)
+            {
+                UI.throwable(null, ex);
+            }
+        }
+        
+        return null;
+    }
    
-    private ResponseData edit(ResponseData frd, boolean editing)
+    public static ResponseData editDialog(ResponseData frd, boolean showAngles)
     {
         String[] measures = { "volts", "watts" };
         JComboBox<String> inputMeasure = new JComboBox<String>(measures);
@@ -335,15 +346,20 @@ public class ResponsesWindow extends JDialog
             angle.setValue(frd.horizontalAngle);
         }
         
-        final JComponent[] inputs = new JComponent[]
+        final JComponent[] inputs = showAngles ? new JComponent[]
         {
-            new JLabel("Input: "), input, inputMeasure,
-            new JLabel("Distance (cm): "), distance,
-            new JLabel("Angle (°): "), angle, angleDirection,
+            new JLabel("Input: "), input, inputMeasure, new JSeparator(),
+            new JLabel("Distance (cm): "), distance, new JSeparator(),
+            minimumPhase, new JSeparator(),
+            new JLabel("Angle (°): "), angle, angleDirection
+        } : new JComponent[]
+        {
+            new JLabel("Input: "), input, inputMeasure, new JSeparator(),
+            new JLabel("Distance (cm): "), distance, new JSeparator(),
             minimumPhase
         };
         
-        if (UI.dialog(this, "FRD info", inputs))
+        if (UI.dialog("FRD info", inputs))
         {
             ResponseData rd = new ResponseData(null);
             rd.data = frd.data;
@@ -364,14 +380,6 @@ public class ResponsesWindow extends JDialog
             }
             
             rd.isMinimumPhase = minimumPhase.isSelected();
-            
-            if (model.contains(rd) && !(editing && rd.equals(frd)))
-            {
-                if (!UI.ask(this, "Data with same angles already exists.\nWould you like to overwrite it?"))
-                {
-                    return null;
-                }
-            }
            
             return rd;
         }
@@ -379,12 +387,29 @@ public class ResponsesWindow extends JDialog
         return null;
     }
     
+    private ResponseData edit(ResponseData frd, boolean showAngles, boolean editing)
+    {
+        ResponseData rd = editDialog(frd, showAngles);
+        if (rd != null)
+        {
+            if (model.contains(rd) && !(editing && rd.equals(frd)))
+            {
+                if (!UI.ask(this, "Data with same angles already exists.\nWould you like to overwrite it?"))
+                {
+                    return null;
+                }
+            }
+        }
+        
+        return rd;
+    }
+    
     private void edit()
     {
         ResponseData current_rd = list.getSelectedValue();
         if (current_rd != null)
         {
-            ResponseData new_rd = edit(current_rd, true);
+            ResponseData new_rd = edit(current_rd, model.getSize() > 1, true);
             if (new_rd != null)
             {
                 model.removeElement(current_rd);

@@ -1137,7 +1137,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="FRDButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Edit"/>
+                <Property name="text" type="java.lang.String" value="Manage"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="FRDButtonActionPerformed"/>

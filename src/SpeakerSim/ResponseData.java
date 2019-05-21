@@ -249,6 +249,11 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
         dist = new DistanceSimulation(distance);
     }
     
+    public ResponseData()
+    {
+        this(null);
+    }
+    
     @Override
     public JsonValue toJSON()
     {

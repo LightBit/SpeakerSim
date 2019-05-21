@@ -21,6 +21,7 @@ import SpeakerSim.Driver;
 import SpeakerSim.Fnc;
 import SpeakerSim.PowerFilter;
 import SpeakerSim.Project;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -87,11 +88,13 @@ public class DriverWindow extends javax.swing.JDialog
         {
             CrossStartField.setEnabled(true);
             CrossEndField.setEnabled(true);
+            FRDButton.setText("Manage");
         }
         else
         {
             CrossStartField.setEnabled(driver.hasZMA());
             CrossEndField.setEnabled(driver.hasZMA());
+            FRDButton.setText("Import");
         }
         
         if (driver.hasZMA())
@@ -554,42 +557,50 @@ public class DriverWindow extends javax.swing.JDialog
     
     private void refresh()
     {
-        setButton(VasButton, VasField.getText(), drv.calcVas(project.Environment.AirDensity, project.Environment.SpeedOfSound) * 1000);
-        setButton(FsButton, FsField.getText(), drv.calcFs());
-        setButton(QesButton, QesField.getText(), drv.calcQes());
-        setButton(QmsButton, QmsField.getText(), drv.calcQms());
-        setButton(QtsButton, QtsField.getText(), drv.calcQts());
-        setButton(BLButton, BLField.getText(), drv.calcBl());
-        setButton(SdButton, SdField.getText(), drv.calcSd() * 10000);
-        setButton(DiaButton, DiaField.getText(), drv.calcDia() * 1000);
-        setButton(VdButton, VdField.getText(), drv.calcVd() * 1000000);
-        setButton(CmsButton, CmsField.getText(), drv.calcCms(project.Environment.AirDensity, project.Environment.SpeedOfSound) * 1000);
-        setButton(MmsButton, MmsField.getText(), drv.calcMms() * 1000);
-        setButton(RmsButton, RmsField.getText(), drv.calcRms());
-        setButton(n0Button, n0Field.getText(), drv.calcN0(project.Environment.AirDensity, project.Environment.SpeedOfSound) * 100);
-        setButton(SPL_1WButton, SPL_1WField.getText(), drv.calcSPL_1W());
-        setButton(SPL_2_83VButton, SPL_2_83VField.getText(), drv.calcSPL_2_83V());
+        setButton(VasButton, VasField, drv.calcVas(project.Environment.AirDensity, project.Environment.SpeedOfSound) * 1000);
+        setButton(FsButton, FsField, drv.calcFs());
+        setButton(QesButton, QesField, drv.calcQes());
+        setButton(QmsButton, QmsField, drv.calcQms());
+        setButton(QtsButton, QtsField, drv.calcQts());
+        setButton(BLButton, BLField, drv.calcBl());
+        setButton(SdButton, SdField, drv.calcSd() * 10000);
+        setButton(DiaButton, DiaField, drv.calcDia() * 1000);
+        setButton(VdButton, VdField, drv.calcVd() * 1000000);
+        setButton(CmsButton, CmsField, drv.calcCms(project.Environment.AirDensity, project.Environment.SpeedOfSound) * 1000);
+        setButton(MmsButton, MmsField, drv.calcMms() * 1000);
+        setButton(RmsButton, RmsField, drv.calcRms());
+        setButton(n0Button, n0Field, drv.calcN0(project.Environment.AirDensity, project.Environment.SpeedOfSound) * 100);
+        setButton(SPL_1WButton, SPL_1WField, drv.calcSPL_1W());
+        setButton(SPL_2_83VButton, SPL_2_83VField, drv.calcSPL_2_83V());
 
         renderGraphs();
     }
     
-    private static void setButton(JButton button, String value, double calcValue)
+    private static void setButton(JButton button, JFormattedTextField field, double calcValue)
     {
-        if (!Double.isNaN(calcValue) && !Double.isInfinite(calcValue) && calcValue > 0)
+        try
         {
-            String text = Fnc.roundedDecimalFormat(calcValue);
-            if (!text.equals(value))
+            double value = UI.getDouble(field);
+            String calcText = Fnc.roundedDecimalFormat(calcValue);
+            double diff = Math.abs((Fnc.parseNumber(calcText).doubleValue() - value) / value);
+            
+            if (!Double.isNaN(calcValue) && !Double.isInfinite(calcValue) && calcValue > 0 && diff > 0.01)
             {
-                button.setText(text);
+                button.setText(calcText);
+                button.setForeground(diff > 0.1 ? Color.RED : Color.BLACK);
                 button.setOpaque(true);
                 button.setContentAreaFilled(true);
                 button.setBorderPainted(true);
                 button.setEnabled(true);
                 return;
             }
+            
+            UI.hideButton(button);
         }
-        
-        UI.hideButton(button);
+        catch (ParseException ex)
+        {
+            UI.throwable(ex);
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -1426,7 +1437,7 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblPowerFilter, gridBagConstraints);
 
-        FRDButton.setText("Edit");
+        FRDButton.setText("Manage");
         FRDButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -1799,11 +1810,31 @@ public class DriverWindow extends javax.swing.JDialog
     {//GEN-HEADEREND:event_FRDButtonActionPerformed
         try
         {
-            new ResponsesWindow((java.awt.Frame) SwingUtilities.getWindowAncestor(this), drv).setVisible(true);
+            if (!drv.hasFRD())
+            {
+                drv.FRD = ResponsesWindow.importFRD();
+                if (drv.hasFRD())
+                {
+                    drv.FRD = ResponsesWindow.editDialog(drv.FRD, false);
+                }
+            }
             
-            boolean cross = drv.hasZMA() || drv.hasFRD();
-            CrossStartField.setEnabled(cross);
-            CrossEndField.setEnabled(cross);
+            if (drv.hasFRD())
+            {
+                new ResponsesWindow((java.awt.Frame) SwingUtilities.getWindowAncestor(this), drv).setVisible(true);
+
+                boolean cross = drv.hasZMA() || drv.hasFRD();
+                CrossStartField.setEnabled(cross);
+                CrossEndField.setEnabled(cross);
+                if (drv.hasFRD())
+                {
+                    FRDButton.setText("Manage");
+                }
+                else
+                {
+                    FRDButton.setText("Import");
+                }
+            }
         }
         catch (Exception ex)
         {

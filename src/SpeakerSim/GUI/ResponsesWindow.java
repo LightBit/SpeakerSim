@@ -205,7 +205,7 @@ public class ResponsesWindow extends JDialog
             public void actionPerformed(ActionEvent evt)
             {
                 FileSelector fc = new FileSelector(".frd");
-                fc.setFileFilter(new FileNameExtensionFilter("Frequency Response Data", "frd"));
+                fc.setFileFilter(new FileNameExtensionFilter("Frequency Response Data", "frd", "txt", "csv"));
 
                 if (fc.showOpenDialog(null) == FileSelector.APPROVE_OPTION)
                 {

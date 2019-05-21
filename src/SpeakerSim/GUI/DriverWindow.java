@@ -1867,7 +1867,7 @@ public class DriverWindow extends javax.swing.JDialog
             else
             {
                 FileSelector fc = new FileSelector(".zma");
-                fc.setFileFilter(new FileNameExtensionFilter("Impedance Data", "zma"));
+                fc.setFileFilter(new FileNameExtensionFilter("Impedance Data", "zma", "txt", "csv"));
 
                 if (fc.showOpenDialog(this) == FileSelector.APPROVE_OPTION)
                 {

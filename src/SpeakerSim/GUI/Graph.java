@@ -18,6 +18,7 @@ package SpeakerSim.GUI;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.text.NumberFormat;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.LogAxis;
@@ -41,13 +42,13 @@ public class Graph
     public Graph(String graphTitle, String xAxis, String yAxis)
     {
         this.xAxis = new LogAxis(xAxis);
+        this.xAxis.setNumberFormatOverride(NumberFormat.getInstance());
         this.xAxis.setBase(10);
         this.xAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         this.xAxis.setLowerMargin(0);
         this.xAxis.setUpperMargin(0);
     
         this.yAxis = new NumberAxis(yAxis);
-        this.yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         
         series = new XYSeries(graphTitle);
         

@@ -109,22 +109,7 @@ public final class MainWindow extends javax.swing.JFrame
                 }
                 else
                 {
-                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) newPath.getLastPathComponent();
-                    
-                    if (oldPath != null || selectedNode.isRoot())
-                    {
-                        List<Speaker> speakers = getSpeakers(selectedNode);
-                        project.CenterPosition = new Position(0, 0, 0);
-
-                        for (Speaker speaker : speakers)
-                        {
-                            project.CenterPosition = project.CenterPosition.add(speaker.Position);
-                        }
-                        project.CenterPosition = project.CenterPosition.divide(speakers.size());
-
-                        ((IItem) selectedNode.getUserObject()).refresh();
-                        refreshNode();
-                    }
+                    showNode((DefaultMutableTreeNode) newPath.getLastPathComponent());
                 }
             }
         });
@@ -853,7 +838,6 @@ public final class MainWindow extends javax.swing.JFrame
         }
         
         project.setModified();
-        item.refresh();
         selectNode(node);
         showNode(node);
     }
@@ -1168,8 +1152,8 @@ public final class MainWindow extends javax.swing.JFrame
         
         ((IItem) parent.getUserObject()).getChildren().remove((IItem) node.getUserObject());
         
-        selectNode(parent);
         model.removeNodeFromParent(node);
+        selectNode(parent);
         project.setModified();
     }
     
@@ -1634,8 +1618,21 @@ public final class MainWindow extends javax.swing.JFrame
     
     private void showNode(final DefaultMutableTreeNode node)
     {
-        // update properties panel
+        // calculate center of all speakers
+        List<Speaker> speakers = getSpeakers(node);
+        project.CenterPosition = new Position(0, 0, 0);
+
+        for (Speaker speaker : speakers)
+        {
+            project.CenterPosition = project.CenterPosition.add(speaker.Position);
+        }
+        project.CenterPosition = project.CenterPosition.divide(speakers.size());
+
+        // refresh item
         final IItem item = (IItem) node.getUserObject();
+        item.refresh();
+        
+        // update properties panel
         showPanels(item);
 
         if (bafflePanel != null)
@@ -1859,16 +1856,10 @@ public final class MainWindow extends javax.swing.JFrame
         worker.start();
     }
     
-    public void refreshNode()
-    {
-        showNode((DefaultMutableTreeNode) tree.getLastSelectedPathComponent());
-    }
-    
     public void refresh()
     {
         project.setModified();
-        getSelectedItem().refresh();
-        refreshNode();
+        showNode((DefaultMutableTreeNode) tree.getLastSelectedPathComponent());
     }
     
     private void addChildren(DefaultMutableTreeNode node, List<IItem> children)

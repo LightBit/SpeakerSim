@@ -2191,7 +2191,7 @@ public final class MainWindow extends javax.swing.JFrame
             {
                 file = fc.getSelectedFile();
                 
-                setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersion() + ")");
+                setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersionString() + ")");
                 
                 project.save(file);
                 return true;
@@ -2241,7 +2241,7 @@ public final class MainWindow extends javax.swing.JFrame
                     projectVersionCheck();
                     load();
                     
-                    setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersion() + ")");
+                    setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersionString() + ")");
                 }
             }
         }
@@ -2284,7 +2284,7 @@ public final class MainWindow extends javax.swing.JFrame
             {
                 if (new EnvironmentWindow(this, p.Environment, p.Settings.RoomSimulation).showDialog())
                 {
-                    setTitle("SpeakerSim (" + Project.currentVersion() + ")");
+                    setTitle("SpeakerSim (" + Project.currentVersionString() + ")");
                     
                     file = null;
                     project = p;

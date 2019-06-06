@@ -83,43 +83,32 @@ public class Position implements JSONable
         return json;
     }
     
-    public static double distance(Position a, Position b)
+    public double distance(Position p)
     {
-        double x = a.X - b.X;
-        double y = a.Y - b.Y;
-        double z = a.Z - b.Z;
+        double x = X - p.X;
+        double y = Y - p.Y;
+        double z = Z - p.Z;
 
         return Math.sqrt(x * x + y * y + z * z);
     }
     
-    public double distance(Position x)
+    public double angle(Position p)
     {
-        return distance(this, x);
+        double cX = Y * p.Z - Z * p.Y;
+        double cY = Z * p.X - X * p.Z;
+        double cZ = X * p.Y - Y * p.X;
+
+        return Math.toDegrees(Math.atan2(Math.sqrt(cX * cX + cY * cY + cZ * cZ), X * p.X + Y * p.Y + Z * p.Z));
     }
     
-    private static double angle(double a1, double b1, double a2, double b2)
+    public double horizontalAngle(Position p)
     {
-        return Math.toDegrees(Math.atan2(b2 - b1, a2 - a1));
+        return Math.toDegrees(Math.atan2(p.X - X, p.Y - Y)) - (HorizontalAngle - p.HorizontalAngle);
     }
     
-    public static double horizontalAngle(Position a, Position b)
+    public double verticalAngle(Position p)
     {
-        return angle(a.Y, a.X, b.Y, b.X) - (a.HorizontalAngle - b.HorizontalAngle);
-    }
-    
-    public double horizontalAngle(Position x)
-    {
-        return horizontalAngle(this, x);
-    }
-    
-    public static double verticalAngle(Position a, Position b)
-    {
-        return angle(a.Y, a.Z, b.Y, b.Z) - (a.VerticalAngle - b.VerticalAngle);
-    }
-    
-    public double verticalAngle(Position x)
-    {
-        return verticalAngle(this, x);
+        return Math.toDegrees(Math.atan2(p.Z - Z, p.Y - Y)) - (VerticalAngle - p.VerticalAngle);
     }
     
     public Position add(double distance, double horizontalAngle, double verticalAngle)
@@ -127,7 +116,10 @@ public class Position implements JSONable
         horizontalAngle = Math.toRadians(HorizontalAngle + horizontalAngle);
         verticalAngle = Math.toRadians(VerticalAngle + verticalAngle);
         
-        return new Position(X + Math.sin(horizontalAngle) * distance, Y + Math.cos(horizontalAngle) * Math.cos(verticalAngle) * distance, Z + Math.sin(verticalAngle) * distance);
+        return new Position(
+            X + Math.sin(horizontalAngle) * distance,
+            Y + Math.cos(horizontalAngle) * Math.cos(verticalAngle) * distance,
+            Z + Math.sin(verticalAngle) * distance);
     }
     
     public Position add(Position p)
@@ -138,27 +130,5 @@ public class Position implements JSONable
     public Position divide(double x)
     {
         return new Position(X / x, Y / x, Z / x, HorizontalAngle / x, VerticalAngle / x);
-    }
-    
-    public static Position average(Position... positions)
-    {
-        Position center = new Position(0, 0, 0);
-        
-        for (Position p : positions)
-        {
-            center.X += p.X;
-            center.Y += p.Y;
-            center.Z += p.Z;
-            center.HorizontalAngle += p.HorizontalAngle;
-            center.VerticalAngle += p.VerticalAngle;
-        }
-        
-        center.X /= positions.length;
-        center.Y /= positions.length;
-        center.Z /= positions.length;
-        center.HorizontalAngle /= positions.length;
-        center.VerticalAngle /= positions.length;
-        
-        return center;
     }
 }

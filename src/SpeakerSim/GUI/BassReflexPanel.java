@@ -103,10 +103,10 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, main.project.Environment.RoomX * 100))
+                if (listen && UI.validate(e, 0, Environment.getInstance().RoomX * 100))
                 {
                     speaker.BassReflex.PortPosition.X = UI.getDouble(e) / 100;
-                    portPositionDistanceField.setValue(main.project.ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
+                    portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
                     main.refresh();
                 }
             }
@@ -117,10 +117,10 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, main.project.Environment.RoomY * 100))
+                if (listen && UI.validate(e, 0, Environment.getInstance().RoomY * 100))
                 {
                     speaker.BassReflex.PortPosition.Y = UI.getDouble(e) / 100;
-                    portPositionDistanceField.setValue(main.project.ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
+                    portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
                     main.refresh();
                 }
             }
@@ -131,10 +131,10 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, main.project.Environment.RoomZ * 100))
+                if (listen && UI.validate(e, 0, Environment.getInstance().RoomZ * 100))
                 {
                     speaker.BassReflex.PortPosition.Z = UI.getDouble(e) / 100;
-                    portPositionDistanceField.setValue(main.project.ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
+                    portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
                     main.refresh();
                 }
             }
@@ -166,7 +166,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         portPositionXField.setValue(speaker.BassReflex.PortPosition.X * 100);
         portPositionYField.setValue(speaker.BassReflex.PortPosition.Y * 100);
         portPositionZField.setValue(speaker.BassReflex.PortPosition.Z * 100);
-        portPositionDistanceField.setValue(main.project.ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
+        portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
         
         listen = true;
     }
@@ -180,16 +180,16 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         cone = new Graph("Cone response", "Hz", "dB");
         port = new Graph("Port response", "Hz", "dB");
         
-        for (double f = main.project.Settings.StartFrequency; f <= main.project.Settings.EndFrequency; f *= main.project.Settings.multiplier())
+        for (double f = Project.getInstance().Settings.StartFrequency; f <= Project.getInstance().Settings.EndFrequency; f *= Project.getInstance().Settings.multiplier())
         {
             box.add(sim.dBmag(f), f);
             cone.add(sim.dBmagCone(f), f);
             port.add(sim.dBmagPort(f), f);
         }
         
-        box.setYRange(box.getMaxY() - main.project.Settings.dBRange, box.getMaxY() + 1);
-        cone.setYRange(cone.getMaxY() - main.project.Settings.dBRange, cone.getMaxY() + 1);
-        port.setYRange(port.getMaxY() - main.project.Settings.dBRange, port.getMaxY() + 1);
+        box.setYRange(box.getMaxY() - Project.getInstance().Settings.dBRange, box.getMaxY() + 1);
+        cone.setYRange(cone.getMaxY() - Project.getInstance().Settings.dBRange, cone.getMaxY() + 1);
+        port.setYRange(port.getMaxY() - Project.getInstance().Settings.dBRange, port.getMaxY() + 1);
         
         tabs.addTab("Enclosure response", box.getGraph());
         tabs.addTab("Cone response", cone.getGraph());
@@ -408,9 +408,9 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
 
     private void portCalcButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_portCalcButtonActionPerformed
     {//GEN-HEADEREND:event_portCalcButtonActionPerformed
-        if (new PortCalculator(null, main.project, speaker.BassReflex, (BassReflexSimulation) speaker.getSimulation()).showDialog())
+        if (new PortCalculator(null, Project.getInstance(), speaker.BassReflex, (BassReflexSimulation) speaker.getSimulation()).showDialog())
         {
-            main.project.setModified();
+            Project.getInstance().setModified();
         }
     }//GEN-LAST:event_portCalcButtonActionPerformed
 

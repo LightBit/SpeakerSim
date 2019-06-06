@@ -36,7 +36,6 @@ public final class MainWindow extends javax.swing.JFrame
     private File file;
     private final FileSelector fc;
     private boolean listen = true;
-    public Project project;
     
     private double[] freq;
     private double[] response;
@@ -52,7 +51,7 @@ public final class MainWindow extends javax.swing.JFrame
         if (arg != null)
         {
             file = new File(arg);
-            project = new Project(file);
+            Project.setInstance(new Project(file));
             
             projectVersionCheck();
             
@@ -62,7 +61,7 @@ public final class MainWindow extends javax.swing.JFrame
         {
             setTitle("SpeakerSim (" + Project.currentVersionString() + ")");
             
-            project = new Project(getClass().getClassLoader().getResourceAsStream("default.ssim"));
+            Project.setInstance(new Project(getClass().getClassLoader().getResourceAsStream("default.ssim")));
         }
         
         initComponents();
@@ -221,9 +220,9 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0, project.Environment.RoomX * 100))
+                if (UI.validate(e, 0, Environment.getInstance().RoomX * 100))
                 {
-                    project.ListeningPosition.X = UI.getDouble(e) / 100;
+                    Project.getInstance().ListeningPosition.X = UI.getDouble(e) / 100;
                     refresh();
                 }
             }
@@ -234,9 +233,9 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0, project.Environment.RoomY * 100))
+                if (UI.validate(e, 0, Environment.getInstance().RoomY * 100))
                 {
-                    project.ListeningPosition.Y = UI.getDouble(e) / 100;
+                    Project.getInstance().ListeningPosition.Y = UI.getDouble(e) / 100;
                     refresh();
                 }
             }
@@ -247,9 +246,9 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0, project.Environment.RoomZ * 100))
+                if (UI.validate(e, 0, Environment.getInstance().RoomZ * 100))
                 {
-                    project.ListeningPosition.Z = UI.getDouble(e) / 100;
+                    Project.getInstance().ListeningPosition.Z = UI.getDouble(e) / 100;
                     refresh();
                 }
             }
@@ -260,7 +259,7 @@ public final class MainWindow extends javax.swing.JFrame
     
     private void projectVersionCheck()
     {
-        if (project.Version.compareTo(Project.currentVersion()) > 0)
+        if (Project.getInstance().Version.compareTo(Project.currentVersion()) > 0)
         {
             UI.warning("Project file was created with newer version. It may not work correctly!");
         }
@@ -837,7 +836,7 @@ public final class MainWindow extends javax.swing.JFrame
             targetItem.getChildren().add(item);
         }
         
-        project.setModified();
+        Project.getInstance().setModified();
         selectNode(node);
         showNode(node);
     }
@@ -851,7 +850,7 @@ public final class MainWindow extends javax.swing.JFrame
     {
         if (item instanceof Speaker)
         {
-            if (new DriverWindow(this, project, ((Speaker) item).Driver).showDialog())
+            if (new DriverWindow(this, Project.getInstance(), ((Speaker) item).Driver).showDialog())
             {
                 return true;
             }
@@ -1154,7 +1153,7 @@ public final class MainWindow extends javax.swing.JFrame
         
         model.removeNodeFromParent(node);
         selectNode(parent);
-        project.setModified();
+        Project.getInstance().setModified();
     }
     
     protected void deleteItem()
@@ -1197,7 +1196,7 @@ public final class MainWindow extends javax.swing.JFrame
                 
                 addItemChildren(parent, item);
                 
-                project.setModified();
+                Project.getInstance().setModified();
             }
         }
         catch (Exception ex)
@@ -1355,7 +1354,7 @@ public final class MainWindow extends javax.swing.JFrame
         p.getChildren().add(pos, (IItem) node.getUserObject());
         
         selectNode(node);
-        project.setModified();
+        Project.getInstance().setModified();
     }
     
     protected void moveDownItem()
@@ -1373,7 +1372,7 @@ public final class MainWindow extends javax.swing.JFrame
         p.getChildren().add(pos, (IItem) node.getUserObject());
         
         selectNode(node);
-        project.setModified();
+        Project.getInstance().setModified();
     }
     
     protected void moveLeftItem(DefaultMutableTreeNode node)
@@ -1397,7 +1396,7 @@ public final class MainWindow extends javax.swing.JFrame
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
         moveLeftItem(node);
         selectNode(node);
-        project.setModified();
+        Project.getInstance().setModified();
     }
     
     protected void moveRightItem()
@@ -1415,7 +1414,7 @@ public final class MainWindow extends javax.swing.JFrame
         model.insertNodeInto(node, target, target.getChildCount());
         
         selectNode(node);
-        project.setModified();
+        Project.getInstance().setModified();
     }
     
     protected boolean canPasteItem()
@@ -1450,20 +1449,20 @@ public final class MainWindow extends javax.swing.JFrame
             
             addItemChildren(parent, item);
             
-            project.setModified();
+            Project.getInstance().setModified();
         }
     }
     
     private void createTables()
     {
-        freq = new double[project.Settings.Points - 1];
+        freq = new double[Project.getInstance().Settings.Points - 1];
         response = new double[freq.length];
         responsePhase = new double[freq.length];
         impedance = new double[freq.length];
         impedancePhase = new double[freq.length];
 
-        double f = project.Settings.StartFrequency;
-        double m = project.Settings.multiplier();
+        double f = Project.getInstance().Settings.StartFrequency;
+        double m = Project.getInstance().Settings.multiplier();
         for (int i = 0; i < freq.length; i++)
         {
             freq[i] = f;
@@ -1512,7 +1511,7 @@ public final class MainWindow extends javax.swing.JFrame
             }
             else
             {
-                UI.setPanelEnabled((JPanel) bafflePanel, project.Settings.BaffleSimulation);
+                UI.setPanelEnabled((JPanel) bafflePanel, Project.getInstance().Settings.BaffleSimulation);
             }
             
             if (driverPositionPanel == null)
@@ -1609,8 +1608,8 @@ public final class MainWindow extends javax.swing.JFrame
     private Complex totalResponse(IItem item, double f)
     {
         Complex r = item.response(f);
-        Complex baffleResponse = project.Settings.BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
-        Complex roomResponse = project.Settings.RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
+        Complex baffleResponse = Project.getInstance().Settings.BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
+        Complex roomResponse = Project.getInstance().Settings.RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
         return r.multiply(baffleResponse).multiply(roomResponse);
     }
     
@@ -1620,13 +1619,13 @@ public final class MainWindow extends javax.swing.JFrame
     {
         // calculate center of all speakers
         List<Speaker> speakers = getSpeakers(node);
-        project.CenterPosition = new Position(0, 0, 0);
+        Project.getInstance().CenterPosition = new Position(0, 0, 0);
 
         for (Speaker speaker : speakers)
         {
-            project.CenterPosition = project.CenterPosition.add(speaker.Position);
+            Project.getInstance().CenterPosition = Project.getInstance().CenterPosition.add(speaker.Position);
         }
-        project.CenterPosition = project.CenterPosition.divide(speakers.size());
+        Project.getInstance().CenterPosition = Project.getInstance().CenterPosition.divide(speakers.size());
 
         // refresh item
         final IItem item = (IItem) node.getUserObject();
@@ -1701,8 +1700,8 @@ public final class MainWindow extends javax.swing.JFrame
                             double f = freq[i];
 
                             Complex r = item.response(f);
-                            Complex baffleResponse = project.Settings.BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
-                            Complex roomResponse = project.Settings.RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
+                            Complex baffleResponse = Project.getInstance().Settings.BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
+                            Complex roomResponse = Project.getInstance().Settings.RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
                             r = r.multiply(baffleResponse).multiply(roomResponse);
 
                             response[i] = Fnc.toDecibels(r.abs());
@@ -1722,9 +1721,9 @@ public final class MainWindow extends javax.swing.JFrame
                             room[i] = Fnc.toDecibels(roomResponse.abs());
                         }
 
-                        if (project.Settings.Smoothing > 0)
+                        if (Project.getInstance().Settings.Smoothing > 0)
                         {
-                            int points = (int)Math.round(project.Settings.pointsPerOctave()) / project.Settings.Smoothing;
+                            int points = (int)Math.round(Project.getInstance().Settings.pointsPerOctave()) / Project.getInstance().Settings.Smoothing;
 
                             response = Fnc.smooth(response, points);
                             listeningWindow = Fnc.smooth(listeningWindow, points);
@@ -1735,9 +1734,9 @@ public final class MainWindow extends javax.swing.JFrame
                             room = Fnc.smooth(room, points);
                         }
 
-                        groupDelay = Fnc.smooth(groupDelay, (int)Math.round(project.Settings.pointsPerOctave()) / (project.Settings.Smoothing > 0 ? Math.min(3, project.Settings.Smoothing) : 3));
-                        maxPower = Fnc.smooth(maxPower, (int)Math.round(project.Settings.pointsPerOctave()) / (project.Settings.Smoothing > 0 ? Math.min(6, project.Settings.Smoothing) : 6));
-                        filter = Fnc.smooth(filter, (int)Math.round(project.Settings.pointsPerOctave()) / (project.Settings.Smoothing > 0 ? Math.min(6, project.Settings.Smoothing) : 6));
+                        groupDelay = Fnc.smooth(groupDelay, (int)Math.round(Project.getInstance().Settings.pointsPerOctave()) / (Project.getInstance().Settings.Smoothing > 0 ? Math.min(3, Project.getInstance().Settings.Smoothing) : 3));
+                        maxPower = Fnc.smooth(maxPower, (int)Math.round(Project.getInstance().Settings.pointsPerOctave()) / (Project.getInstance().Settings.Smoothing > 0 ? Math.min(6, Project.getInstance().Settings.Smoothing) : 6));
+                        filter = Fnc.smooth(filter, (int)Math.round(Project.getInstance().Settings.pointsPerOctave()) / (Project.getInstance().Settings.Smoothing > 0 ? Math.min(6, Project.getInstance().Settings.Smoothing) : 6));
 
                         final Graph graphSPL = new Graph("Frequency response", "Hz", freq, "dB", response);
                         final Graph graphPower = new Graph("Power response", "Hz", freq, "dB", power);
@@ -1753,11 +1752,11 @@ public final class MainWindow extends javax.swing.JFrame
                         final Graph graphRoom = new Graph("Room", "Hz", freq, "dB", room);
                         final Graph graphImpedance = new Graph("Impedance", "Hz", freq, "Ω", impedance);
 
-                        graphSPL.setYRange(graphSPL.getMaxY() - project.Settings.dBRange, graphSPL.getMaxY() + 1);
-                        graphListeningWindow.setYRange(graphListeningWindow.getMaxY() - project.Settings.dBRange, graphListeningWindow.getMaxY() + 1);
-                        graphPower.setYRange(graphPower.getMaxY() - project.Settings.dBRange, graphPower.getMaxY() + 1);
-                        graphDirectivity.setYRange(0, project.Settings.dBRange);
-                        graphMaxPower.setYRange(0, Math.min(project.Settings.MaxPower, graphMaxPower.getMaxY() + 1));
+                        graphSPL.setYRange(graphSPL.getMaxY() - Project.getInstance().Settings.dBRange, graphSPL.getMaxY() + 1);
+                        graphListeningWindow.setYRange(graphListeningWindow.getMaxY() - Project.getInstance().Settings.dBRange, graphListeningWindow.getMaxY() + 1);
+                        graphPower.setYRange(graphPower.getMaxY() - Project.getInstance().Settings.dBRange, graphPower.getMaxY() + 1);
+                        graphDirectivity.setYRange(0, Project.getInstance().Settings.dBRange);
+                        graphMaxPower.setYRange(0, Math.min(Project.getInstance().Settings.MaxPower, graphMaxPower.getMaxY() + 1));
                         graphExcursion.setYRange(0, graphExcursion.getMaxY() + 1);
                         graphPhase.addYMark(0, "");
                         
@@ -1766,8 +1765,8 @@ public final class MainWindow extends javax.swing.JFrame
                             graphExcursion.addYMark(speakers.get(0).Driver.Xmax * 1000, "Xmax");
                         }
                         
-                        graphBaffle.setYRange(graphBaffle.getMaxY() - project.Settings.dBRange, graphBaffle.getMaxY() + 1);
-                        graphImpedance.setYRange(0, Math.min(graphImpedance.getMaxY() + 1, project.Settings.MaxImpedance));
+                        graphBaffle.setYRange(graphBaffle.getMaxY() - Project.getInstance().Settings.dBRange, graphBaffle.getMaxY() + 1);
+                        graphImpedance.setYRange(0, Math.min(graphImpedance.getMaxY() + 1, Project.getInstance().Settings.MaxImpedance));
 
                         SwingUtilities.invokeLater(new Runnable()
                         {
@@ -1820,7 +1819,7 @@ public final class MainWindow extends javax.swing.JFrame
                         }
                         
                         final Graph graphImpedance = new Graph("Impedance", "Hz", freq, "Ω", impedance);
-                        graphImpedance.setYRange(0, Math.min(graphImpedance.getMaxY() + 1, project.Settings.MaxImpedance));
+                        graphImpedance.setYRange(0, Math.min(graphImpedance.getMaxY() + 1, Project.getInstance().Settings.MaxImpedance));
 
                         SwingUtilities.invokeLater(new Runnable()
                         {
@@ -1858,7 +1857,7 @@ public final class MainWindow extends javax.swing.JFrame
     
     public void refresh()
     {
-        project.setModified();
+        Project.getInstance().setModified();
         showNode((DefaultMutableTreeNode) tree.getLastSelectedPathComponent());
     }
     
@@ -1876,15 +1875,15 @@ public final class MainWindow extends javax.swing.JFrame
     {
         createTables();
         
-        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(project);
-        addChildren(rootNode, project.getChildren());
+        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(Project.getInstance());
+        addChildren(rootNode, Project.getInstance().getChildren());
         tree.setModel(new DefaultTreeModel(rootNode));
         expandAllNodes(tree);
         tree.setSelectionPath(new TreePath(((DefaultMutableTreeNode) tree.getModel().getRoot()).getPath()));
         
-        listeningPosXField.setValue(project.ListeningPosition.X * 100);
-        listeningPosYField.setValue(project.ListeningPosition.Y * 100);
-        listeningPosZField.setValue(project.ListeningPosition.Z * 100);
+        listeningPosXField.setValue(Project.getInstance().ListeningPosition.X * 100);
+        listeningPosYField.setValue(Project.getInstance().ListeningPosition.Y * 100);
+        listeningPosZField.setValue(Project.getInstance().ListeningPosition.Z * 100);
     }
     
     @SuppressWarnings("unchecked")
@@ -2153,7 +2152,7 @@ public final class MainWindow extends javax.swing.JFrame
 
     private void menuEnvironmentActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_menuEnvironmentActionPerformed
     {//GEN-HEADEREND:event_menuEnvironmentActionPerformed
-        if (new EnvironmentWindow(this, project.Environment, project.Settings.RoomSimulation).showDialog())
+        if (new EnvironmentWindow(this, Environment.getInstance(), Project.getInstance().Settings.RoomSimulation).showDialog())
         {
             refresh();
         }
@@ -2161,7 +2160,7 @@ public final class MainWindow extends javax.swing.JFrame
     
     private boolean request_close()
     {
-        if (project != null && project.isModified())
+        if (Project.getInstance() != null && Project.getInstance().isModified())
         {
             switch (JOptionPane.showOptionDialog(this, "Project has been modified!", "Save changes?", 0, JOptionPane.WARNING_MESSAGE, null, new String[]{"Save", "Do not save", "Cancel"}, "Save"))
             {
@@ -2193,7 +2192,7 @@ public final class MainWindow extends javax.swing.JFrame
                 
                 setTitle("SpeakerSim - " + file.getName() + " (" + Project.currentVersionString() + ")");
                 
-                project.save(file);
+                Project.getInstance().save(file);
                 return true;
             }
         }
@@ -2215,7 +2214,7 @@ public final class MainWindow extends javax.swing.JFrame
             }
             else
             {
-                project.save(file);
+                Project.getInstance().save(file);
                 return true;
             }
         }
@@ -2236,7 +2235,7 @@ public final class MainWindow extends javax.swing.JFrame
                 if (fc.showOpenDialog(this) == FileSelector.APPROVE_OPTION)
                 {
                     file = fc.getSelectedFile();
-                    project = new Project(file);
+                    Project.setInstance(new Project(file));
                     
                     projectVersionCheck();
                     load();
@@ -2287,7 +2286,7 @@ public final class MainWindow extends javax.swing.JFrame
                     setTitle("SpeakerSim (" + Project.currentVersionString() + ")");
                     
                     file = null;
-                    project = p;
+                    Project.setInstance(p);
                     load();
                     refresh();
                     
@@ -2297,21 +2296,13 @@ public final class MainWindow extends javax.swing.JFrame
                         addItem(amp, (DefaultMutableTreeNode) tree.getModel().getRoot());
                     }
                 }
-                else
-                {
-                    Environment.setInstance(project.Environment);
-                }
-            }
-            else
-            {
-                Project.setInstance(project);
             }
         }
     }//GEN-LAST:event_menuFileNewActionPerformed
 
     private void menuSettingsActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_menuSettingsActionPerformed
     {//GEN-HEADEREND:event_menuSettingsActionPerformed
-        if (new SettingsWindow(this, project.Settings).showDialog())
+        if (new SettingsWindow(this, Project.getInstance().Settings).showDialog())
         {
             createTables();
             refresh();

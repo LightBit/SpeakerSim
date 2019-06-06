@@ -78,10 +78,10 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, main.project.Environment.RoomX * 100))
+                if (listen && UI.validate(e, 0, Environment.getInstance().RoomX * 100))
                 {
                     speaker.Aperiodic.VentPosition.X = UI.getDouble(e) / 100;
-                    portPositionDistanceField.setValue(main.project.ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
+                    portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
                     main.refresh();
                 }
             }
@@ -92,10 +92,10 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, main.project.Environment.RoomY * 100))
+                if (listen && UI.validate(e, 0, Environment.getInstance().RoomY * 100))
                 {
                     speaker.Aperiodic.VentPosition.Y = UI.getDouble(e) / 100;
-                    portPositionDistanceField.setValue(main.project.ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
+                    portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
                     main.refresh();
                 }
             }
@@ -106,10 +106,10 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, main.project.Environment.RoomZ * 100))
+                if (listen && UI.validate(e, 0, Environment.getInstance().RoomZ * 100))
                 {
                     speaker.Aperiodic.VentPosition.Z = UI.getDouble(e) / 100;
-                    portPositionDistanceField.setValue(main.project.ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
+                    portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
                     main.refresh();
                 }
             }
@@ -139,7 +139,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         portPositionXField.setValue(speaker.Aperiodic.VentPosition.X * 100);
         portPositionYField.setValue(speaker.Aperiodic.VentPosition.Y * 100);
         portPositionZField.setValue(speaker.Aperiodic.VentPosition.Z * 100);
-        portPositionDistanceField.setValue(main.project.ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
+        portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
         
         listen = true;
     }
@@ -153,16 +153,16 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         cone = new Graph("Cone response", "Hz", "dB");
         vent = new Graph("Vent response", "Hz", "dB");
         
-        for (double f = main.project.Settings.StartFrequency; f <= main.project.Settings.EndFrequency; f *= main.project.Settings.multiplier())
+        for (double f = Project.getInstance().Settings.StartFrequency; f <= Project.getInstance().Settings.EndFrequency; f *= Project.getInstance().Settings.multiplier())
         {
             box.add(sim.dBmag(f), f);
             cone.add(sim.dBmagCone(f), f);
             vent.add(sim.dBmagPort(f), f);
         }
         
-        box.setYRange(box.getMaxY() - main.project.Settings.dBRange, box.getMaxY() + 1);
-        cone.setYRange(cone.getMaxY() - main.project.Settings.dBRange, cone.getMaxY() + 1);
-        vent.setYRange(vent.getMaxY() - main.project.Settings.dBRange, vent.getMaxY() + 1);
+        box.setYRange(box.getMaxY() - Project.getInstance().Settings.dBRange, box.getMaxY() + 1);
+        cone.setYRange(cone.getMaxY() - Project.getInstance().Settings.dBRange, cone.getMaxY() + 1);
+        vent.setYRange(vent.getMaxY() - Project.getInstance().Settings.dBRange, vent.getMaxY() + 1);
         
         tabs.addTab("Enclosure response", box.getGraph());
         tabs.addTab("Cone response", cone.getGraph());
@@ -345,9 +345,9 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
 
     private void portCalcButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_portCalcButtonActionPerformed
     {//GEN-HEADEREND:event_portCalcButtonActionPerformed
-        if (new VentCalculator(null, main.project, speaker.Aperiodic, (AperiodicSimulation) speaker.getSimulation(), speaker.Driver).showDialog())
+        if (new VentCalculator(null, Project.getInstance(), speaker.Aperiodic, (AperiodicSimulation) speaker.getSimulation(), speaker.Driver).showDialog())
         {
-            main.project.setModified();
+            Project.getInstance().setModified();
         }
     }//GEN-LAST:event_portCalcButtonActionPerformed
 

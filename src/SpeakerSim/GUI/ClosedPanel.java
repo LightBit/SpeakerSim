@@ -98,12 +98,12 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         
         box = new Graph("Enclosure response", "Hz", "dB");
         
-        for (double f = main.project.Settings.StartFrequency; f <= main.project.Settings.EndFrequency; f *= main.project.Settings.multiplier())
+        for (double f = Project.getInstance().Settings.StartFrequency; f <= Project.getInstance().Settings.EndFrequency; f *= Project.getInstance().Settings.multiplier())
         {
             box.add(sim.dBmag(f), f);
         }
         
-        box.setYRange(box.getMaxY() - main.project.Settings.dBRange, box.getMaxY() + 1);
+        box.setYRange(box.getMaxY() - Project.getInstance().Settings.dBRange, box.getMaxY() + 1);
         
         tabs.addTab("Enclosure response", box.getGraph());
     }

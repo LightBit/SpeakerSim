@@ -89,6 +89,11 @@ public class Project extends Item
     {
         super();
         
+        if (instance == null)
+        {
+            instance = this;
+        }
+        
         Version = currentVersion();
         Settings = new Settings();
         Environment = new Environment();
@@ -97,7 +102,6 @@ public class Project extends Item
         ListeningPosition.Y = 1.866;
         
         modified = false;
-        instance = this;
     }
     
     public Project(JsonValue json)
@@ -112,18 +116,22 @@ public class Project extends Item
             Version = new Date(0);
         }
         
+        Project p = instance;
         try
         {
+            instance = this;
+            
             Settings = new Settings(jsonObj.get("Settings"));
             Environment = new Environment(jsonObj.get("Environment"));
             ListeningPosition = new Position(jsonObj.get("ListeningPosition"));
 
             modified = false;
             super.fromJSON(json);
-            instance = this;
         }
         catch (Exception e)
         {
+            instance = p;
+            
             if (Version.compareTo(currentVersion()) > 0)
             {
                 throw new HandledException("Can't open project file that was created with newer version!");
@@ -136,13 +144,11 @@ public class Project extends Item
     public Project(File file) throws IOException
     {
         this(JSON.open(file));
-        modified = false;
     }
     
     public Project(InputStream stream) throws IOException
     {
         this(JSON.open(stream));
-        modified = false;
     }
     
     @Override
@@ -174,6 +180,6 @@ public class Project extends Item
     @Override
     public Complex impedance(double f)
     {
-        return new Complex(0);
+        return Complex.ZERO;
     }
 }

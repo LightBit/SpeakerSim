@@ -16,7 +16,9 @@
 
 package SpeakerSim.GUI;
 
+import SpeakerSim.Environment;
 import SpeakerSim.Position;
+import SpeakerSim.Project;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -38,12 +40,12 @@ public class DriverPositionPanel extends javax.swing.JPanel
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, main.project.Environment.RoomX * 100))
+                if (listen && UI.validate(e, 0, Environment.getInstance().RoomX * 100))
                 {
                     position.X = UI.getDouble(e) / 100;
-                    distanceField.setValue(main.project.ListeningPosition.distance(position) * 100);
-                    relativeVerticalAngleField.setValue(position.verticalAngle(main.project.ListeningPosition));
-                    relativeHorizontalAngleField.setValue(position.horizontalAngle(main.project.ListeningPosition));
+                    distanceField.setValue(Project.getInstance().ListeningPosition.distance(position) * 100);
+                    relativeVerticalAngleField.setValue(position.verticalAngle(Project.getInstance().ListeningPosition));
+                    relativeHorizontalAngleField.setValue(position.horizontalAngle(Project.getInstance().ListeningPosition));
                     main.refresh();
                 }
             }
@@ -54,12 +56,12 @@ public class DriverPositionPanel extends javax.swing.JPanel
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, main.project.Environment.RoomY * 100))
+                if (listen && UI.validate(e, 0, Environment.getInstance().RoomY * 100))
                 {
                     position.Y = UI.getDouble(e) / 100;
-                    distanceField.setValue(main.project.ListeningPosition.distance(position) * 100);
-                    relativeVerticalAngleField.setValue(position.verticalAngle(main.project.ListeningPosition));
-                    relativeHorizontalAngleField.setValue(position.horizontalAngle(main.project.ListeningPosition));
+                    distanceField.setValue(Project.getInstance().ListeningPosition.distance(position) * 100);
+                    relativeVerticalAngleField.setValue(position.verticalAngle(Project.getInstance().ListeningPosition));
+                    relativeHorizontalAngleField.setValue(position.horizontalAngle(Project.getInstance().ListeningPosition));
                     main.refresh();
                 }
             }
@@ -70,12 +72,12 @@ public class DriverPositionPanel extends javax.swing.JPanel
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, main.project.Environment.RoomZ * 100))
+                if (listen && UI.validate(e, 0, Environment.getInstance().RoomZ * 100))
                 {
                     position.Z = UI.getDouble(e) / 100;
-                    distanceField.setValue(main.project.ListeningPosition.distance(position) * 100);
-                    relativeVerticalAngleField.setValue(position.verticalAngle(main.project.ListeningPosition));
-                    relativeHorizontalAngleField.setValue(position.horizontalAngle(main.project.ListeningPosition));
+                    distanceField.setValue(Project.getInstance().ListeningPosition.distance(position) * 100);
+                    relativeVerticalAngleField.setValue(position.verticalAngle(Project.getInstance().ListeningPosition));
+                    relativeHorizontalAngleField.setValue(position.horizontalAngle(Project.getInstance().ListeningPosition));
                     main.refresh();
                 }
             }
@@ -89,7 +91,7 @@ public class DriverPositionPanel extends javax.swing.JPanel
                 if (listen && UI.validate(e, -180, 180))
                 {
                     position.VerticalAngle = UI.getDouble(e);
-                    relativeVerticalAngleField.setValue(position.verticalAngle(main.project.ListeningPosition));
+                    relativeVerticalAngleField.setValue(position.verticalAngle(Project.getInstance().ListeningPosition));
                     main.refresh();
                 }
             }
@@ -103,7 +105,7 @@ public class DriverPositionPanel extends javax.swing.JPanel
                 if (listen && UI.validate(e, -180, 180))
                 {
                     position.HorizontalAngle = UI.getDouble(e);
-                    relativeHorizontalAngleField.setValue(position.horizontalAngle(main.project.ListeningPosition));
+                    relativeHorizontalAngleField.setValue(position.horizontalAngle(Project.getInstance().ListeningPosition));
                     main.refresh();
                 }
             }
@@ -121,9 +123,9 @@ public class DriverPositionPanel extends javax.swing.JPanel
         zField.setValue(position.Z * 100);
         verticalAngleField.setValue(position.VerticalAngle);
         horizontalAngleField.setValue(position.HorizontalAngle);
-        relativeVerticalAngleField.setValue(position.verticalAngle(main.project.ListeningPosition));
-        relativeHorizontalAngleField.setValue(position.horizontalAngle(main.project.ListeningPosition));
-        distanceField.setValue(main.project.ListeningPosition.distance(position) * 100);
+        relativeVerticalAngleField.setValue(position.verticalAngle(Project.getInstance().ListeningPosition));
+        relativeHorizontalAngleField.setValue(position.horizontalAngle(Project.getInstance().ListeningPosition));
+        distanceField.setValue(Project.getInstance().ListeningPosition.distance(position) * 100);
         
         listen = true;
     }

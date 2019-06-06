@@ -17,6 +17,7 @@
 package SpeakerSim.GUI;
 
 import SpeakerSim.Baffle;
+import SpeakerSim.Project;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
@@ -117,7 +118,7 @@ public class BafflePanel extends javax.swing.JPanel
             }
         });
         
-        UI.setPanelEnabled(this, main.project.Settings.BaffleSimulation);
+        UI.setPanelEnabled(this, Project.getInstance().Settings.BaffleSimulation);
     }
     
     public void show(Baffle baffle)

@@ -22,32 +22,130 @@ import static org.junit.Assert.*;
 public class PositionTest
 {
     @Test
-    public void horizontalAngle()
+    public void horizontalAngle_1()
     {
-        Position a;
-        Position b;
-
-        a = new Position(1, 1, 1, 0, 0);
-        b = new Position(1, 2, 1);
+        Position a = new Position(1, 1, 1, 0, 0);
+        Position b = new Position(1, 2, 1);
         assertEquals(0, a.horizontalAngle(b), 0);
-
-        a = new Position(1, 1, 1, 0, 90);
-        b = new Position(1, 1, 2);
+    }
+    
+    @Test
+    public void horizontalAngle_2()
+    {
+        Position a = new Position(1, 1, 1, 0, 45);
+        Position b = new Position(1, 2, 2);
         assertEquals(0, a.horizontalAngle(b), 0);
-
-        /*a = new Position(1, 1, 1, 0, 180);
-        b = new Position(1, 0, 1);
-        assertEquals(0, a.horizontalAngle(b), 0);*/
+    }
+    
+    @Test
+    public void horizontalAngle_3()
+    {
+        Position a = new Position(1, 1, 1, 0, 90);
+        Position b = new Position(1, 1, 2);
+        assertEquals(0, a.horizontalAngle(b), 0);
+    }
+    
+    @Test
+    public void horizontalAngle_4()
+    {
+        Position a = new Position(1, 1, 1, 0, 180);
+        Position b = new Position(1, 0, 1);
+        assertEquals(0, a.horizontalAngle(b), 0);
+    }
+    
+    @Test
+    public void horizontalAngle_5()
+    {
+        Position a = new Position(1, 1, 1, 0, -45);
+        Position b = new Position(1, 0, 0);
+        assertEquals(0, a.horizontalAngle(b), 0);
+    }
+    
+    @Test
+    public void horizontalAngle_6()
+    {
+        Position a = new Position(1, 1, 1, 0, -90);
+        Position b = new Position(1, 1, 0);
+        assertEquals(0, a.horizontalAngle(b), 0);
+    }
+    
+    @Test
+    public void horizontalAngle_7()
+    {
+        Position a = new Position(1, 1, 1, 0, -180);
+        Position b = new Position(1, 0, 1);
+        assertEquals(0, a.horizontalAngle(b), 0);
     }
 
     @Test
-    public void verticalAngle()
+    public void horizontalAngle_8()
     {
-        Position a;
-        Position b;
+        Position a = new Position(1, 1, 1, 0, -180);
+        Position b = new Position(1, 2, 1);
+        assertEquals(-180, a.horizontalAngle(b), 0);
+    }
 
-        a = new Position(1, 1, 1, 0, 0);
-        b = new Position(1, 1, 2);
-        assertEquals(90, a.verticalAngle(b), 0);
+    @Test
+    public void verticalAngle_1()
+    {
+        Position a = new Position(1, 1, 1, 0, 0);
+        Position b = new Position(1, 2, 1);
+        assertEquals(0, a.verticalAngle(b), 0);
+    }
+    
+    @Test
+    public void verticalAngle_2()
+    {
+        Position a = new Position(1, 1, 1, 45, 0);
+        Position b = new Position(2, 2, 1);
+        assertEquals(0, a.verticalAngle(b), 0);
+    }
+    
+    @Test
+    public void verticalAngle_3()
+    {
+        Position a = new Position(1, 1, 1, 90, 0);
+        Position b = new Position(1, 2, 1);
+        assertEquals(0, a.verticalAngle(b), 0);
+    }
+    
+    @Test
+    public void verticalAngle_4()
+    {
+        Position a = new Position(1, 1, 1, 180, 0);
+        Position b = new Position(1, 0, 1);
+        assertEquals(0, a.verticalAngle(b), 0);
+    }
+    
+    @Test
+    public void verticalAngle_5()
+    {
+        Position a = new Position(1, 1, 1, -45, 0);
+        Position b = new Position(0, 0, 1);
+        assertEquals(0, a.verticalAngle(b), 0);
+    }
+    
+    @Test
+    public void verticalAngle_6()
+    {
+        Position a = new Position(1, 1, 1, -90, 0);
+        Position b = new Position(0, 1, 1);
+        assertEquals(0, a.verticalAngle(b), 0);
+    }
+    
+    @Test
+    public void verticalAngle_7()
+    {
+        Position a = new Position(1, 1, 1, -180, 0);
+        Position b = new Position(1, 0, 1);
+        assertEquals(0, a.verticalAngle(b), 0);
+    }
+
+    @Test
+    public void verticalAngle_8()
+    {
+        Position a = new Position(1, 1, 1, 180, 0);
+        Position b = new Position(1, 2, 1);
+        assertEquals(180, a.verticalAngle(b), 0);
     }
 }

@@ -4,7 +4,7 @@
 #convert -background transparent resources/SpeakerSim.png -define icon:auto-resize=16,24,32,48,64,72,96,128 SpeakerSim.ico
 
 # Build using Maven
-mvn package
+mvn package -Dmaven.test.skip=true
 
 # Move final jar
 mv ./target/SpeakerSim-jar-with-dependencies.jar ./SpeakerSim.jar

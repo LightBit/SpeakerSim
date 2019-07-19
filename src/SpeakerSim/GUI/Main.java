@@ -19,7 +19,6 @@ package SpeakerSim.GUI;
 import SpeakerSim.Project;
 import java.awt.*;
 import java.beans.*;
-import java.lang.reflect.*;
 import javax.swing.*;
 import java.util.Base64;
 import io.sentry.Sentry;
@@ -65,18 +64,6 @@ public class Main
             {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             }
-        }
-        catch (Exception ex)
-        {
-            // ignore - non critical
-        }
-        
-        try
-        {
-            Toolkit tk = Toolkit.getDefaultToolkit();
-            Field awtAppClassNameField = tk.getClass().getDeclaredField("awtAppClassName");
-            awtAppClassNameField.setAccessible(true);
-            awtAppClassNameField.set(tk, "SpeakerSim");
         }
         catch (Exception ex)
         {

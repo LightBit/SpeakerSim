@@ -156,7 +156,7 @@ public final class MainWindow extends javax.swing.JFrame
                 {
                     showMenu();
                 }
-                else if ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)
+                else if ((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0)
                 {
                     switch (key)
                     {
@@ -786,11 +786,10 @@ public final class MainWindow extends javax.swing.JFrame
     {
         List<Speaker> speakers = new ArrayList<Speaker>();
         
-        @SuppressWarnings("unchecked")
-        Enumeration<DefaultMutableTreeNode> e = node.depthFirstEnumeration();
+        Enumeration e = node.depthFirstEnumeration();
         while (e.hasMoreElements())
         {
-            Object x = e.nextElement().getUserObject();
+            Object x = ((DefaultMutableTreeNode)e.nextElement()).getUserObject();
             if (x instanceof Speaker)
             {
                 speakers.add((Speaker) x);

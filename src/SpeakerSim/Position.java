@@ -85,21 +85,25 @@ public class Position implements JSONable
     
     public double distance(Position p)
     {
-        double x = X - p.X;
-        double y = Y - p.Y;
-        double z = Z - p.Z;
+        double x = p.X - X;
+        double y = p.Y - Y;
+        double z = p.Z - Z;
 
         return Math.sqrt(x * x + y * y + z * z);
     }
     
     public double horizontalAngle(Position p)
     {
-        return Math.toDegrees(Math.atan2(p.X - X, (p.Y - Y) + (p.Z - Z) * Math.sin(VerticalAngle))) - HorizontalAngle;
+        double d = Math.hypot(p.Y - Y, p.Z - Z);
+        
+        return Math.toDegrees(Math.atan2(p.X - X, d)) - HorizontalAngle;
     }
     
     public double verticalAngle(Position p)
     {
-        return Math.toDegrees(Math.atan2(p.Z - Z, (p.Y - Y) + (p.X - X) * Math.sin(HorizontalAngle))) - VerticalAngle;
+        double d = Math.hypot(p.Y - Y, p.X - X);
+        
+        return Math.toDegrees(Math.atan2(p.Z - Z, d)) - VerticalAngle;
     }
     
     public Position add(double distance, double horizontalAngle, double verticalAngle)

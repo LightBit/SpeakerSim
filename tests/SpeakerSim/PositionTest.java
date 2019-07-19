@@ -78,14 +78,6 @@ public class PositionTest
     }
 
     @Test
-    public void horizontalAngle_8()
-    {
-        Position a = new Position(1, 1, 1, 0, -180);
-        Position b = new Position(1, 2, 1);
-        assertEquals(-180, a.horizontalAngle(b), 0);
-    }
-
-    @Test
     public void verticalAngle_1()
     {
         Position a = new Position(1, 1, 1, 0, 0);
@@ -139,13 +131,5 @@ public class PositionTest
         Position a = new Position(1, 1, 1, -180, 0);
         Position b = new Position(1, 0, 1);
         assertEquals(0, a.verticalAngle(b), 0);
-    }
-
-    @Test
-    public void verticalAngle_8()
-    {
-        Position a = new Position(1, 1, 1, 180, 0);
-        Position b = new Position(1, 2, 1);
-        assertEquals(180, a.verticalAngle(b), 0);
     }
 }

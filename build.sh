@@ -4,7 +4,8 @@
 #convert -background transparent resources/SpeakerSim.png -define icon:auto-resize=16,24,32,48,64,72,96,128 SpeakerSim.ico
 
 # Build using Maven
-mvn package -Dmaven.test.skip=true
+mvn package
+#mvn package -Dmaven.test.skip=true
 
 # Move final jar
 mv ./target/SpeakerSim-jar-with-dependencies.jar ./SpeakerSim.jar
@@ -13,14 +14,14 @@ mv ./target/SpeakerSim-jar-with-dependencies.jar ./SpeakerSim.jar
 7za a -tzip -mx=9 SpeakerSim.zip SpeakerSim.jar
 
 # Download OpenJDK with OpenJ9 for Windows 32-bit
-OPENJDK_WINDOWS_FILE=OpenJDK8U-jre_x86-32_windows_openj9_8u212b04_openj9-0.14.2.zip
+OPENJDK_WINDOWS_FILE=OpenJDK8U-jre_x86-32_windows_openj9_8u222b10_openj9-0.15.1.zip
 if [ ! -d ./jre ]; then
 	if [ ! -f $OPENJDK_WINDOWS_FILE ]; then
-		wget https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u212-b04_openj9-0.14.2/$OPENJDK_WINDOWS_FILE
+		wget https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u222-b10_openj9-0.15.1/$OPENJDK_WINDOWS_FILE
 	fi
 	
 	unzip $OPENJDK_WINDOWS_FILE
-	mv ./jdk8u212-b04-jre ./jre
+	mv ./jdk8u222-b10-jre ./jre
 fi
 
 # Windows setup

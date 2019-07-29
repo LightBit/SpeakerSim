@@ -22,7 +22,6 @@ import java.beans.*;
 import javax.swing.*;
 import java.util.Base64;
 import io.sentry.Sentry;
-import io.sentry.SentryClientFactory;
 import io.sentry.DefaultSentryClientFactory;
 import io.sentry.context.ContextManager;
 import io.sentry.context.SingletonContextManager;
@@ -41,22 +40,42 @@ public class Main
             }
         });
         
-        SentryClientFactory scf = new DefaultSentryClientFactory()
+        Sentry.init(new DefaultSentryClientFactory()
         {
             @Override
             protected ContextManager getContextManager(Dsn dsn)
             {
                 return new SingletonContextManager();
             }
-        };
-        Sentry.init(scf);
+        });
         Sentry.getContext().addTag("version", Project.currentVersionString());
-        Sentry.getContext().addTag("machine_id", Base64.getEncoder().encodeToString(UI.machineId()));
         Sentry.getContext().addTag("arch", System.getProperty("os.arch"));
         Sentry.getContext().addTag("os", System.getProperty("os.name"));
         Sentry.getContext().addTag("os_version", System.getProperty("os.version"));
         Sentry.getContext().addTag("java_runtime", System.getProperty("java.runtime.name"));
         Sentry.getContext().addTag("java_version", System.getProperty("java.runtime.version"));
+        
+        try
+        {
+            if (Integer.parseInt(System.getProperty("java.specification.version")) < 8)
+            {
+                UI.error("Your Java Runtime Environment is too old. Java 8 or newer required.");
+                System.exit(-1);
+            }
+        }
+        catch (Exception ex)
+        {
+            // ignore
+        }
+        
+        try
+        {
+            Sentry.getContext().addTag("machine_id", Base64.getEncoder().encodeToString(UI.machineId()));
+        }
+        catch (Exception ex)
+        {
+            // ignore
+        }
 
         try
         {

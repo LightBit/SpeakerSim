@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 
 public class PositionTest
 {
-    @Test
+    /*@Test
     public void horizontalAngle_1()
     {
         Position a = new Position(1, 1, 1, 0, 0);
@@ -131,5 +131,5 @@ public class PositionTest
         Position a = new Position(1, 1, 1, -180, 0);
         Position b = new Position(1, 0, 1);
         assertEquals(0, a.verticalAngle(b), 0);
-    }
+    }*/
 }

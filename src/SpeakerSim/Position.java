@@ -34,11 +34,11 @@ public class Position implements JSONable
         {
             JsonObject jsonObj = json.asObject();
 
-            X = JSON.getDouble(jsonObj, "X", 0.6);
-            Y = JSON.getDouble(jsonObj, "Y", 1);
-            Z = JSON.getDouble(jsonObj, "Z", 1.1);
-            HorizontalAngle = JSON.getDouble(jsonObj, "HorizontalAngle", 0);
-            VerticalAngle = JSON.getDouble(jsonObj, "VerticalAngle", 0);
+            X = JSON.getDouble(jsonObj, "X");
+            Y = JSON.getDouble(jsonObj, "Y");
+            Z = JSON.getDouble(jsonObj, "Z");
+            HorizontalAngle = 0; //JSON.getDouble(jsonObj, "HorizontalAngle", 0);
+            VerticalAngle = 0; //JSON.getDouble(jsonObj, "VerticalAngle", 0);
         }
         else
         {
@@ -60,8 +60,8 @@ public class Position implements JSONable
         X = x;
         Y = y;
         Z = z;
-        HorizontalAngle = horizontalAngle;
-        VerticalAngle = verticalAngle;
+        HorizontalAngle = 0; //horizontalAngle;
+        VerticalAngle = 0; //verticalAngle;
     }
     
     public Position()
@@ -94,16 +94,12 @@ public class Position implements JSONable
     
     public double horizontalAngle(Position p)
     {
-        double d = Math.hypot(p.Y - Y, p.Z - Z);
-        
-        return Math.toDegrees(Math.atan2(p.X - X, d)) - HorizontalAngle;
+        return Math.toDegrees(Math.atan2(p.X - X, p.Y - Y)) - (HorizontalAngle - p.HorizontalAngle);
     }
     
     public double verticalAngle(Position p)
     {
-        double d = Math.hypot(p.Y - Y, p.X - X);
-        
-        return Math.toDegrees(Math.atan2(p.Z - Z, d)) - VerticalAngle;
+        return Math.toDegrees(Math.atan2(p.Z - Z, p.Y - Y)) - (VerticalAngle - p.VerticalAngle);
     }
     
     public Position add(double distance, double horizontalAngle, double verticalAngle)

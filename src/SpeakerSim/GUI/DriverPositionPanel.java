@@ -193,6 +193,7 @@ public class DriverPositionPanel extends javax.swing.JPanel
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel10.setText("Horizontal angle (°):");
+        jLabel10.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
@@ -210,6 +211,7 @@ public class DriverPositionPanel extends javax.swing.JPanel
 
         verticalAngleField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         verticalAngleField.setToolTipText("Relative to room walls");
+        verticalAngleField.setEnabled(false);
         verticalAngleField.setMinimumSize(new java.awt.Dimension(40, 19));
         verticalAngleField.setPreferredSize(new java.awt.Dimension(40, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -219,6 +221,7 @@ public class DriverPositionPanel extends javax.swing.JPanel
 
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel14.setText("Vertical angle (°):");
+        jLabel14.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
@@ -227,6 +230,7 @@ public class DriverPositionPanel extends javax.swing.JPanel
 
         horizontalAngleField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         horizontalAngleField.setToolTipText("Relative to room walls");
+        horizontalAngleField.setEnabled(false);
         horizontalAngleField.setMinimumSize(new java.awt.Dimension(40, 19));
         horizontalAngleField.setPreferredSize(new java.awt.Dimension(40, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();

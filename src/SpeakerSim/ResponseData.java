@@ -59,7 +59,7 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
 
                 if (inputIsVoltage)
                 {
-                    amplitude -= Fnc.toDecibels(input);
+                    amplitude += Fnc.toDecibels(2.83) - Fnc.toDecibels(input);
                 }
                 else
                 {

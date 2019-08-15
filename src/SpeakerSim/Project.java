@@ -39,7 +39,7 @@ public class Project extends Item
     
     private static Project instance;
     private static Date currentVersion;
-    private static final SimpleDateFormat verFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat VERSION_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     
     public static Project getInstance()
     {
@@ -61,6 +61,18 @@ public class Project extends Item
         modified = true;
     }
     
+    public static Date parseVersion(String version)
+    {
+        try
+        {
+            return VERSION_FORMAT.parse(version);
+        }
+        catch (ParseException ex)
+        {
+            return new Date(0);
+        }
+    }
+    
     public static Date currentVersion()
     {
         if (currentVersion == null)
@@ -69,9 +81,9 @@ public class Project extends Item
             {
                 final Properties properties = new Properties();
                 properties.load(Project.class.getClassLoader().getResourceAsStream("project.properties"));
-                currentVersion = verFormat.parse(properties.getProperty("version"));
+                currentVersion = parseVersion(properties.getProperty("version"));
             }
-            catch (IOException | ParseException ex)
+            catch (IOException ex)
             {
                 currentVersion = new Date(0);
             }
@@ -82,7 +94,7 @@ public class Project extends Item
     
     public static String currentVersionString()
     {
-        return verFormat.format(currentVersion());
+        return VERSION_FORMAT.format(currentVersion());
     }
     
     public Project()
@@ -107,14 +119,8 @@ public class Project extends Item
     public Project(JsonValue json)
     {
         JsonObject jsonObj = json.asObject();
-        try
-        {
-            Version = verFormat.parse(jsonObj.getString("Version", ""));
-        }
-        catch (ParseException ex)
-        {
-            Version = new Date(0);
-        }
+        
+        Version = parseVersion(jsonObj.getString("Version", ""));
         
         Project p = instance;
         try

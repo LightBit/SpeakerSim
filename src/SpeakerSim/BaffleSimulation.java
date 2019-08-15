@@ -113,7 +113,7 @@ public class BaffleSimulation
         for (int i = 0; i < 36; i++)
         {
             double radians = Math.toRadians(i * 10);
-            axis[i] = Math.sqrt(distance * distance + edges[i] * edges[i] - (2 * distance * edges[i] * (Math.sin(radians) * horizontal + Math.cos(radians) * vertical))) + edges[i] - distance;
+            axis[i] = Math.sqrt(Math.max(distance * distance + edges[i] * edges[i] - (2 * distance * edges[i] * (Math.sin(radians) * horizontal + Math.cos(radians) * vertical)), 0)) + edges[i] - distance;
             
             mean[i] = axis[i] - edges[i];
             averageDifference += mean[i];

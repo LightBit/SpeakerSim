@@ -137,6 +137,16 @@ public final class Fnc
         return a.add(b);
     }
     
+    public static double to360Degress(double x)
+    {
+        return x < 0 ? x + 360 : x;
+    }
+    
+    public static double to180Degress(double x)
+    {
+        return x > 180 ? x - 360 : x;
+    }
+    
     public static double[] averageSmooth(double[] values, int points)
     {
         double[] r = new double[values.length];

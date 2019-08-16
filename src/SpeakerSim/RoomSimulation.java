@@ -44,17 +44,17 @@ public class RoomSimulation
         wall[4] = lambda * (env.RoomY - sourcePos.Y);
         wall[5] = lambda * (env.RoomZ - sourcePos.Z);
         
-        wallSource[0] = new BaffleSimulation(baffle, driver, sourcePos.X, 90 - sourcePos.HorizontalAngle, 0, env, dipole);
-        wallSource[1] = new BaffleSimulation(baffle, driver, sourcePos.Y, sourcePos.HorizontalAngle, 0, env, dipole);
+        wallSource[0] = new BaffleSimulation(baffle, driver, sourcePos.X, sourcePos.HorizontalAngle, 0, env, dipole);
+        wallSource[1] = new BaffleSimulation(baffle, driver, sourcePos.Y, 90 - sourcePos.HorizontalAngle, 0, env, dipole);
         wallSource[2] = new BaffleSimulation(baffle, driver, sourcePos.Z, 0, 90 - sourcePos.VerticalAngle, env, dipole);
-        wallSource[3] = new BaffleSimulation(baffle, driver, env.RoomX - sourcePos.X, 270 - sourcePos.HorizontalAngle, 0, env, dipole);
-        wallSource[4] = new BaffleSimulation(baffle, driver, env.RoomY - sourcePos.Y, 180 - sourcePos.HorizontalAngle, 0, env, dipole);
+        wallSource[3] = new BaffleSimulation(baffle, driver, env.RoomX - sourcePos.X, 180 - sourcePos.HorizontalAngle, 0, env, dipole);
+        wallSource[4] = new BaffleSimulation(baffle, driver, env.RoomY - sourcePos.Y, 270 - sourcePos.HorizontalAngle, 0, env, dipole);
         wallSource[5] = new BaffleSimulation(baffle, driver, env.RoomZ - sourcePos.Z, 0, 270 - sourcePos.VerticalAngle, env, dipole);
         
         // first reflections
         Position reflectionPos;
         
-        // X (left wall)
+        // X (front wall)
         reflectionPos = new Position
         (
             0,
@@ -64,7 +64,7 @@ public class RoomSimulation
         source[0] = new BaffleSimulation(baffle, driver, sourcePos, reflectionPos, env, dipole);
         reflection[0] = new DistanceSimulation(sourcePos.distance(reflectionPos) + reflectionPos.distance(listeningPos), env);
         
-        // RoomX (right wall)
+        // RoomX (back wall)
         reflectionPos = new Position
         (
             env.RoomX,
@@ -74,7 +74,7 @@ public class RoomSimulation
         source[1] = new BaffleSimulation(baffle, driver, sourcePos, reflectionPos, env, dipole);
         reflection[1] = new DistanceSimulation(sourcePos.distance(reflectionPos) + reflectionPos.distance(listeningPos), env);
         
-        // Y (front wall)
+        // Y (left wall)
         reflectionPos = new Position
         (
             reflectionPoint(listeningPos.X, sourcePos.X, listeningPos.Y, sourcePos.Y),
@@ -84,7 +84,7 @@ public class RoomSimulation
         source[2] = new BaffleSimulation(baffle, driver, sourcePos, reflectionPos, env, dipole);
         reflection[2] = new DistanceSimulation(sourcePos.distance(reflectionPos) + reflectionPos.distance(listeningPos), env);
         
-        // RoomY (back wall)
+        // RoomY (right wall)
         reflectionPos = new Position
         (
             reflectionPoint(listeningPos.X, sourcePos.X, env.RoomY - listeningPos.Y, env.RoomY - sourcePos.Y),

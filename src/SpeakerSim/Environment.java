@@ -64,8 +64,8 @@ public class Environment implements JSONable
         Altitude = 300;
         Humidity = 0.50;
         Temperature = 23;
-        RoomX = 5;
-        RoomY = 6;
+        RoomX = 7;
+        RoomY = 5;
         RoomZ = 2.5;
     }
     
@@ -79,8 +79,17 @@ public class Environment implements JSONable
         Altitude = JSON.getDouble(jsonObj, "Altitude", 300);
         Humidity = JSON.getDouble(jsonObj, "Humidity", 0.5);
         Temperature = JSON.getDouble(jsonObj, "Temperature", 23);
-        RoomX = JSON.getDouble(jsonObj, "RoomX", 5);
-        RoomY = JSON.getDouble(jsonObj, "RoomY", 6);
+        
+        if (Project.getInstance().Version.compareTo(Project.parseVersion("2019-08-16")) < 0)
+        {
+            RoomX = JSON.getDouble(jsonObj, "RoomY", 5);
+            RoomY = JSON.getDouble(jsonObj, "RoomX", 7);
+        }
+        else
+        {
+            RoomX = JSON.getDouble(jsonObj, "RoomX", 7);
+            RoomY = JSON.getDouble(jsonObj, "RoomY", 5);
+        }
         RoomZ = JSON.getDouble(jsonObj, "RoomZ", 2.5);
     }
 

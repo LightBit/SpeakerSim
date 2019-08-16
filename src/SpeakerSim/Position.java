@@ -34,11 +34,19 @@ public class Position implements JSONable
         {
             JsonObject jsonObj = json.asObject();
 
-            X = JSON.getDouble(jsonObj, "X");
-            Y = JSON.getDouble(jsonObj, "Y");
+            if (Project.getInstance().Version.compareTo(Project.parseVersion("2019-08-16")) < 0)
+            {
+                X = JSON.getDouble(jsonObj, "Y");
+                Y = JSON.getDouble(jsonObj, "X");
+            }
+            else
+            {
+                X = JSON.getDouble(jsonObj, "X");
+                Y = JSON.getDouble(jsonObj, "Y");
+            }
             Z = JSON.getDouble(jsonObj, "Z");
-            HorizontalAngle = 0; //JSON.getDouble(jsonObj, "HorizontalAngle", 0);
-            VerticalAngle = 0; //JSON.getDouble(jsonObj, "VerticalAngle", 0);
+            HorizontalAngle = JSON.getDouble(jsonObj, "HorizontalAngle", 0);
+            VerticalAngle = JSON.getDouble(jsonObj, "VerticalAngle", 0);
         }
         else
         {
@@ -60,8 +68,8 @@ public class Position implements JSONable
         X = x;
         Y = y;
         Z = z;
-        HorizontalAngle = 0; //horizontalAngle;
-        VerticalAngle = 0; //verticalAngle;
+        HorizontalAngle = horizontalAngle;
+        VerticalAngle = verticalAngle;
     }
     
     public Position()
@@ -94,32 +102,81 @@ public class Position implements JSONable
     
     public double horizontalAngle(Position p)
     {
-        return Math.toDegrees(Math.atan2(p.X - X, p.Y - Y)) - (HorizontalAngle - p.HorizontalAngle);
+        double x = p.X - X;
+        double y = p.Y - Y;
+        double z = p.Z - Z;
+        
+        double alpha = Math.toRadians(VerticalAngle);
+        double beta = Math.toRadians(-HorizontalAngle);
+        double gamma = 0;
+        
+        double a = x * (Math.cos(alpha) * Math.cos(beta))
+                + y * (-Math.sin(beta))
+                + z * (Math.cos(beta) * Math.sin(alpha));
+        
+        double b = x * (Math.sin(alpha) * Math.sin(gamma) + Math.cos(alpha) * Math.cos(gamma) * Math.sin(beta))
+                + y * (Math.cos(beta) * Math.cos(gamma))
+                + z * (-Math.cos(alpha) * Math.sin(gamma) + Math.cos(gamma) * Math.sin(alpha) * Math.sin(beta));
+        
+        return Math.toDegrees(Math.atan2(b, a));
     }
     
     public double verticalAngle(Position p)
     {
-        return Math.toDegrees(Math.atan2(p.Z - Z, p.Y - Y)) - (VerticalAngle - p.VerticalAngle);
+        double x = p.X - X;
+        double y = p.Y - Y;
+        double z = p.Z - Z;
+        
+        double alpha = Math.toRadians(HorizontalAngle);
+        double beta = Math.toRadians(-VerticalAngle);
+        double gamma = 0;
+        
+        double a = x * (Math.cos(alpha) * Math.cos(beta))
+                + y * (Math.cos(beta) * Math.sin(alpha))
+                + z * (-Math.sin(beta));
+        
+        double c = x * (Math.sin(alpha) * Math.sin(gamma) + Math.cos(alpha) * Math.cos(gamma) * Math.sin(beta))
+                + y * (Math.cos(gamma) * Math.sin(alpha) * Math.sin(beta) - Math.cos(alpha) * Math.sin(gamma))
+                + z * (Math.cos(beta) * Math.cos(gamma));
+        
+        return Math.toDegrees(Math.atan2(c, a));
     }
     
-    public Position add(double distance, double horizontalAngle, double verticalAngle)
+    public Position move(double distance, double horizontalAngle, double verticalAngle)
     {
-        horizontalAngle = Math.toRadians(HorizontalAngle + horizontalAngle);
-        verticalAngle = Math.toRadians(VerticalAngle + verticalAngle);
+        horizontalAngle = Math.toRadians(horizontalAngle);
+        verticalAngle = Math.toRadians(verticalAngle);
         
-        return new Position(
-            X + Math.sin(horizontalAngle) * distance,
-            Y + Math.cos(horizontalAngle) * Math.cos(verticalAngle) * distance,
-            Z + Math.sin(verticalAngle) * distance);
+        return new Position
+        (
+            X + distance * Math.cos(horizontalAngle) * Math.cos(verticalAngle),
+            Y + distance * Math.sin(horizontalAngle),
+            Z + distance * Math.sin(verticalAngle),
+            HorizontalAngle,
+            VerticalAngle
+        );
     }
     
     public Position add(Position p)
     {
-        return new Position(X + p.X, Y + p.Y, Z + p.Z, HorizontalAngle + p.HorizontalAngle, VerticalAngle + p.VerticalAngle);
+        return new Position
+        (
+            X + p.X,
+            Y + p.Y,
+            Z + p.Z,
+            HorizontalAngle + p.HorizontalAngle,
+            VerticalAngle + p.VerticalAngle
+        );
     }
     
     public Position divide(double x)
     {
-        return new Position(X / x, Y / x, Z / x, HorizontalAngle / x, VerticalAngle / x);
+        return new Position(
+                X / x,
+                Y / x,
+                Z / x,
+                HorizontalAngle / x,
+                VerticalAngle / x
+        );
     }
 }

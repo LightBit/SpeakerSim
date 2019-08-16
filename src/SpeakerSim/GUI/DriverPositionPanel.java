@@ -24,14 +24,12 @@ import java.beans.PropertyChangeListener;
 
 public class DriverPositionPanel extends javax.swing.JPanel
 {
-    private final MainWindow main;
     private Position position;
     private boolean listen;
     
     public DriverPositionPanel(final MainWindow main)
     {
         listen = false;
-        this.main = main;
         
         initComponents();
         
@@ -44,8 +42,8 @@ public class DriverPositionPanel extends javax.swing.JPanel
                 {
                     position.X = UI.getDouble(e) / 100;
                     distanceField.setValue(Project.getInstance().ListeningPosition.distance(position) * 100);
-                    relativeVerticalAngleField.setValue(position.verticalAngle(Project.getInstance().ListeningPosition));
-                    relativeHorizontalAngleField.setValue(position.horizontalAngle(Project.getInstance().ListeningPosition));
+                    relativeVerticalAngleField.setValue(Math.round(position.verticalAngle(Project.getInstance().ListeningPosition)));
+                    relativeHorizontalAngleField.setValue(Math.round(position.horizontalAngle(Project.getInstance().ListeningPosition)));
                     main.refresh();
                 }
             }
@@ -60,8 +58,8 @@ public class DriverPositionPanel extends javax.swing.JPanel
                 {
                     position.Y = UI.getDouble(e) / 100;
                     distanceField.setValue(Project.getInstance().ListeningPosition.distance(position) * 100);
-                    relativeVerticalAngleField.setValue(position.verticalAngle(Project.getInstance().ListeningPosition));
-                    relativeHorizontalAngleField.setValue(position.horizontalAngle(Project.getInstance().ListeningPosition));
+                    relativeVerticalAngleField.setValue(Math.round(position.verticalAngle(Project.getInstance().ListeningPosition)));
+                    relativeHorizontalAngleField.setValue(Math.round(position.horizontalAngle(Project.getInstance().ListeningPosition)));
                     main.refresh();
                 }
             }
@@ -76,8 +74,8 @@ public class DriverPositionPanel extends javax.swing.JPanel
                 {
                     position.Z = UI.getDouble(e) / 100;
                     distanceField.setValue(Project.getInstance().ListeningPosition.distance(position) * 100);
-                    relativeVerticalAngleField.setValue(position.verticalAngle(Project.getInstance().ListeningPosition));
-                    relativeHorizontalAngleField.setValue(position.horizontalAngle(Project.getInstance().ListeningPosition));
+                    relativeVerticalAngleField.setValue(Math.round(position.verticalAngle(Project.getInstance().ListeningPosition)));
+                    relativeHorizontalAngleField.setValue(Math.round(position.horizontalAngle(Project.getInstance().ListeningPosition)));
                     main.refresh();
                 }
             }
@@ -91,7 +89,8 @@ public class DriverPositionPanel extends javax.swing.JPanel
                 if (listen && UI.validate(e, -180, 180))
                 {
                     position.VerticalAngle = UI.getDouble(e);
-                    relativeVerticalAngleField.setValue(position.verticalAngle(Project.getInstance().ListeningPosition));
+                    relativeVerticalAngleField.setValue(Math.round(position.verticalAngle(Project.getInstance().ListeningPosition)));
+                    relativeHorizontalAngleField.setValue(Math.round(position.horizontalAngle(Project.getInstance().ListeningPosition)));
                     main.refresh();
                 }
             }
@@ -105,7 +104,8 @@ public class DriverPositionPanel extends javax.swing.JPanel
                 if (listen && UI.validate(e, -180, 180))
                 {
                     position.HorizontalAngle = UI.getDouble(e);
-                    relativeHorizontalAngleField.setValue(position.horizontalAngle(Project.getInstance().ListeningPosition));
+                    relativeVerticalAngleField.setValue(Math.round(position.verticalAngle(Project.getInstance().ListeningPosition)));
+                    relativeHorizontalAngleField.setValue(Math.round(position.horizontalAngle(Project.getInstance().ListeningPosition)));
                     main.refresh();
                 }
             }
@@ -123,8 +123,8 @@ public class DriverPositionPanel extends javax.swing.JPanel
         zField.setValue(position.Z * 100);
         verticalAngleField.setValue(position.VerticalAngle);
         horizontalAngleField.setValue(position.HorizontalAngle);
-        relativeVerticalAngleField.setValue(position.verticalAngle(Project.getInstance().ListeningPosition));
-        relativeHorizontalAngleField.setValue(position.horizontalAngle(Project.getInstance().ListeningPosition));
+        relativeVerticalAngleField.setValue(Math.round(position.verticalAngle(Project.getInstance().ListeningPosition)));
+        relativeHorizontalAngleField.setValue(Math.round(position.horizontalAngle(Project.getInstance().ListeningPosition)));
         distanceField.setValue(Project.getInstance().ListeningPosition.distance(position) * 100);
         
         listen = true;
@@ -193,7 +193,6 @@ public class DriverPositionPanel extends javax.swing.JPanel
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel10.setText("Horizontal angle (°):");
-        jLabel10.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
@@ -211,7 +210,6 @@ public class DriverPositionPanel extends javax.swing.JPanel
 
         verticalAngleField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         verticalAngleField.setToolTipText("Relative to room walls");
-        verticalAngleField.setEnabled(false);
         verticalAngleField.setMinimumSize(new java.awt.Dimension(40, 19));
         verticalAngleField.setPreferredSize(new java.awt.Dimension(40, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -221,7 +219,6 @@ public class DriverPositionPanel extends javax.swing.JPanel
 
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel14.setText("Vertical angle (°):");
-        jLabel14.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
@@ -230,7 +227,6 @@ public class DriverPositionPanel extends javax.swing.JPanel
 
         horizontalAngleField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         horizontalAngleField.setToolTipText("Relative to room walls");
-        horizontalAngleField.setEnabled(false);
         horizontalAngleField.setMinimumSize(new java.awt.Dimension(40, 19));
         horizontalAngleField.setPreferredSize(new java.awt.Dimension(40, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();

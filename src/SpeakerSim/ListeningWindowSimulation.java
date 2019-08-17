@@ -27,39 +27,39 @@ public class ListeningWindowSimulation
         distance = new DistanceSimulation[9];
         Position pos;
         
-        pos = centerPos.move(2, 0, 0);
+        pos = centerPos.moveVertically(2, 0);
         bs[0] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
         distance[0] = new DistanceSimulation(sourcePos, pos, env);
         
-        pos = centerPos.move(2, 0, 10);
+        pos = centerPos.moveVertically(2, 10);
         bs[1] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
         distance[1] = new DistanceSimulation(sourcePos, pos, env);
         
-        pos = centerPos.move(2, 0, -10);
+        pos = centerPos.moveVertically(2, -10);
         bs[2] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
         distance[2] = new DistanceSimulation(sourcePos, pos, env);
         
-        pos = centerPos.move(2, 10, 0);
+        pos = centerPos.moveHorizontally(2, 10);
         bs[3] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
         distance[3] = new DistanceSimulation(sourcePos, pos, env);
         
-        pos = centerPos.move(2, -10, 0);
+        pos = centerPos.moveHorizontally(2, -10);
         bs[4] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
         distance[4] = new DistanceSimulation(sourcePos, pos, env);
         
-        pos = centerPos.move(2, 20, 0);
+        pos = centerPos.moveHorizontally(2, 20);
         bs[5] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
         distance[5] = new DistanceSimulation(sourcePos, pos, env);
         
-        pos = centerPos.move(2, -20, 0);
+        pos = centerPos.moveHorizontally(2, -20);
         bs[6] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
         distance[6] = new DistanceSimulation(sourcePos, pos, env);
         
-        pos = centerPos.move(2, 30, 0);
+        pos = centerPos.moveHorizontally(2, 30);
         bs[7] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
         distance[7] = new DistanceSimulation(sourcePos, pos, env);
         
-        pos = centerPos.move(2, -30, 0);
+        pos = centerPos.moveHorizontally(2, -30);
         bs[8] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
         distance[8] = new DistanceSimulation(sourcePos, pos, env);
     }

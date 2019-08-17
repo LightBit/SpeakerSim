@@ -142,16 +142,29 @@ public class Position implements JSONable
         return Math.toDegrees(Math.atan2(c, a));
     }
     
-    public Position move(double distance, double horizontalAngle, double verticalAngle)
+    public Position moveHorizontally(double distance, double angle)
     {
-        horizontalAngle = Math.toRadians(horizontalAngle);
-        verticalAngle = Math.toRadians(verticalAngle);
+        angle = Math.toRadians(angle);
         
         return new Position
         (
-            X + distance * Math.cos(horizontalAngle) * Math.cos(verticalAngle),
-            Y + distance * Math.sin(horizontalAngle),
-            Z + distance * Math.sin(verticalAngle),
+            X + distance * Math.cos(angle),
+            Y + distance * Math.sin(angle),
+            Z,
+            HorizontalAngle,
+            VerticalAngle
+        );
+    }
+    
+    public Position moveVertically(double distance, double angle)
+    {
+        angle = Math.toRadians(angle);
+        
+        return new Position
+        (
+            X + distance * Math.cos(angle),
+            Y,
+            Z + distance * Math.sin(angle),
             HorizontalAngle,
             VerticalAngle
         );

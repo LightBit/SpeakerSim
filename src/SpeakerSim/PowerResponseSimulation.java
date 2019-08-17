@@ -31,11 +31,11 @@ public class PowerResponseSimulation
             Position pos;
             int angle = i * 10;
             
-            pos = centerPos.move(2, angle, 0);
+            pos = centerPos.moveHorizontally(2, angle);
             bs[i] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
             distance[i] = new DistanceSimulation(sourcePos, pos, env);
             
-            pos = centerPos.move(2, 0, angle);
+            pos = centerPos.moveVertically(2, angle);
             bs[35 + i] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
             distance[35 + i] = new DistanceSimulation(sourcePos, pos, env);
         }

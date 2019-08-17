@@ -48,7 +48,7 @@ public class PositionTest
         
         for (a.X = 0; a.X <= 1; a.X += 0.01)
         {
-            for (a.Y = 0; a.Y <= 5; a.Y += 0.1)
+            for (a.Y = 0; a.Y <= 7; a.Y += 1)
             {
                 for (a.Z = 0; a.Z <= 5; a.Z += 0.5)
                 {
@@ -70,7 +70,7 @@ public class PositionTest
         
         for (a.X = 0; a.X <= 1; a.X += 0.01)
         {
-            for (a.Y = 0; a.Y <= 5; a.Y += 0.1)
+            for (a.Y = 0; a.Y <= 7; a.Y += 1)
             {
                 for (a.Z = 0; a.Z <= 5; a.Z += 0.5)
                 {
@@ -84,26 +84,41 @@ public class PositionTest
         }
     }
     
-    /*@Test
-    public void moveToCalculated()
+    @Test
+    public void moveHorizontallyToCalculated()
     {
-        Position a = new Position();
-        Position b = new Position(0.3, 6, 1);
+        Position a = new Position(0, 0, 0);
+        Position b = new Position(0.3, 6, 0);
         
-        for (a.X = 0; a.X <= 1; a.X += 0.01)
+        for (a.X = 0; a.X <= 1; a.X += 0.1)
         {
-            for (a.Y = 0; a.Y <= 5; a.Y += 0.1)
+            for (a.Y = 0; a.Y <= 7; a.Y += 1)
             {
-                for (a.Z = 0; a.Z <= 5; a.Z += 0.5)
-                {
-                    Position p = a.move(a.distance(b), a.horizontalAngle(b), a.verticalAngle(b));
-                    assertEquals(b.X, p.X, 0);
-                    assertEquals(b.Y, p.Y, 0);
-                    assertEquals(b.Z, p.Z, 0);
-                }
+                Position p = a.moveHorizontally(a.distance(b), a.horizontalAngle(b));
+                assertEquals(b.X, p.X, 0.001);
+                assertEquals(b.Y, p.Y, 0.001);
+                assertEquals(b.Z, p.Z, 0.001);
             }
         }
-    }*/
+    }
+    
+    @Test
+    public void moveVerticallyToCalculated()
+    {
+        Position a = new Position(0, 0, 0);
+        Position b = new Position(0.3, 0, 6);
+        
+        for (a.X = 0; a.X <= 1; a.X += 0.1)
+        {
+            for (a.Z = 0; a.Z <= 7; a.Z += 1)
+            {
+                Position p = a.moveVertically(a.distance(b), a.verticalAngle(b));
+                assertEquals(b.X, p.X, 0.001);
+                assertEquals(b.Y, p.Y, 0.001);
+                assertEquals(b.Z, p.Z, 0.001);
+            }
+        }
+    }
     
     @Test
     public void horizontalAngle_1()
@@ -239,7 +254,7 @@ public class PositionTest
     {
         Position a = new Position(3, 2, 1, 0, 0);
         Position b = new Position(5, 6, 4);
-        assertEquals(63.4, a.horizontalAngle(b), 0.1);
+        assertEquals(63.434, a.horizontalAngle(b), 0.001);
     }
 
     @Test
@@ -375,6 +390,70 @@ public class PositionTest
     {
         Position a = new Position(3, 2, 1, 0, 0);
         Position b = new Position(5, 6, 4);
-        assertEquals(56.3, a.verticalAngle(b), 0.1);
+        assertEquals(56.309, a.verticalAngle(b), 0.001);
+    }
+    
+    @Test
+    public void moveHorizontally_1()
+    {
+        Position a = new Position(1, 2, 5, 30, 70);
+        Position b = a.moveHorizontally(2, 0);
+        assertEquals(a.X + 2, b.X, 0.001);
+        assertEquals(a.Y, b.Y, 0.001);
+        assertEquals(a.Z, b.Z, 0);
+        assertEquals(a.HorizontalAngle, b.HorizontalAngle, 0);
+        assertEquals(a.VerticalAngle, b.VerticalAngle, 0);
+    }
+    
+    @Test
+    public void moveHorizontally_2()
+    {
+        Position a = new Position(1, 2, 3);
+        Position b = a.moveHorizontally(2, 90);
+        assertEquals(a.X, b.X, 0.001);
+        assertEquals(a.Y + 2, b.Y, 0.001);
+        assertEquals(a.Z, b.Z, 0);
+    }
+    
+    @Test
+    public void moveHorizontally_3()
+    {
+        Position a = new Position(4, 50, 1);
+        Position b = a.moveHorizontally(1, -100);
+        assertEquals(3.826, b.X, 0.001);
+        assertEquals(49.015, b.Y, 0.001);
+        assertEquals(1, b.Z, 0);
+    }
+    
+    @Test
+    public void moveVertically_1()
+    {
+        Position a = new Position(1, 2, 5, 30, 70);
+        Position b = a.moveVertically(2, 0);
+        assertEquals(a.X + 2, b.X, 0.001);
+        assertEquals(a.Y, b.Y, 0);
+        assertEquals(a.Z, b.Z, 0.001);
+        assertEquals(a.HorizontalAngle, b.HorizontalAngle, 0);
+        assertEquals(a.VerticalAngle, b.VerticalAngle, 0);
+    }
+    
+    @Test
+    public void moveVertically_4()
+    {
+        Position a = new Position(1, 2, 5);
+        Position b = a.moveVertically(2, 90);
+        assertEquals(a.X, b.X, 0.001);
+        assertEquals(a.Y, b.Y, 0);
+        assertEquals(a.Z + 2, b.Z, 0.001);
+    }
+    
+    @Test
+    public void moveVertically_3()
+    {
+        Position a = new Position(4, 50, 1);
+        Position b = a.moveVertically(1, -100);
+        assertEquals(3.826, b.X, 0.001);
+        assertEquals(a.Y, b.Y, 0);
+        assertEquals(0.015, b.Z, 0.001);
     }
 }

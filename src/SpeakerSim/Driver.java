@@ -373,9 +373,31 @@ public class Driver implements JSONable
     {
         if (hasFRD() && (hFRD != null || vFRD != null))
         {
-            // TODO: dipole and sign tricks
-            horizontalAngle = Math.abs(horizontalAngle);
-            verticalAngle = Math.abs(verticalAngle);
+            if (hFRD != null)
+            {
+                if (hFRD[0].horizontalAngle >= 0)
+                {
+                    horizontalAngle = Math.abs(horizontalAngle);
+                }
+                
+                /*if (dipole && Math.abs(horizontalAngle) > 90 && hFRD[0].horizontalAngle >= -90 && hFRD[hFRD.length - 1].horizontalAngle <= 90)
+                {
+                    horizontalAngle = (180 - horizontalAngle) % 180;
+                }*/
+            }
+            
+            if (vFRD != null)
+            {
+                if (vFRD[0].verticalAngle >= 0)
+                {
+                    verticalAngle = Math.abs(verticalAngle);
+                }
+                
+                /*if (dipole && Math.abs(verticalAngle) > 90 && vFRD[0].verticalAngle >= -90 && vFRD[vFRD.length - 1].verticalAngle <= 90)
+                {
+                    verticalAngle = (180 - verticalAngle) % 180;
+                }*/
+            }
             
             double axial = FRD.response(f, SPL_2_83V - SPL_1W).abs();
             double horizontal = horizontalAxis(f, horizontalAngle);

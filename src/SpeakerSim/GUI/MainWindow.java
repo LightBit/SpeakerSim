@@ -786,7 +786,7 @@ public final class MainWindow extends javax.swing.JFrame
     {
         List<Speaker> speakers = new ArrayList<Speaker>();
         
-        Enumeration e = node.depthFirstEnumeration();
+        Enumeration<?> e = node.depthFirstEnumeration();
         while (e.hasMoreElements())
         {
             Object x = ((DefaultMutableTreeNode)e.nextElement()).getUserObject();
@@ -1115,7 +1115,7 @@ public final class MainWindow extends javax.swing.JFrame
     protected boolean canRemoveItem()
     {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-        Enumeration children = node.children();
+        Enumeration<?> children = node.children();
         while (children.hasMoreElements())
         {
             if (!canMoveLeftItem((DefaultMutableTreeNode) children.nextElement()))
@@ -1129,7 +1129,7 @@ public final class MainWindow extends javax.swing.JFrame
     
     protected void removeItem(DefaultMutableTreeNode node)
     {
-        Enumeration children = node.children();
+        Enumeration<?> children = node.children();
         while (children.hasMoreElements())
         {
             moveLeftItem((DefaultMutableTreeNode) children.nextElement());
@@ -1145,6 +1145,8 @@ public final class MainWindow extends javax.swing.JFrame
     
     protected void deleteItem(DefaultMutableTreeNode node)
     {
+        stopWorker();
+        
         DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
         DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
         
@@ -1187,6 +1189,8 @@ public final class MainWindow extends javax.swing.JFrame
 
             if (fs.showOpenDialog(this) == FileSelector.APPROVE_OPTION)
             {
+                stopWorker();
+                
                 IItem item = Item.constructItem(JSON.open(fs.getSelectedFile()));
                 
                 DefaultMutableTreeNode parent = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
@@ -1234,16 +1238,7 @@ public final class MainWindow extends javax.swing.JFrame
 
             if (fs.showSaveDialog(this) == FileSelector.APPROVE_OPTION)
             {
-                if (worker != null && worker.isAlive())
-                {
-                    try
-                    {
-                        worker.join();
-                    }
-                    catch (InterruptedException ex)
-                    {
-                    }
-                }
+                waitWorker();
                 
                 try (PrintWriter writer = new PrintWriter(fs.getSelectedFile(), "UTF-8"))
                 {
@@ -1251,8 +1246,6 @@ public final class MainWindow extends javax.swing.JFrame
                     {
                         writer.print(new ResponseEntry(freq[i], response[i], responsePhase[i]).toString());
                     }
-
-                    writer.close();
                 }
             }
         }
@@ -1271,16 +1264,7 @@ public final class MainWindow extends javax.swing.JFrame
 
             if (fs.showSaveDialog(this) == FileSelector.APPROVE_OPTION)
             {
-                if (worker != null && worker.isAlive())
-                {
-                    try
-                    {
-                        worker.join();
-                    }
-                    catch (InterruptedException ex)
-                    {
-                    }
-                }
+                waitWorker();
                 
                 try (PrintWriter writer = new PrintWriter(fs.getSelectedFile(), "UTF-8"))
                 {
@@ -1288,8 +1272,6 @@ public final class MainWindow extends javax.swing.JFrame
                     {
                         writer.print(new ResponseEntry(freq[i], impedance[i], impedancePhase[i]).toString());
                     }
-
-                    writer.close();
                 }
             }
         }
@@ -1340,6 +1322,8 @@ public final class MainWindow extends javax.swing.JFrame
     
     protected void moveUpItem()
     {
+        stopWorker();
+        
         DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
         DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
@@ -1358,6 +1342,8 @@ public final class MainWindow extends javax.swing.JFrame
     
     protected void moveDownItem()
     {
+        stopWorker();
+        
         DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
         DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
@@ -1376,6 +1362,8 @@ public final class MainWindow extends javax.swing.JFrame
     
     protected void moveLeftItem(DefaultMutableTreeNode node)
     {
+        stopWorker();
+        
         DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
         DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
         
@@ -1400,6 +1388,8 @@ public final class MainWindow extends javax.swing.JFrame
     
     protected void moveRightItem()
     {
+        stopWorker();
+        
         DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
         DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
@@ -1418,7 +1408,7 @@ public final class MainWindow extends javax.swing.JFrame
     
     protected boolean canPasteItem()
     {
-        Class type = CopyPaste.getType();
+        Class<?> type = CopyPaste.getType();
         IItem target = getSelectedItem();
         
         return (type == Amplifier.class && target instanceof Project)
@@ -1442,8 +1432,9 @@ public final class MainWindow extends javax.swing.JFrame
         IItem item = CopyPaste.get();
         if (item != null)
         {
-            DefaultMutableTreeNode parent = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+            stopWorker();
             
+            DefaultMutableTreeNode parent = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
             ((IItem) parent.getUserObject()).getChildren().add(item);
             
             addItemChildren(parent, item);
@@ -1614,6 +1605,36 @@ public final class MainWindow extends javax.swing.JFrame
     
     private Thread worker;
     
+    private void stopWorker()
+    {
+        if (worker != null && worker.isAlive())
+        {
+            worker.interrupt();
+            
+            try
+            {
+                worker.join();
+            }
+            catch (InterruptedException ex)
+            {
+            }
+        }
+    }
+    
+    private void waitWorker()
+    {
+        if (worker != null && worker.isAlive())
+        {
+            try
+            {
+                worker.join();
+            }
+            catch (InterruptedException ex)
+            {
+            }
+        }
+    }
+    
     private void showNode(final DefaultMutableTreeNode node)
     {
         // calculate center of all speakers
@@ -1652,17 +1673,7 @@ public final class MainWindow extends javax.swing.JFrame
         propertiesPanel.repaint();
 
         // stop worker, if running
-        if (worker != null && worker.isAlive())
-        {
-            worker.interrupt();
-            try
-            {
-                worker.join();
-            }
-            catch (InterruptedException ex)
-            {
-            }
-        }
+        stopWorker();
         
         final String selectedTab = UI.getSelectedTab(tabs);
         tabs.removeAll();

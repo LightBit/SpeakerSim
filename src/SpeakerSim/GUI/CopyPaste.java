@@ -27,14 +27,14 @@ import java.io.IOException;
 
 public class CopyPaste implements Transferable, ClipboardOwner
 {
-    private static final DataFlavor itemDataFlavor = DataFlavor.stringFlavor;//new DataFlavor(IItem.class, "SpeakerSim");
-    private static final DataFlavor[] flavors = new DataFlavor[] { itemDataFlavor };
+    private static final DataFlavor DATA_FLAVOR = new DataFlavor(IItem.class, "SpeakerSim");
+    private static final DataFlavor[] FLAVORS = new DataFlavor[] { DATA_FLAVOR };
     
-    private final IItem item;
+    private final String item;
     
     public CopyPaste(IItem item)
     {
-        this.item = item;
+        this.item = Item.itemToJSON(item).toString();
     }
     
     public static void set(IItem item)
@@ -44,55 +44,49 @@ public class CopyPaste implements Transferable, ClipboardOwner
         clipboard.setContents(obj, obj);
     }
     
-    public static IItem get()
+    private static String getString()
     {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         Transferable contents = clipboard.getContents(null);
-        if (contents != null && contents.isDataFlavorSupported(CopyPaste.itemDataFlavor))
+        if (contents != null && contents.isDataFlavorSupported(CopyPaste.DATA_FLAVOR))
         {
             try
             {
-                return (IItem) Item.constructItem(Json.parse((String) contents.getTransferData(CopyPaste.itemDataFlavor)));
+                return (String) contents.getTransferData(CopyPaste.DATA_FLAVOR);
             }
-            catch (Exception ex)
+            catch (UnsupportedFlavorException | IOException ex)
             {
                 return null;
             }
-            /*catch (UnsupportedFlavorException ex)
-            {
-                return null;
-            }
-            catch (IOException ex)
-            {
-                UI.exception(ex);
-            }*/
         }
         
         return null;
     }
     
-    public static Class getType()
+    public static IItem get()
     {
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        Transferable contents = clipboard.getContents(null);
-        if (contents != null && contents.isDataFlavorSupported(CopyPaste.itemDataFlavor))
+        String data = getString();
+        if (data != null)
+        {
+            return Item.constructItem(Json.parse(data));
+        }
+        
+        return null;
+    }
+    
+    public static Class<?> getType()
+    {
+        String data = getString();
+        if (data != null)
         {
             try
             {
-                return Class.forName("SpeakerSim." + Json.parse((String) contents.getTransferData(CopyPaste.itemDataFlavor)).asObject().getString("Type", ""));
+                return Class.forName("SpeakerSim." + Json.parse(data).asObject().getString("Type", ""));
             }
-            catch (Exception ex)
+            catch (ClassNotFoundException ex)
             {
                 return null;
             }
-            /*catch (UnsupportedFlavorException | ClassNotFoundException ex)
-            {
-                return null;
-            }
-            catch (IOException ex)
-            {
-                UI.exception(ex);
-            }*/
         }
         
         return null;
@@ -101,24 +95,24 @@ public class CopyPaste implements Transferable, ClipboardOwner
     @Override
     public DataFlavor[] getTransferDataFlavors()
     {
-        return flavors;
+        return FLAVORS;
     }
 
     @Override
     public boolean isDataFlavorSupported(DataFlavor flavor)
     {
-        return itemDataFlavor == flavor;
+        return DATA_FLAVOR == flavor;
     }
 
     @Override
-    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
+    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException
     {
-        if (flavor == itemDataFlavor)
+        if (flavor == DATA_FLAVOR)
         {
-            return Item.itemToJSON(item).toString();
+            return item;
         }
 
-        return null;
+        throw new UnsupportedFlavorException(flavor);
     }
 
     @Override

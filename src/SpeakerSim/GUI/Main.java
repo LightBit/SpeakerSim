@@ -36,7 +36,7 @@ public class Main
             @Override
             public void uncaughtException(Thread t, Throwable e)
             {
-                UI.throwable(e);
+                UI.throwable(null, e);
             }
         });
         
@@ -59,7 +59,7 @@ public class Main
         {
             if (Integer.parseInt(System.getProperty("java.specification.version")) < 8)
             {
-                UI.error("Your Java Runtime Environment is too old. Java 8 or newer required.");
+                UI.error(null, "Your Java Runtime Environment is too old. Java 8 or newer required.");
                 System.exit(-1);
             }
         }
@@ -124,7 +124,7 @@ public class Main
         }
         catch (Throwable ex)
         {
-            UI.throwable(ex);
+            UI.throwable(null, ex);
             System.exit(-1);
         }
     }

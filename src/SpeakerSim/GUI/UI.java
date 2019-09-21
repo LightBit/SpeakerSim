@@ -226,16 +226,6 @@ public final class UI
         }
     }
     
-    public static void warning(String message)
-    {
-        JOptionPane.showMessageDialog(null, message, "Warning", JOptionPane.WARNING_MESSAGE);
-    }
-    
-    public static void error(String message)
-    {
-        JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-    
     private static String stackTraceToString(Throwable e)
     {
         StringBuilder sb = new StringBuilder();
@@ -265,7 +255,7 @@ public final class UI
         ta.setCaretPosition(0);
         ta.setEditable(false);
 
-        switch (JOptionPane.showOptionDialog(parent, new JScrollPane(ta), "Unexpected error", 0, JOptionPane.ERROR_MESSAGE, null, new String[] {"OK", "Copy", "Save"}, "OK"))
+        switch (JOptionPane.showOptionDialog(parent, new JScrollPane(ta), "Unexpected error", 0, JOptionPane.ERROR_MESSAGE, null, new String[]{"Close", "Copy", "Save"}, "Close"))
         {
             case 1:
                 StringSelection selection = new StringSelection(stackTrace);
@@ -304,7 +294,7 @@ public final class UI
             {
                 message = e.toString();
             }
-            error(message);
+            error(parent, message);
             System.exit(-1);
         }
         else if (e instanceof HandledException)
@@ -324,11 +314,11 @@ public final class UI
                 }
             }
             
-            error(message);
+            error(parent, message);
         }
         else if (e instanceof IOException)
         {
-            error("Error reading file: " + e.getLocalizedMessage());
+            error(parent, "Error reading file: " + e.getLocalizedMessage());
         }
         else
         {
@@ -336,35 +326,41 @@ public final class UI
         }
     }
     
-    public static void throwable(Throwable e)
+    public static void warning(Component parent, String message)
     {
-        throwable(null, e);
+        JOptionPane.showMessageDialog(parent, message, "Warning", JOptionPane.WARNING_MESSAGE);
+    }
+    
+    public static void error(Component parent, String message)
+    {
+        JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public static int options(Component parent, String message, String[] options)
+    {
+        return JOptionPane.showOptionDialog(parent, message, "Warning", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
     }
     
     public static boolean ask(Component parent, String question)
     {
-        int dialogButton = JOptionPane.showConfirmDialog(null, question, "Warning", JOptionPane.YES_NO_OPTION);
+        int dialogButton = JOptionPane.showConfirmDialog(parent, question, "Warning", JOptionPane.YES_NO_OPTION);
         return dialogButton == JOptionPane.YES_OPTION;
     }
     
     public static String askInput(Component parent, String title, String question)
     {
-        return JOptionPane.showInputDialog(null, question, title, JOptionPane.PLAIN_MESSAGE);
+        return JOptionPane.showInputDialog(parent, question, title, JOptionPane.PLAIN_MESSAGE);
     }
     
     public static String askInput(Component parent, String title, String question, String defaultValue)
     {
-        return (String) JOptionPane.showInputDialog(null, question, title, JOptionPane.PLAIN_MESSAGE, null, null, defaultValue);
+        return (String) JOptionPane.showInputDialog(parent, question, title, JOptionPane.PLAIN_MESSAGE, null, null, defaultValue);
     }
     
     public static boolean dialog(Component parent, String title, Object content)
     {
-        return JOptionPane.showConfirmDialog(parent, content, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION;
-    }
-    
-    public static boolean dialog(String title, Object content)
-    {
-        return JOptionPane.showConfirmDialog(null, content, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION;
+        String[] opts = {"Save", "Cancel"};
+        return JOptionPane.showOptionDialog(parent, content, title, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, opts, opts[0]) == 0;
     }
     
     public static String getSelectedTab(JTabbedPane tabs)

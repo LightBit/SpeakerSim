@@ -261,7 +261,7 @@ public final class MainWindow extends javax.swing.JFrame
     {
         if (Project.getInstance().Version.compareTo(Project.currentVersion()) > 0)
         {
-            UI.warning("Project file was created with newer version. It may not work correctly!");
+            UI.warning(this, "Project file was created with newer version. It may not work correctly!");
         }
     }
     
@@ -293,7 +293,7 @@ public final class MainWindow extends javax.swing.JFrame
                                     @Override
                                     public void run()
                                     {
-                                        if (UI.ask(null, "New version is available. Would you like to update?"))
+                                        if (UI.options(null, "New version is available. It is recommended to update.", new String[]{"Visit web page", "Continue"}) == 0)
                                         {
                                             UI.openURL("https://gitlab.com/LightBit/SpeakerSim/releases");
                                         }
@@ -2172,7 +2172,7 @@ public final class MainWindow extends javax.swing.JFrame
     {
         if (Project.getInstance() != null && Project.getInstance().isModified())
         {
-            switch (JOptionPane.showOptionDialog(this, "Project has been modified!", "Save changes?", 0, JOptionPane.WARNING_MESSAGE, null, new String[]{"Save", "Do not save", "Cancel"}, "Save"))
+            switch (UI.options(this, "Project has been modified.", new String[]{"Save", "Do not save", "Cancel"}))
             {
                 case 0:
                     if (!save())

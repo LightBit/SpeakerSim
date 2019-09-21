@@ -576,13 +576,13 @@ public class DriverWindow extends javax.swing.JDialog
         renderGraphs();
     }
     
-    private static void setButton(JButton button, JFormattedTextField field, double calcValue)
+    private void setButton(JButton button, JFormattedTextField field, double calcValue)
     {
         try
         {
             double value = UI.getDouble(field);
             String calcText = Fnc.roundedDecimalFormat(calcValue);
-            double diff = Math.abs((Fnc.parseNumber(calcText).doubleValue() - value) / value);
+            double diff = Math.abs(Math.min((calcValue - value) / value, (Fnc.parseNumber(calcText).doubleValue() - value) / value));
             
             if (!Double.isNaN(calcValue) && !Double.isInfinite(calcValue) && calcValue > 0 && diff > 0.01)
             {
@@ -599,7 +599,7 @@ public class DriverWindow extends javax.swing.JDialog
         }
         catch (ParseException ex)
         {
-            UI.throwable(ex);
+            UI.throwable(this, ex);
         }
     }
     
@@ -711,7 +711,7 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.weighty = 0.1;
         getContentPane().add(tabs, gridBagConstraints);
 
-        OKButton.setText("OK");
+        OKButton.setText("Save");
         OKButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -1693,12 +1693,165 @@ public class DriverWindow extends javax.swing.JDialog
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_OKButtonActionPerformed
     {//GEN-HEADEREND:event_OKButtonActionPerformed
-        result = true;
+        String invalid = "";
         
-        Driver.copy(drv, origDriver);
-        origDriver.PowerFilter.setType(PowerFilter.valueOf(powerFilterComboBox.getSelectedItem().toString()));
+        if (drv.Name == null || drv.Name.isEmpty())
+        {
+            invalid += "Name, ";
+        }
         
-        dispose();
+        if (drv.Closed)
+        {
+            if (!drv.hasFRD())
+            {
+                invalid += "Response, ";
+            }
+            
+            if (!drv.hasZMA())
+            {
+                invalid += "Impedance, ";
+            }
+            
+            if (drv.Re <= 0)
+            {
+                invalid += "Re, ";
+            }
+        }
+        else
+        {
+            if (drv.Vas <= 0)
+            {
+                invalid += "Vas, ";
+            }
+            
+            if (drv.Fs <= 0)
+            {
+                invalid += "Fs, ";
+            }
+            
+            if (drv.Qes <= 0)
+            {
+                invalid += "Qes, ";
+            }
+            
+            if (drv.Qms <= 0)
+            {
+                invalid += "Qms, ";
+            }
+            
+            if (drv.Qts <= 0)
+            {
+                invalid += "Qts, ";
+            }
+            
+            if (drv.Re <= 0)
+            {
+                invalid += "Re, ";
+            }
+            
+            if (drv.Bl <= 0)
+            {
+                invalid += "Bl, ";
+            }
+            
+            if (drv.Le <= 0)
+            {
+                invalid += "Le, ";
+            }
+            
+            if (drv.Xmax <= 0)
+            {
+                invalid += "Xmax, ";
+            }
+        }
+        
+        if (Driver.Shape.Circular.equals(drv.shape))
+        {
+            if (drv.Dia <= 0)
+            {
+                invalid += "Dia, ";
+            }
+        }
+        else if (Driver.Shape.Rectangular.equals(drv.shape))
+        {
+            if (drv.Width <= 0)
+            {
+                invalid += "Width, ";
+            }
+
+            if (drv.Height <= 0)
+            {
+                invalid += "Height, ";
+            }
+        }
+        
+        if (!drv.Closed)
+        {
+            if (drv.Sd <= 0)
+            {
+                invalid += "Sd, ";
+            }
+            
+            if (drv.Vd <= 0)
+            {
+                invalid += "Vd, ";
+            }
+            
+            if (drv.Cms <= 0)
+            {
+                invalid += "Cms, ";
+            }
+            
+            if (drv.Mms <= 0)
+            {
+                invalid += "Mms, ";
+            }
+            
+            if (drv.Rms <= 0)
+            {
+                invalid += "Rms, ";
+            }
+            
+            if (drv.n0 <= 0)
+            {
+                invalid += "n0, ";
+            }
+        }
+        
+        if (drv.SPL_1W <= 0)
+        {
+            invalid += "SPL at 1W/1m, ";
+        }
+
+        if (drv.SPL_2_83V <= 0)
+        {
+            invalid += "SPL at 2.83V/1m, ";
+        }
+
+        if (drv.Pe <= 0)
+        {
+            invalid += "Pe, ";
+        }
+        
+        if (!invalid.isEmpty())
+        {
+            UI.error(this, "Invalid parameters:\n" + invalid.substring(0, invalid.length() - 2));
+        }
+        else
+        {
+            if (!drv.hasFRD() || !drv.hasZMA())
+            {
+                if (UI.options(this, "There is no frequency or impedance response data. This data is required for good results.", new String[]{"Save anyway", "Cancel"}) != 0)
+                {
+                    return;
+                }
+            }
+            
+            result = true;
+            Driver.copy(drv, origDriver);
+            origDriver.PowerFilter.setType(PowerFilter.valueOf(powerFilterComboBox.getSelectedItem().toString()));
+            dispose();
+        }
     }//GEN-LAST:event_OKButtonActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_CancelButtonActionPerformed
@@ -1815,7 +1968,7 @@ public class DriverWindow extends javax.swing.JDialog
                 drv.FRD = ResponsesWindow.importFRD();
                 if (drv.hasFRD())
                 {
-                    drv.FRD = ResponsesWindow.editDialog(drv.FRD, false);
+                    drv.FRD = ResponsesWindow.editDialog(this, drv.FRD, false);
                 }
             }
             

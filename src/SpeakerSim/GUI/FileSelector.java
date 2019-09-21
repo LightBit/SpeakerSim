@@ -18,7 +18,6 @@ package SpeakerSim.GUI;
 
 import java.io.File;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 
 public class FileSelector extends JFileChooser
 {
@@ -61,22 +60,18 @@ public class FileSelector extends JFileChooser
         {
             if (getDialogType() == JFileChooser.SAVE_DIALOG)
             {
-                switch (JOptionPane.showConfirmDialog(this, "The file exists, overwrite?", "Existing file", JOptionPane.YES_NO_CANCEL_OPTION))
+                switch (UI.options(this, "File already exists.", new String[]{"Overwrite", "Change file name", "Do not save"}))
                 {
-                    case JOptionPane.YES_OPTION:
-                        super.approveSelection();
-                    case JOptionPane.NO_OPTION:
-                    case JOptionPane.CLOSED_OPTION:
-                        return;
-
-                    case JOptionPane.CANCEL_OPTION:
+                    case 0:
+                        break;
+                     
+                    case 2:
                         cancelSelection();
                         return;
+                    
+                    default:
+                        return;
                 }
-            }
-            else
-            {
-
             }
         }
         super.approveSelection();

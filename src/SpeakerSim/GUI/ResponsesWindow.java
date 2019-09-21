@@ -17,6 +17,7 @@
 package SpeakerSim.GUI;
 
 import SpeakerSim.*;
+import java.awt.Component;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
@@ -303,7 +304,7 @@ public class ResponsesWindow extends JDialog
         return null;
     }
    
-    public static ResponseData editDialog(ResponseData frd, boolean showAngles)
+    public static ResponseData editDialog(Component parent, ResponseData frd, boolean showAngles)
     {
         String[] measures = { "volts", "watts" };
         JComboBox<String> inputMeasure = new JComboBox<String>(measures);
@@ -359,7 +360,7 @@ public class ResponsesWindow extends JDialog
             minimumPhase
         };
         
-        if (UI.dialog("FRD info", inputs))
+        if (UI.dialog(parent, "FRD info", inputs))
         {
             ResponseData rd = new ResponseData(null);
             rd.data = frd.data;
@@ -389,12 +390,12 @@ public class ResponsesWindow extends JDialog
     
     private ResponseData edit(ResponseData frd, boolean showAngles, boolean editing)
     {
-        ResponseData rd = editDialog(frd, showAngles);
+        ResponseData rd = editDialog(this, frd, showAngles);
         if (rd != null)
         {
             if (model.contains(rd) && !(editing && rd.equals(frd)))
             {
-                if (!UI.ask(this, "Data with same angles already exists.\nWould you like to overwrite it?"))
+                if (UI.options(this, "Data with same angles already exists.", new String[]{"Overwrite", "Cancel"}) != 0)
                 {
                     return null;
                 }
@@ -420,8 +421,7 @@ public class ResponsesWindow extends JDialog
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         scrollPane = new javax.swing.JScrollPane();
@@ -488,7 +488,7 @@ public class ResponsesWindow extends JDialog
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         getContentPane().add(removeButton, gridBagConstraints);
 
-        okButton.setText("OK");
+        okButton.setText("Save");
         controlPanel.add(okButton);
 
         cancelButton.setText("Cancel");

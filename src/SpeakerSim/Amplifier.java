@@ -37,7 +37,7 @@ public class Amplifier extends Filter
         try
         {
             Class<?> filterClass = Class.forName("SpeakerSim." + type);
-            Constructor constructor = filterClass.getConstructor(JsonValue.class);
+            Constructor<?> constructor = filterClass.getConstructor(JsonValue.class);
             return (IActiveFilter) constructor.newInstance(json);
         }
         catch (Exception e)
@@ -58,7 +58,7 @@ public class Amplifier extends Filter
     {
         super();
         Pe = 1000;
-        Zo = 0.1;
+        Zo = 0;
         Filters = new IActiveFilter[0];
     }
     

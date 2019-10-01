@@ -35,7 +35,7 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
 {
     public boolean isMinimumPhase;
     public boolean inputIsVoltage;
-    public double input;
+    public double inputValue;
     public double distance;
     public double horizontalAngle;
     public double verticalAngle;
@@ -59,11 +59,11 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
 
                 if (inputIsVoltage)
                 {
-                    amplitude += Fnc.toDecibels(2.83) - Fnc.toDecibels(input);
+                    amplitude += Fnc.toDecibels(2.83) - Fnc.toDecibels(inputValue);
                 }
                 else
                 {
-                    amplitude += SPLdiff - Fnc.powerToDecibels(input);
+                    amplitude += SPLdiff - Fnc.powerToDecibels(inputValue);
                 }
                 
                 Complex x = dist.response(f);
@@ -104,8 +104,6 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
                     }
                 }
             }
-            
-            r.close();
         }
         
         if (frd.isEmpty())
@@ -201,8 +199,6 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
             {
                 writer.print(entry.toString());
             }
-
-            writer.close();
         }
     }
     
@@ -225,7 +221,7 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
             distance = JSON.getDouble(jsonObj, "Distance", 1);
             isMinimumPhase = JSON.getBoolean(jsonObj, "IsMinimumPhase", true);
             inputIsVoltage = JSON.getBoolean(jsonObj, "InputIsVoltage", false);
-            input = JSON.getDouble(jsonObj, "Input", 1);
+            inputValue = JSON.getDouble(jsonObj, "InputValue", 1);
             horizontalAngle = JSON.getDouble(jsonObj, "HorizontalAngle");
             verticalAngle = JSON.getDouble(jsonObj, "VerticalAngle");
             
@@ -242,7 +238,7 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
         {
             isMinimumPhase = true;
             inputIsVoltage = false;
-            input = 1;
+            inputValue = 1;
             distance = 1;
         }
         
@@ -268,7 +264,7 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
         json.add("Distance", distance);
         json.add("IsMinimumPhase", isMinimumPhase);
         json.add("InputIsVoltage", inputIsVoltage);
-        json.add("InputValue", input);
+        json.add("InputValue", inputValue);
         json.add("HorizontalAngle", horizontalAngle);
         json.add("VerticalAngle", verticalAngle);
         json.add("Data", array);

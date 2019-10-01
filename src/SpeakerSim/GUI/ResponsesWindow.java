@@ -323,7 +323,7 @@ public class ResponsesWindow extends JDialog
        
         JCheckBox minimumPhase = new JCheckBox("Has minimum phase", frd.isMinimumPhase); 
        
-        input.setValue(frd.input);
+        input.setValue(frd.inputValue);
        
         if (frd.inputIsVoltage)
         {
@@ -366,7 +366,7 @@ public class ResponsesWindow extends JDialog
             rd.data = frd.data;
             
             rd.inputIsVoltage = inputMeasure.getSelectedIndex() == 0;
-            rd.input = UI.getDouble(input);
+            rd.inputValue = UI.getDouble(input);
             rd.distance = UI.getDouble(distance) / 100;
             
             if (angleDirection.getSelectedIndex() == 0)

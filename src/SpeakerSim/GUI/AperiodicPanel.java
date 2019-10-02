@@ -26,6 +26,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
     private final MainWindow main;
     private Speaker speaker;
     private boolean listen;
+    private Graph box;
     
     public AperiodicPanel(final MainWindow main)
     {
@@ -122,10 +123,6 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         return bassReflexPanel.getBaseline(width, height);
     }
     
-    Graph box;
-    Graph cone;
-    Graph vent;
-    
     @Override
     public void show(Speaker speaker)
     {
@@ -145,28 +142,34 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
     }
     
     @Override
-    public void addGraphs(final JTabbedPane tabs)
+    public void simulate()
     {
         BassReflexSimulation sim = (BassReflexSimulation) speaker.getSimulation();
         
-        box = new Graph("Enclosure response", "Hz", "dB");
-        cone = new Graph("Cone response", "Hz", "dB");
-        vent = new Graph("Vent response", "Hz", "dB");
+        double[] enclosure = new double[main.freq.length];
+        double[] cone = new double[main.freq.length];
+        double[] port = new double[main.freq.length];
         
-        for (double f = Project.getInstance().Settings.StartFrequency; f <= Project.getInstance().Settings.EndFrequency; f *= Project.getInstance().Settings.multiplier())
+        for (int i = 0; i < main.freq.length; i++)
         {
-            box.add(sim.dBmag(f), f);
-            cone.add(sim.dBmagCone(f), f);
-            vent.add(sim.dBmagPort(f), f);
+            double f = main.freq[i];
+            enclosure[i] = sim.dBmag(f);
+            cone[i] = sim.dBmagCone(f);
+            port[i] = sim.dBmagPort(f);
         }
         
-        box.setYRange(box.getMaxY() - Project.getInstance().Settings.dBRange, box.getMaxY() + 1);
-        cone.setYRange(cone.getMaxY() - Project.getInstance().Settings.dBRange, cone.getMaxY() + 1);
-        vent.setYRange(vent.getMaxY() - Project.getInstance().Settings.dBRange, vent.getMaxY() + 1);
+        box = new Graph("Hz", "dB");
+        box.add("Enclosure", main.freq, enclosure);
+        box.add("Cone", main.freq, cone);
+        box.add("Vent", main.freq, port);
         
+        box.setYRange(box.getMaxY() - Project.getInstance().Settings.dBRange, box.getMaxY() + 1);
+    }
+    
+    @Override
+    public void addGraphs(final JTabbedPane tabs)
+    {
         tabs.addTab("Enclosure response", box.getGraph());
-        tabs.addTab("Cone response", cone.getGraph());
-        tabs.addTab("Vent response", vent.getGraph());
     }
 
     @SuppressWarnings("unchecked")

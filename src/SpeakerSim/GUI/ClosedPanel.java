@@ -26,6 +26,7 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
     private final MainWindow main;
     private Speaker speaker;
     private boolean listen;
+    private Graph box;
     
     public ClosedPanel(final MainWindow main)
     {
@@ -74,8 +75,6 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         });
     }
     
-    Graph box;
-    
     @Override
     public void show(Speaker speaker)
     {
@@ -92,19 +91,27 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
     }
     
     @Override
-    public void addGraphs(final JTabbedPane tabs)
+    public void simulate()
     {
         ClosedBoxSimulation sim = (ClosedBoxSimulation) speaker.getSimulation();
         
-        box = new Graph("Enclosure response", "Hz", "dB");
+        double[] enclosure = new double[main.freq.length];
         
-        for (double f = Project.getInstance().Settings.StartFrequency; f <= Project.getInstance().Settings.EndFrequency; f *= Project.getInstance().Settings.multiplier())
+        for (int i = 0; i < main.freq.length; i++)
         {
-            box.add(sim.dBmag(f), f);
+            double f = main.freq[i];
+            enclosure[i] = sim.dBmag(f);
         }
         
-        box.setYRange(box.getMaxY() - Project.getInstance().Settings.dBRange, box.getMaxY() + 1);
+        box = new Graph("Hz", "dB");
+        box.add("Enclosure", main.freq, enclosure);
         
+        box.setYRange(box.getMaxY() - Project.getInstance().Settings.dBRange, box.getMaxY() + 1);
+    }
+    
+    @Override
+    public void addGraphs(final JTabbedPane tabs)
+    {
         tabs.addTab("Enclosure response", box.getGraph());
     }
     

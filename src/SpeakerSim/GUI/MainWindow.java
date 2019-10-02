@@ -37,11 +37,15 @@ public final class MainWindow extends javax.swing.JFrame
     private final FileSelector fc;
     private boolean listen = true;
     
-    private double[] freq;
+    public double[] freq;
     private double[] response;
     private double[] responsePhase;
     private double[] impedance;
     private double[] impedancePhase;
+    private Component enclosurePanel;
+    private Component bafflePanel;
+    private Component driverPositionPanel;
+    private Thread worker;
     
     public MainWindow(String arg) throws IOException
     {
@@ -1484,10 +1488,6 @@ public final class MainWindow extends javax.swing.JFrame
         refresh();
     }
     
-    private Component enclosurePanel;
-    private Component bafflePanel;
-    private Component driverPositionPanel;
-    
     private void showPanels(IItem item)
     {
         if (item instanceof Speaker)
@@ -1603,8 +1603,6 @@ public final class MainWindow extends javax.swing.JFrame
         return r.multiply(baffleResponse).multiply(roomResponse);
     }
     
-    private Thread worker;
-    
     private void stopWorker()
     {
         if (worker != null && worker.isAlive())
@@ -1688,6 +1686,7 @@ public final class MainWindow extends javax.swing.JFrame
                 try
                 {
                     final IItem item = (IItem) node.getUserObject();
+                    final List<IItem> subitems = item.getChildren();
                     final List<Speaker> speakers = getSpeakers(node);
 
                     if (!speakers.isEmpty())
@@ -1702,6 +1701,7 @@ public final class MainWindow extends javax.swing.JFrame
                         double[] filter = new double[freq.length];
                         double[] baffle = new double[freq.length];
                         double[] room = new double[freq.length];
+                        double[][] leafs = new double[subitems.size()][freq.length];
 
                         for (int i = 0; i < freq.length; i++)
                         {
@@ -1713,8 +1713,17 @@ public final class MainWindow extends javax.swing.JFrame
                             Complex baffleResponse = Project.getInstance().Settings.BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
                             Complex roomResponse = Project.getInstance().Settings.RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
                             r = r.multiply(baffleResponse).multiply(roomResponse);
-
                             response[i] = Fnc.toDecibels(r.abs());
+                            
+                            for (int j = 0; j < leafs.length; j++)
+                            {
+                                Complex l = subitems.get(j).response(f);
+                                Complex br = Project.getInstance().Settings.BaffleSimulation ? subitems.get(j).responseWithBaffle(f).divide(l) : new Complex(1);
+                                Complex rr = Project.getInstance().Settings.RoomSimulation ? subitems.get(j).responseWithRoom(f).divide(l) : new Complex(1);
+                                l = l.multiply(br).multiply(rr);
+                                leafs[j][i] = Fnc.toDecibels(l.abs());
+                            }
+
                             listeningWindow[i] = Fnc.toDecibels(item.listeningWindowResponse(f).abs());
                             power[i] = Fnc.toDecibels(item.powerResponse(f).abs());
                             directivity[i] = listeningWindow[i] - power[i];
@@ -1736,6 +1745,10 @@ public final class MainWindow extends javax.swing.JFrame
                             int points = (int)Math.round(Project.getInstance().Settings.pointsPerOctave()) / Project.getInstance().Settings.Smoothing;
 
                             response = Fnc.smooth(response, points);
+                            for (int j = 0; j < leafs.length; j++)
+                            {
+                                leafs[j] = Fnc.smooth(leafs[j], points);
+                            }
                             listeningWindow = Fnc.smooth(listeningWindow, points);
                             power = Fnc.smooth(power, points);
                             directivity = Fnc.smooth(directivity, points);
@@ -1748,24 +1761,29 @@ public final class MainWindow extends javax.swing.JFrame
                         maxPower = Fnc.smooth(maxPower, (int)Math.round(Project.getInstance().Settings.pointsPerOctave()) / (Project.getInstance().Settings.Smoothing > 0 ? Math.min(6, Project.getInstance().Settings.Smoothing) : 6));
                         filter = Fnc.smooth(filter, (int)Math.round(Project.getInstance().Settings.pointsPerOctave()) / (Project.getInstance().Settings.Smoothing > 0 ? Math.min(6, Project.getInstance().Settings.Smoothing) : 6));
 
-                        final Graph graphSPL = new Graph("Frequency response", "Hz", freq, "dB", response);
-                        final Graph graphPower = new Graph("Power response", "Hz", freq, "dB", power);
-                        final Graph graphListeningWindow = new Graph("Listening window", "Hz", freq, "dB", listeningWindow);
-                        final Graph graphDirectivity = new Graph("Directivity", "Hz", freq, "dB", directivity);
+                        final Graph graphResponse = new Graph(item.toString(), "Hz", freq, "dB", response);
+                        for (int j = 0; j < leafs.length; j++)
+                        {
+                            graphResponse.add(subitems.get(j).toString(), freq, leafs[j]);
+                        }
+                        
+                        final Graph graphDirectivity = new Graph("Hz", "dB");
+                        graphDirectivity.add("Listening window", freq, listeningWindow);
+                        graphDirectivity.add("Power response", freq, power);
+                        graphDirectivity.add("Directivity", freq, directivity);
+                        
                         final Graph graphPhase = new Graph("Phase", "Hz", freq, "", responsePhase);
                         final Graph graphMaxSPL = new Graph("Maximal response", "Hz", freq, "dB", maxSPL);
                         final Graph graphMaxPower = new Graph("Maximal power", "Hz", freq, "W", maxPower);
                         final Graph graphExcursion = new Graph("Excursion", "Hz", freq, "mm", excursion);
                         final Graph graphGroupDelay = new Graph("Group delay", "Hz", freq, "ms", groupDelay);
                         final Graph graphFilter = new Graph("Filter", "Hz", freq, "dB", filter);
-                        final Graph graphBaffle = new Graph("Baffle diffraction", "Hz", freq, "dB", baffle);
+                        final Graph graphBaffle = new Graph("Baffle", "Hz", freq, "dB", baffle);
                         final Graph graphRoom = new Graph("Room", "Hz", freq, "dB", room);
                         final Graph graphImpedance = new Graph("Impedance", "Hz", freq, "Ω", impedance);
 
-                        graphSPL.setYRange(graphSPL.getMaxY() - Project.getInstance().Settings.dBRange, graphSPL.getMaxY() + 1);
-                        graphListeningWindow.setYRange(graphListeningWindow.getMaxY() - Project.getInstance().Settings.dBRange, graphListeningWindow.getMaxY() + 1);
-                        graphPower.setYRange(graphPower.getMaxY() - Project.getInstance().Settings.dBRange, graphPower.getMaxY() + 1);
-                        graphDirectivity.setYRange(0, Project.getInstance().Settings.dBRange);
+                        graphResponse.setYRange(graphResponse.getMaxY() - Project.getInstance().Settings.dBRange, graphResponse.getMaxY() + 1);
+                        graphDirectivity.setYRange(0, graphDirectivity.getMaxY() + 1);
                         graphMaxPower.setYRange(0, Math.min(Project.getInstance().Settings.MaxPower, graphMaxPower.getMaxY() + 1));
                         graphExcursion.setYRange(0, graphExcursion.getMaxY() + 1);
                         graphPhase.addYMark(0, "");
@@ -1777,15 +1795,18 @@ public final class MainWindow extends javax.swing.JFrame
                         
                         graphBaffle.setYRange(graphBaffle.getMaxY() - Project.getInstance().Settings.dBRange, graphBaffle.getMaxY() + 1);
                         graphImpedance.setYRange(0, Math.min(graphImpedance.getMaxY() + 1, Project.getInstance().Settings.MaxImpedance));
+                        
+                        if (enclosurePanel != null)
+                        {
+                            ((ISpeakerPanel) enclosurePanel).simulate();
+                        }
 
                         SwingUtilities.invokeLater(new Runnable()
                         {
                             @Override
                             public void run()
                             {
-                                tabs.addTab("Frequency response", graphSPL.getGraph());
-                                tabs.addTab("Listening window", graphListeningWindow.getGraph());
-                                tabs.addTab("Power response", graphPower.getGraph());
+                                tabs.addTab("Frequency response", graphResponse.getGraph());
                                 tabs.addTab("Directivity", graphDirectivity.getGraph());
                                 tabs.addTab("Phase", graphPhase.getGraph());
                                 tabs.addTab("Maximal response", graphMaxSPL.getGraph());
@@ -1798,8 +1819,16 @@ public final class MainWindow extends javax.swing.JFrame
                                 
                                 tabs.addTab("Group delay", graphGroupDelay.getGraph());
                                 tabs.addTab("Filter", graphFilter.getGraph());
-                                tabs.addTab("Baffle diffraction", graphBaffle.getGraph());
-                                tabs.addTab("Room", graphRoom.getGraph());
+                                
+                                if (Project.getInstance().Settings.BaffleSimulation)
+                                {
+                                    tabs.addTab("Baffle", graphBaffle.getGraph());
+                                }
+                                
+                                if (Project.getInstance().Settings.RoomSimulation)
+                                {
+                                    tabs.addTab("Room", graphRoom.getGraph());
+                                }
                                 
                                 if (!(item instanceof Project))
                                 {
@@ -1808,7 +1837,7 @@ public final class MainWindow extends javax.swing.JFrame
 
                                 if (enclosurePanel != null)
                                 {
-                                    ((ISpeakerPanel) enclosurePanel).addGraphs(tabs); // graphs shoud be done in worker thread?
+                                    ((ISpeakerPanel) enclosurePanel).addGraphs(tabs);
                                 }
 
                                 tabs.revalidate();

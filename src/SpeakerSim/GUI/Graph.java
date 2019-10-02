@@ -32,14 +32,14 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.chart.ui.RectangleAnchor;
 import org.jfree.chart.ui.TextAnchor;
 
-public class Graph
+public final class Graph
 {
-    private final XYSeries series;
     private final LogAxis xAxis;
     private final NumberAxis yAxis;
+    private final XYSeriesCollection series;
     private final XYPlot plot;
     
-    public Graph(String graphTitle, String xAxis, String yAxis)
+    public Graph(String xAxis, String yAxis)
     {
         this.xAxis = new LogAxis(xAxis);
         this.xAxis.setNumberFormatOverride(NumberFormat.getInstance());
@@ -50,10 +50,10 @@ public class Graph
     
         this.yAxis = new NumberAxis(yAxis);
         
-        series = new XYSeries(graphTitle);
+        series = new XYSeriesCollection();
         
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesShapesVisible(0, false);
+        renderer.setDefaultShapesVisible(false);
         
         plot = new XYPlot();
         plot.setRenderer(renderer);
@@ -68,19 +68,40 @@ public class Graph
         }
     }
     
+    public Graph(String graphTitle, String xAxis, String yAxis)
+    {
+        this(xAxis, yAxis);
+        
+        series.addSeries(new XYSeries(graphTitle));
+    }
+    
     public Graph(String graphTitle, String xAxis, double[] x, String yAxis, double[] y)
     {
-        this(graphTitle, xAxis, yAxis);
+        this(xAxis, yAxis);
+        
+        add(graphTitle, x, y);
+    }
+    
+    public void add(String title, double[] x, double[] y)
+    {
+        XYSeries s = new XYSeries(title);
         
         for (int i = 0; i < x.length; i++)
         {
-            series.add(x[i], y[i]);
+            s.add(x[i], y[i]);
         }
+        
+        series.addSeries(s);
     }
     
     public void add(double y, double x)
     {
-        series.add(x, y);
+        if (series.getSeriesCount() < 1)
+        {
+            series.addSeries(new XYSeries(""));
+        }
+        
+        series.getSeries(0).add(x, y);
     }
     
     public void addXMark(double x, String label)
@@ -107,7 +128,14 @@ public class Graph
     
     public double getMaxY()
     {
-        return series.getMaxY();
+        double max = 0;
+        
+        for (int i = 0; i < series.getSeriesCount(); i++)
+        {
+            max = Math.max(max, series.getSeries(i).getMaxY());
+        }
+        
+        return max;
     }
     
     public void setYRange(double min, double max)
@@ -119,10 +147,15 @@ public class Graph
     {
         plot.setDomainAxis(xAxis);
         plot.setRangeAxis(yAxis);
-        plot.setDataset(new XYSeriesCollection(series));
+        plot.setDataset(series);
         
         JFreeChart chart = new JFreeChart(null, plot);
-        chart.removeLegend();
+        
+        if (series.getSeriesCount() < 2)
+        {
+            chart.removeLegend();
+        }
+        
         return chart;
     }
     

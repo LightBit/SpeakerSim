@@ -78,10 +78,6 @@ public class PassFilterWindow extends javax.swing.JDialog
                 boolean custom = PassFilter.isCustom(t);
                 
                 frequencyField.setEnabled(!custom);
-                C1Field.setEditable(custom);
-                C2Field.setEditable(custom);
-                L1Field.setEditable(custom);
-                L2Field.setEditable(custom);
                 
                 if (!custom)
                 {
@@ -171,7 +167,8 @@ public class PassFilterWindow extends javax.swing.JDialog
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel7 = new javax.swing.JLabel();
@@ -250,7 +247,6 @@ public class PassFilterWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel10, gridBagConstraints);
 
-        C1Field.setEditable(false);
         C1Field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -267,7 +263,6 @@ public class PassFilterWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel9, gridBagConstraints);
 
-        L1Field.setEditable(false);
         L1Field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -284,7 +279,6 @@ public class PassFilterWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel12, gridBagConstraints);
 
-        C2Field.setEditable(false);
         C2Field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -293,7 +287,6 @@ public class PassFilterWindow extends javax.swing.JDialog
         gridBagConstraints.weightx = 1.0;
         getContentPane().add(C2Field, gridBagConstraints);
 
-        L2Field.setEditable(false);
         L2Field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -303,16 +296,20 @@ public class PassFilterWindow extends javax.swing.JDialog
         getContentPane().add(L2Field, gridBagConstraints);
 
         okButton.setText("Save");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        okButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 okButtonActionPerformed(evt);
             }
         });
         controlPanel.add(okButton);
 
         cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cancelButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 cancelButtonActionPerformed(evt);
             }
         });

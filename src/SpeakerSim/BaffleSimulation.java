@@ -173,7 +173,7 @@ public class BaffleSimulation
     
     public Complex response(double f)
     {
-        Complex x = Fnc.toComplex((enabled ? 0.5 : 1) * offAxis(f, horizontalAngle, verticalAngle) * diffraction(f), 0);
+        Complex x = Complex.toComplex((enabled ? 0.5 : 1) * offAxis(f, horizontalAngle, verticalAngle) * diffraction(f), 0);
         
         // invert phase, if behind dipole
         if (dipole && (angle < 270 && angle > 90))

@@ -257,7 +257,7 @@ public class Driver implements JSONable
     {
         if (FRD != null)
         {
-            Complex x = Fnc.toComplex(Fnc.toAmplitude(SPL_2_83V), response(CrossEnd).phase());
+            Complex x = Complex.toComplex(Fnc.toAmplitude(SPL_2_83V), response(CrossEnd).phase());
             return normalize(f, response(f), x);
         }
         
@@ -273,7 +273,7 @@ public class Driver implements JSONable
     {
         if (FRD != null)
         {
-            Complex x = Fnc.toComplex(Fnc.toAmplitude(SPL_1W), response1W(CrossEnd).phase());
+            Complex x = Complex.toComplex(Fnc.toAmplitude(SPL_1W), response1W(CrossEnd).phase());
             return normalize(f, response1W(f), x);
         }
         
@@ -461,7 +461,7 @@ public class Driver implements JSONable
             // no lower value
             if (prev.frequency > f)
             {
-                return Fnc.toComplex(prev.amplitude, Math.toRadians(prev.phase)); // TODO: use predicted slope
+                return Complex.toComplex(prev.amplitude, Math.toRadians(prev.phase)); // TODO: use predicted slope
             }
 
             for (ResponseEntry entry : ZMA)
@@ -470,14 +470,14 @@ public class Driver implements JSONable
                 {
                     double amplitude = Fnc.interpolate(prev.frequency, prev.amplitude, entry.frequency, entry.amplitude, f);
                     double phase = Fnc.interpolate(prev.frequency, prev.phase, entry.frequency, entry.phase, f);
-                    return Fnc.toComplex(amplitude, Math.toRadians(phase));
+                    return Complex.toComplex(amplitude, Math.toRadians(phase));
                 }
                 
                 prev = entry;
             }
             
             // no higher value
-            return Fnc.toComplex(prev.amplitude, Math.toRadians(prev.phase)); // TODO: use predicted slope
+            return Complex.toComplex(prev.amplitude, Math.toRadians(prev.phase)); // TODO: use predicted slope
         }
         else
         {
@@ -499,7 +499,7 @@ public class Driver implements JSONable
     
     public Complex normImpedance(double f)
     {
-        Complex z = Fnc.toComplex(Re, LeZ(Le, f));
+        Complex z = Complex.toComplex(Re, LeZ(Le, f));
         
         if (ZMA != null)
         {

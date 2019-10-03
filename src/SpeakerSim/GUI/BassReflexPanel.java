@@ -196,7 +196,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
     @Override
     public void addGraphs(final JTabbedPane tabs)
     {
-        tabs.addTab("Enclosure response", box.getGraph());
+        tabs.addTab("Enclosure", box.getGraph());
     }
 
     @SuppressWarnings("unchecked")

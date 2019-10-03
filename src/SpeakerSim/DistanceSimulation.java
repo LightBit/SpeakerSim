@@ -54,6 +54,6 @@ public class DistanceSimulation
     
     public Complex response(double f)
     {
-        return Fnc.toComplex(amplitude, f * phase);
+        return Complex.toComplex(amplitude, f * phase);
     }
 }

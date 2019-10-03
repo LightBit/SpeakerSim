@@ -40,6 +40,11 @@ public class Complex
     {
         this(0, 0);
     }
+    
+    public static Complex toComplex(double amplitude, double phase)
+    {
+        return new Complex(amplitude * Math.cos(phase), amplitude * Math.sin(phase));
+    }
 
     public double abs()
     {

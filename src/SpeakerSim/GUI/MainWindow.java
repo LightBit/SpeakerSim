@@ -1691,6 +1691,7 @@ public final class MainWindow extends javax.swing.JFrame
 
                     if (!speakers.isEmpty())
                     {
+                        double[] filter = new double[freq.length];
                         double[] listeningWindow = new double[freq.length];
                         double[] power = new double[freq.length];
                         double[] directivity = new double[freq.length];
@@ -1698,10 +1699,12 @@ public final class MainWindow extends javax.swing.JFrame
                         double[] maxPower = new double[freq.length];
                         double[] excursion = new double[freq.length];
                         double[] groupDelay = new double[freq.length];
-                        double[] filter = new double[freq.length];
                         double[] baffle = new double[freq.length];
                         double[] room = new double[freq.length];
-                        double[][] leafs = new double[subitems.size()][freq.length];
+                        double[][] responses = new double[subitems.size()][freq.length];
+                        double[][] phases = new double[subitems.size()][freq.length];
+                        double[][] filters = new double[subitems.size()][freq.length];
+                        double[][] excursions = new double[subitems.size()][freq.length];
 
                         for (int i = 0; i < freq.length; i++)
                         {
@@ -1715,56 +1718,104 @@ public final class MainWindow extends javax.swing.JFrame
                             r = r.multiply(baffleResponse).multiply(roomResponse);
                             response[i] = Fnc.toDecibels(r.abs());
                             
-                            for (int j = 0; j < leafs.length; j++)
+                            for (int j = 0; j < subitems.size(); j++)
                             {
-                                Complex l = subitems.get(j).response(f);
-                                Complex br = Project.getInstance().Settings.BaffleSimulation ? subitems.get(j).responseWithBaffle(f).divide(l) : new Complex(1);
-                                Complex rr = Project.getInstance().Settings.RoomSimulation ? subitems.get(j).responseWithRoom(f).divide(l) : new Complex(1);
-                                l = l.multiply(br).multiply(rr);
-                                leafs[j][i] = Fnc.toDecibels(l.abs());
+                                IItem subitem = subitems.get(j);
+                                Complex sr = totalResponse(subitem, f);
+                                responses[j][i] = Fnc.toDecibels(sr.abs());
+                                phases[j][i] = sr.phase();
+                                filters[j][i] = Fnc.toDecibels(subitem.filter(f).abs());
+                                excursions[j][i] = subitem.excursion(f, Double.MAX_VALUE);
                             }
 
+                            filter[i] = Fnc.toDecibels(item.filter(f).abs());
                             listeningWindow[i] = Fnc.toDecibels(item.listeningWindowResponse(f).abs());
                             power[i] = Fnc.toDecibels(item.powerResponse(f).abs());
                             directivity[i] = listeningWindow[i] - power[i];
-                            responsePhase[i] = Math.toDegrees(r.phase());
+                            responsePhase[i] = r.phase();//responsePhase[i] = Math.toDegrees(r.phase());
                             Complex z = item.impedance(f);
                             impedance[i] = z.abs();
                             impedancePhase[i] = z.phase();
                             maxPower[i] = item.maxPower(f);
                             maxSPL[i] = Fnc.toDecibels(item.response1W(f).multiply(baffleResponse).multiply(roomResponse).abs()) + Fnc.powerToDecibels(maxPower[i]);
                             excursion[i] = item.excursion(f, Double.MAX_VALUE);
-                            groupDelay[i] = Math.abs((Math.abs(Math.toDegrees(totalResponse(item, f + 0.1).phase())) - Math.abs(responsePhase[i])) / (360 * 0.1)) * 1000;
-                            filter[i] = Fnc.toDecibels(item.filter(f).abs());
+                            groupDelay[i] = Math.abs((Math.abs(Math.toDegrees(totalResponse(item, f + 0.1).phase())) - Math.abs(Math.toDegrees(responsePhase[i]))) / (360 * 0.1)) * 1000;
                             baffle[i] = Fnc.toDecibels(baffleResponse.abs());
                             room[i] = Fnc.toDecibels(roomResponse.abs());
                         }
-
+                        
                         if (Project.getInstance().Settings.Smoothing > 0)
                         {
                             int points = (int)Math.round(Project.getInstance().Settings.pointsPerOctave()) / Project.getInstance().Settings.Smoothing;
 
                             response = Fnc.smooth(response, points);
-                            for (int j = 0; j < leafs.length; j++)
+                            for (int j = 0; j < subitems.size(); j++)
                             {
-                                leafs[j] = Fnc.smooth(leafs[j], points);
+                                responses[j] = Fnc.smooth(responses[j], points);
+                                filters[j] = Fnc.smooth(filters[j], points);
+                                excursions[j] = Fnc.smooth(excursions[j], points);
+                                //phases[j] = Fnc.unwrapPhase(freq, phases[j]);
+                                //phases[j] = Fnc.smooth(phases[j], points);
+                                //phases[j] = Fnc.wrapPhase(phases[j]);
                             }
+                            //responsePhase = Fnc.unwrapPhase(freq, responsePhase);
+                            //responsePhase = Fnc.smooth(responsePhase, points);
+                            //responsePhase = Fnc.wrapPhase(responsePhase);
+                            filter = Fnc.smooth(filter, points);
                             listeningWindow = Fnc.smooth(listeningWindow, points);
                             power = Fnc.smooth(power, points);
                             directivity = Fnc.smooth(directivity, points);
                             maxSPL = Fnc.smooth(maxSPL, points);
+                            maxPower = Fnc.smooth(maxPower, points);
+                            //groupDelay = Fnc.smooth(groupDelay, points);
                             baffle = Fnc.smooth(baffle, points);
                             room = Fnc.smooth(room, points);
                         }
 
                         groupDelay = Fnc.smooth(groupDelay, (int)Math.round(Project.getInstance().Settings.pointsPerOctave()) / (Project.getInstance().Settings.Smoothing > 0 ? Math.min(3, Project.getInstance().Settings.Smoothing) : 3));
-                        maxPower = Fnc.smooth(maxPower, (int)Math.round(Project.getInstance().Settings.pointsPerOctave()) / (Project.getInstance().Settings.Smoothing > 0 ? Math.min(6, Project.getInstance().Settings.Smoothing) : 6));
-                        filter = Fnc.smooth(filter, (int)Math.round(Project.getInstance().Settings.pointsPerOctave()) / (Project.getInstance().Settings.Smoothing > 0 ? Math.min(6, Project.getInstance().Settings.Smoothing) : 6));
-
-                        final Graph graphResponse = new Graph(item.toString(), "Hz", freq, "dB", response);
-                        for (int j = 0; j < leafs.length; j++)
+                        
+                        double delay = Fnc.min(groupDelay) / 1000;
+                        
+                        for (int i = 1; i < freq.length; i++)
                         {
-                            graphResponse.add(subitems.get(j).toString(), freq, leafs[j]);
+                            Complex cd = Complex.toComplex(1, 2 * Math.PI * freq[i] * delay);
+                            if (false/*phase inverted*/)
+                            {
+                                cd.conjugate();
+                            }
+                            responsePhase[i] = Math.toDegrees(Complex.toComplex(1, responsePhase[i]).multiply(cd).phase());
+                        }
+                        
+                        final Graph graphResponse = new Graph(item.toString(), "Hz", freq, "dB", response);
+                        final Graph graphPhase = new Graph("Hz", "");
+                        final Graph graphFilters = new Graph(item.toString(), "Hz", freq, "dB", filter);
+                        final Graph graphExcursion = new Graph("Excursion", "Hz", freq, "mm", excursion);
+                        
+                        if (subitems.size() < 1)
+                        {
+                            graphPhase.add("Phase", freq, responsePhase);
+                        }
+                        else
+                        {
+                            for (int j = 0; j < subitems.size(); j++)
+                            {
+                                String subitem = subitems.get(j).toString();
+
+                                graphResponse.add(subitem, freq, responses[j]);
+                                graphFilters.add(subitem, freq, filters[j]);
+                                graphExcursion.add(subitem, freq, excursions[j]);
+
+                                for (int i = 0; i < freq.length; i++)
+                                {
+                                    Complex cd = Complex.toComplex(1, 2 * Math.PI * freq[i] * delay);
+                                    if (false/*phase inverted*/)
+                                    {
+                                        cd.conjugate();
+                                    }
+                                    phases[j][i] = Math.toDegrees(Complex.toComplex(1, phases[j][i]).multiply(cd).phase());
+                                }
+                                graphPhase.add(subitem, freq, phases[j]);
+                            }
                         }
                         
                         final Graph graphDirectivity = new Graph("Hz", "dB");
@@ -1772,28 +1823,27 @@ public final class MainWindow extends javax.swing.JFrame
                         graphDirectivity.add("Power response", freq, power);
                         graphDirectivity.add("Directivity", freq, directivity);
                         
-                        final Graph graphPhase = new Graph("Phase", "Hz", freq, "", responsePhase);
                         final Graph graphMaxSPL = new Graph("Maximal response", "Hz", freq, "dB", maxSPL);
                         final Graph graphMaxPower = new Graph("Maximal power", "Hz", freq, "W", maxPower);
-                        final Graph graphExcursion = new Graph("Excursion", "Hz", freq, "mm", excursion);
                         final Graph graphGroupDelay = new Graph("Group delay", "Hz", freq, "ms", groupDelay);
-                        final Graph graphFilter = new Graph("Filter", "Hz", freq, "dB", filter);
                         final Graph graphBaffle = new Graph("Baffle", "Hz", freq, "dB", baffle);
                         final Graph graphRoom = new Graph("Room", "Hz", freq, "dB", room);
                         final Graph graphImpedance = new Graph("Impedance", "Hz", freq, "Ω", impedance);
 
-                        graphResponse.setYRange(graphResponse.getMaxY() - Project.getInstance().Settings.dBRange, graphResponse.getMaxY() + 1);
+                        graphResponse.setYRange(Project.getInstance().Settings.dBRange);
+                        graphFilters.setYRange(Project.getInstance().Settings.dBRange);
                         graphDirectivity.setYRange(0, graphDirectivity.getMaxY() + 1);
                         graphMaxPower.setYRange(0, Math.min(Project.getInstance().Settings.MaxPower, graphMaxPower.getMaxY() + 1));
                         graphExcursion.setYRange(0, graphExcursion.getMaxY() + 1);
                         graphPhase.addYMark(0, "");
                         
-                        if (speakers.size() == 1)
+                        for (Speaker s : speakers)
                         {
-                            graphExcursion.addYMark(speakers.get(0).Driver.Xmax * 1000, "Xmax");
+                            graphExcursion.addYMark(s.Driver.Xmax * 1000, s.Driver.Name);
                         }
                         
-                        graphBaffle.setYRange(graphBaffle.getMaxY() - Project.getInstance().Settings.dBRange, graphBaffle.getMaxY() + 1);
+                        graphBaffle.setYRange(Project.getInstance().Settings.dBRange);
+                        graphRoom.setYRange(Project.getInstance().Settings.dBRange);
                         graphImpedance.setYRange(0, Math.min(graphImpedance.getMaxY() + 1, Project.getInstance().Settings.MaxImpedance));
                         
                         if (enclosurePanel != null)
@@ -1809,16 +1859,11 @@ public final class MainWindow extends javax.swing.JFrame
                                 tabs.addTab("Frequency response", graphResponse.getGraph());
                                 tabs.addTab("Directivity", graphDirectivity.getGraph());
                                 tabs.addTab("Phase", graphPhase.getGraph());
+                                tabs.addTab("Filters", graphFilters.getGraph());
                                 tabs.addTab("Maximal response", graphMaxSPL.getGraph());
                                 tabs.addTab("Maximal power", graphMaxPower.getGraph());
-                                
-                                if (speakers.size() == 1)
-                                {
-                                    tabs.addTab("Excursion", graphExcursion.getGraph());
-                                }
-                                
+                                tabs.addTab("Excursion", graphExcursion.getGraph());
                                 tabs.addTab("Group delay", graphGroupDelay.getGraph());
-                                tabs.addTab("Filter", graphFilter.getGraph());
                                 
                                 if (Project.getInstance().Settings.BaffleSimulation)
                                 {
@@ -1879,14 +1924,17 @@ public final class MainWindow extends javax.swing.JFrame
                 }
                 catch (final Throwable e)
                 {
-                    SwingUtilities.invokeLater(new Runnable()
+                    if (!Thread.currentThread().isInterrupted())
                     {
-                        @Override
-                        public void run()
+                        SwingUtilities.invokeLater(new Runnable()
                         {
-                            UI.throwable(parent, e);
-                        }
-                    });
+                            @Override
+                            public void run()
+                            {
+                                UI.throwable(parent, e);
+                            }
+                        });
+                    }
                 }
             }
         };

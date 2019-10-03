@@ -101,11 +101,6 @@ public final class Fnc
         return Math.pow(10, x / 20);
     }
     
-    public static Complex toComplex(double amplitude, double phase)
-    {
-        return new Complex(amplitude * Math.cos(phase), amplitude * Math.sin(phase));
-    }
-    
     public static Complex zL(double L, double f)
     {
         return new Complex(0, 2 * Math.PI * f * L);
@@ -211,6 +206,21 @@ public final class Fnc
         return x == 0 ? 1 : Math.sin(x) / x;
     }
     
+    public static double min(double[] x)
+    {
+        double min = Double.MAX_VALUE;
+        
+        for (int i = 0; i < x.length; i++)
+        {
+            if (Double.isFinite(x[i]) && x[i] < min)
+            {
+                min = x[i];
+            }
+        }
+        
+        return min;
+    }
+    
     /*public static double calcSlopeLo(double[] frequency, double[] amplitude)
     {
         for (int i = 1; i < amplitude.length; i++)
@@ -314,5 +324,59 @@ public final class Fnc
         }
         
         return phase;
+    }
+    
+    public static double[] unwrapPhase(double[] f, double[] phase)
+    {
+        double[] unwrapped = new double[phase.length];
+        double prev = 0;
+        double x = 0;
+        
+        for (int i = 0; i < f.length; i++)
+        {
+            double p = phase[i];
+            
+            if (i > 0)
+            {
+                if (prev < -Math.PI / 2 && p > Math.PI / 2)
+                {
+                    x -= 2 * Math.PI;
+                }
+                else if (prev > Math.PI / 2 && p < -Math.PI / 2)
+                {
+                    x += 2 * Math.PI;
+                }
+                
+                unwrapped[i] = p + x;
+            }
+            
+            prev = p;
+        }
+        
+        return unwrapped;
+    }
+    
+    public static double[] wrapPhase(double[] phase)
+    {
+        double[] wrapped = new double[phase.length];
+        
+        for (int i = 0; i < phase.length; i++)
+        {
+            double p = phase[i];
+            
+            while (p > Math.PI)
+            {
+                p -= 2 * Math.PI;
+            }
+
+            while (p <= -Math.PI)
+            {
+                p += 2 * Math.PI;
+            }
+            
+            wrapped[i] = p;
+        }
+        
+        return wrapped;
     }
 }

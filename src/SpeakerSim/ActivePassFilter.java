@@ -108,7 +108,7 @@ public abstract class ActivePassFilter implements IActiveFilter
         double x = 1 + CONST[type][3] * fn4 - CONST[type][1] * fn2;
         double y = -CONST[type][2] * fn3 + CONST[type][0] * fn;
         
-        return Fnc.toComplex(1 / Math.hypot(x, y), -Math.atan2(y, x));
+        return Complex.toComplex(1 / Math.hypot(x, y), -Math.atan2(y, x));
     }
     
     public String name()

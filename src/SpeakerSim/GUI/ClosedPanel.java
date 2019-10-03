@@ -112,7 +112,7 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
     @Override
     public void addGraphs(final JTabbedPane tabs)
     {
-        tabs.addTab("Enclosure response", box.getGraph());
+        tabs.addTab("Enclosure", box.getGraph());
     }
     
     @SuppressWarnings("unchecked")

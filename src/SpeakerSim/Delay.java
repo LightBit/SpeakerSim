@@ -46,7 +46,7 @@ public class Delay implements IActiveFilter
     @Override
     public Complex response(double f)
     {
-        return Fnc.toComplex(1, 2 * Math.PI * f * -time);
+        return Complex.toComplex(1, 2 * Math.PI * f * -time);
     }
     
     @Override

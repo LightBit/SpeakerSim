@@ -84,7 +84,7 @@ public class Equalizer implements IActiveFilter
     @Override
     public Complex response(double f)
     {
-        return Fnc.toComplex(amplitude(f), phase(f));
+        return Complex.toComplex(amplitude(f), phase(f));
     }
     
     @Override

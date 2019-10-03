@@ -143,6 +143,12 @@ public final class Graph
         yAxis.setRange(min, max);
     }
     
+    public void setYRange(double range)
+    {
+        double maxY = getMaxY();
+        setYRange(maxY - range, maxY + 1);
+    }
+    
     private JFreeChart getChart()
     {
         plot.setDomainAxis(xAxis);

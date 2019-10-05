@@ -145,6 +145,8 @@ public class Project extends Item
             
             throw e;
         }
+        
+        Version = currentVersion();
     }
     
     public Project(File file) throws IOException

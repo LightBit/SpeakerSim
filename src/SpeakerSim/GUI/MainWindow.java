@@ -1844,7 +1844,7 @@ public final class MainWindow extends javax.swing.JFrame
                             @Override
                             public void run()
                             {
-                                tabs.addTab("Frequency response", graphResponse.getGraph());
+                                tabs.addTab("Response", graphResponse.getGraph());
                                 tabs.addTab("Directivity", graphDirectivity.getGraph());
                                 tabs.addTab("Phase", graphPhase.getGraph());
                                 tabs.addTab("Filters", graphFilters.getGraph());

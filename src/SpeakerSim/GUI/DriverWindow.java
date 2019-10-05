@@ -589,14 +589,12 @@ public class DriverWindow extends javax.swing.JDialog
             {
                 button.setText(calcText);
                 button.setForeground(diff > 0.1 ? Color.RED : Color.BLACK);
-                button.setOpaque(true);
-                button.setContentAreaFilled(true);
-                button.setBorderPainted(true);
-                button.setEnabled(true);
-                return;
+                button.setVisible(true);
             }
-            
-            UI.hideButton(button);
+            else
+            {
+                button.setVisible(false);
+            }
         }
         catch (ParseException ex)
         {
@@ -626,11 +624,9 @@ public class DriverWindow extends javax.swing.JDialog
         lblVas = new javax.swing.JLabel();
         QmsButton = new javax.swing.JButton();
         lblQes = new javax.swing.JLabel();
-        ReButton = new javax.swing.JButton();
         QmsField = new javax.swing.JFormattedTextField();
         lblQms = new javax.swing.JLabel();
         LeField = new javax.swing.JFormattedTextField();
-        LeButton = new javax.swing.JButton();
         lblQts = new javax.swing.JLabel();
         DiaField = new javax.swing.JFormattedTextField();
         DiaButton = new javax.swing.JButton();
@@ -660,7 +656,6 @@ public class DriverWindow extends javax.swing.JDialog
         QesButton = new javax.swing.JButton();
         QtsButton = new javax.swing.JButton();
         BLButton = new javax.swing.JButton();
-        XmaxButton = new javax.swing.JButton();
         SdButton = new javax.swing.JButton();
         CmsButton = new javax.swing.JButton();
         RmsButton = new javax.swing.JButton();
@@ -793,13 +788,11 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(ReField, gridBagConstraints);
 
         FsButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        FsButton.setBorderPainted(false);
-        FsButton.setContentAreaFilled(false);
-        FsButton.setEnabled(false);
         FsButton.setFocusable(false);
         FsButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         FsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         FsButton.setMinimumSize(new java.awt.Dimension(120, 19));
+        FsButton.setOpaque(true);
         FsButton.setPreferredSize(new java.awt.Dimension(120, 19));
         FsButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -831,13 +824,11 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(lblVas, gridBagConstraints);
 
         QmsButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        QmsButton.setBorderPainted(false);
-        QmsButton.setContentAreaFilled(false);
-        QmsButton.setEnabled(false);
         QmsButton.setFocusable(false);
         QmsButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         QmsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         QmsButton.setMinimumSize(new java.awt.Dimension(120, 19));
+        QmsButton.setOpaque(true);
         QmsButton.setPreferredSize(new java.awt.Dimension(120, 19));
         QmsButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -858,28 +849,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblQes, gridBagConstraints);
-
-        ReButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        ReButton.setBorderPainted(false);
-        ReButton.setContentAreaFilled(false);
-        ReButton.setEnabled(false);
-        ReButton.setFocusable(false);
-        ReButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        ReButton.setMaximumSize(new java.awt.Dimension(120, 19));
-        ReButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        ReButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        ReButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                ReButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 16;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        propertiesPanel.add(ReButton, gridBagConstraints);
 
         QmsField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         QmsField.setToolTipText("Mechanical Q at resonance");
@@ -906,28 +875,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 20;
         propertiesPanel.add(LeField, gridBagConstraints);
 
-        LeButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        LeButton.setBorderPainted(false);
-        LeButton.setContentAreaFilled(false);
-        LeButton.setEnabled(false);
-        LeButton.setFocusable(false);
-        LeButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        LeButton.setMaximumSize(new java.awt.Dimension(120, 19));
-        LeButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        LeButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        LeButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                LeButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 20;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        propertiesPanel.add(LeButton, gridBagConstraints);
-
         lblQts.setText("Qts:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -945,13 +892,11 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(DiaField, gridBagConstraints);
 
         DiaButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        DiaButton.setBorderPainted(false);
-        DiaButton.setContentAreaFilled(false);
-        DiaButton.setEnabled(false);
         DiaButton.setFocusable(false);
         DiaButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         DiaButton.setMaximumSize(new java.awt.Dimension(120, 19));
         DiaButton.setMinimumSize(new java.awt.Dimension(120, 19));
+        DiaButton.setOpaque(true);
         DiaButton.setPreferredSize(new java.awt.Dimension(120, 19));
         DiaButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1126,13 +1071,11 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(SPL_1WField, gridBagConstraints);
 
         VasButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        VasButton.setBorderPainted(false);
-        VasButton.setContentAreaFilled(false);
-        VasButton.setEnabled(false);
         VasButton.setFocusable(false);
         VasButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         VasButton.setMaximumSize(new java.awt.Dimension(120, 19));
         VasButton.setMinimumSize(new java.awt.Dimension(120, 19));
+        VasButton.setOpaque(true);
         VasButton.setPreferredSize(new java.awt.Dimension(120, 19));
         VasButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1148,13 +1091,11 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(VasButton, gridBagConstraints);
 
         VdButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        VdButton.setBorderPainted(false);
-        VdButton.setContentAreaFilled(false);
-        VdButton.setEnabled(false);
         VdButton.setFocusable(false);
         VdButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         VdButton.setMaximumSize(new java.awt.Dimension(120, 19));
         VdButton.setMinimumSize(new java.awt.Dimension(120, 19));
+        VdButton.setOpaque(true);
         VdButton.setPreferredSize(new java.awt.Dimension(120, 19));
         VdButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1170,13 +1111,11 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(VdButton, gridBagConstraints);
 
         MmsButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        MmsButton.setBorderPainted(false);
-        MmsButton.setContentAreaFilled(false);
-        MmsButton.setEnabled(false);
         MmsButton.setFocusable(false);
         MmsButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         MmsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         MmsButton.setMinimumSize(new java.awt.Dimension(120, 19));
+        MmsButton.setOpaque(true);
         MmsButton.setPreferredSize(new java.awt.Dimension(120, 19));
         MmsButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1192,13 +1131,11 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(MmsButton, gridBagConstraints);
 
         n0Button.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        n0Button.setBorderPainted(false);
-        n0Button.setContentAreaFilled(false);
-        n0Button.setEnabled(false);
         n0Button.setFocusable(false);
         n0Button.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         n0Button.setMaximumSize(new java.awt.Dimension(120, 19));
         n0Button.setMinimumSize(new java.awt.Dimension(120, 19));
+        n0Button.setOpaque(true);
         n0Button.setPreferredSize(new java.awt.Dimension(120, 19));
         n0Button.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1214,13 +1151,11 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(n0Button, gridBagConstraints);
 
         QesButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        QesButton.setBorderPainted(false);
-        QesButton.setContentAreaFilled(false);
-        QesButton.setEnabled(false);
         QesButton.setFocusable(false);
         QesButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         QesButton.setMaximumSize(new java.awt.Dimension(120, 19));
         QesButton.setMinimumSize(new java.awt.Dimension(120, 19));
+        QesButton.setOpaque(true);
         QesButton.setPreferredSize(new java.awt.Dimension(120, 19));
         QesButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1236,13 +1171,11 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(QesButton, gridBagConstraints);
 
         QtsButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        QtsButton.setBorderPainted(false);
-        QtsButton.setContentAreaFilled(false);
-        QtsButton.setEnabled(false);
         QtsButton.setFocusable(false);
         QtsButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         QtsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         QtsButton.setMinimumSize(new java.awt.Dimension(120, 19));
+        QtsButton.setOpaque(true);
         QtsButton.setPreferredSize(new java.awt.Dimension(120, 19));
         QtsButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1258,13 +1191,11 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(QtsButton, gridBagConstraints);
 
         BLButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        BLButton.setBorderPainted(false);
-        BLButton.setContentAreaFilled(false);
-        BLButton.setEnabled(false);
         BLButton.setFocusable(false);
         BLButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         BLButton.setMaximumSize(new java.awt.Dimension(120, 19));
         BLButton.setMinimumSize(new java.awt.Dimension(120, 19));
+        BLButton.setOpaque(true);
         BLButton.setPreferredSize(new java.awt.Dimension(120, 19));
         BLButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1279,36 +1210,12 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(BLButton, gridBagConstraints);
 
-        XmaxButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        XmaxButton.setBorderPainted(false);
-        XmaxButton.setContentAreaFilled(false);
-        XmaxButton.setEnabled(false);
-        XmaxButton.setFocusable(false);
-        XmaxButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        XmaxButton.setMaximumSize(new java.awt.Dimension(120, 19));
-        XmaxButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        XmaxButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        XmaxButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                XmaxButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 22;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        propertiesPanel.add(XmaxButton, gridBagConstraints);
-
         SdButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        SdButton.setBorderPainted(false);
-        SdButton.setContentAreaFilled(false);
-        SdButton.setEnabled(false);
         SdButton.setFocusable(false);
         SdButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         SdButton.setMaximumSize(new java.awt.Dimension(120, 19));
         SdButton.setMinimumSize(new java.awt.Dimension(120, 19));
+        SdButton.setOpaque(true);
         SdButton.setPreferredSize(new java.awt.Dimension(120, 19));
         SdButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1324,13 +1231,11 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(SdButton, gridBagConstraints);
 
         CmsButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        CmsButton.setBorderPainted(false);
-        CmsButton.setContentAreaFilled(false);
-        CmsButton.setEnabled(false);
         CmsButton.setFocusable(false);
         CmsButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         CmsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         CmsButton.setMinimumSize(new java.awt.Dimension(120, 19));
+        CmsButton.setOpaque(true);
         CmsButton.setPreferredSize(new java.awt.Dimension(120, 19));
         CmsButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1346,13 +1251,11 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(CmsButton, gridBagConstraints);
 
         RmsButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        RmsButton.setBorderPainted(false);
-        RmsButton.setContentAreaFilled(false);
-        RmsButton.setEnabled(false);
         RmsButton.setFocusable(false);
         RmsButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         RmsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         RmsButton.setMinimumSize(new java.awt.Dimension(120, 19));
+        RmsButton.setOpaque(true);
         RmsButton.setPreferredSize(new java.awt.Dimension(120, 19));
         RmsButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1368,13 +1271,11 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(RmsButton, gridBagConstraints);
 
         SPL_1WButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        SPL_1WButton.setBorderPainted(false);
-        SPL_1WButton.setContentAreaFilled(false);
-        SPL_1WButton.setEnabled(false);
         SPL_1WButton.setFocusable(false);
         SPL_1WButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         SPL_1WButton.setMaximumSize(new java.awt.Dimension(120, 19));
         SPL_1WButton.setMinimumSize(new java.awt.Dimension(120, 19));
+        SPL_1WButton.setOpaque(true);
         SPL_1WButton.setPreferredSize(new java.awt.Dimension(120, 19));
         SPL_1WButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1660,13 +1561,11 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(lblWidth, gridBagConstraints);
 
         SPL_2_83VButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        SPL_2_83VButton.setBorderPainted(false);
-        SPL_2_83VButton.setContentAreaFilled(false);
-        SPL_2_83VButton.setEnabled(false);
         SPL_2_83VButton.setFocusable(false);
         SPL_2_83VButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         SPL_2_83VButton.setMaximumSize(new java.awt.Dimension(120, 19));
         SPL_2_83VButton.setMinimumSize(new java.awt.Dimension(120, 19));
+        SPL_2_83VButton.setOpaque(true);
         SPL_2_83VButton.setPreferredSize(new java.awt.Dimension(120, 19));
         SPL_2_83VButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1872,7 +1771,7 @@ public class DriverWindow extends javax.swing.JDialog
             UI.exception(this, ex);
         }
         
-        UI.hideButton(button);
+        button.setVisible(false);
     }
     
     private void QtsButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_QtsButtonActionPerformed
@@ -1900,25 +1799,10 @@ public class DriverWindow extends javax.swing.JDialog
         copyFromButtonToField(QmsButton, QmsField);
     }//GEN-LAST:event_QmsButtonActionPerformed
 
-    private void ReButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_ReButtonActionPerformed
-    {//GEN-HEADEREND:event_ReButtonActionPerformed
-        copyFromButtonToField(ReButton, ReField);
-    }//GEN-LAST:event_ReButtonActionPerformed
-
     private void BLButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_BLButtonActionPerformed
     {//GEN-HEADEREND:event_BLButtonActionPerformed
         copyFromButtonToField(BLButton, BLField);
     }//GEN-LAST:event_BLButtonActionPerformed
-
-    private void LeButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_LeButtonActionPerformed
-    {//GEN-HEADEREND:event_LeButtonActionPerformed
-        copyFromButtonToField(LeButton, LeField);
-    }//GEN-LAST:event_LeButtonActionPerformed
-
-    private void XmaxButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_XmaxButtonActionPerformed
-    {//GEN-HEADEREND:event_XmaxButtonActionPerformed
-        copyFromButtonToField(XmaxButton, XmaxField);
-    }//GEN-LAST:event_XmaxButtonActionPerformed
 
     private void DiaButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_DiaButtonActionPerformed
     {//GEN-HEADEREND:event_DiaButtonActionPerformed
@@ -2116,7 +2000,6 @@ public class DriverWindow extends javax.swing.JDialog
     private javax.swing.JFormattedTextField FsField;
     private javax.swing.JFormattedTextField HeightField;
     private javax.swing.JButton ImportButton;
-    private javax.swing.JButton LeButton;
     private javax.swing.JFormattedTextField LeField;
     private javax.swing.JButton MmsButton;
     private javax.swing.JFormattedTextField MmsField;
@@ -2130,7 +2013,6 @@ public class DriverWindow extends javax.swing.JDialog
     private javax.swing.JFormattedTextField QmsField;
     private javax.swing.JButton QtsButton;
     private javax.swing.JFormattedTextField QtsField;
-    private javax.swing.JButton ReButton;
     private javax.swing.JFormattedTextField ReField;
     private javax.swing.JButton RmsButton;
     private javax.swing.JFormattedTextField RmsField;
@@ -2145,7 +2027,6 @@ public class DriverWindow extends javax.swing.JDialog
     private javax.swing.JButton VdButton;
     private javax.swing.JFormattedTextField VdField;
     private javax.swing.JFormattedTextField WidthField;
-    private javax.swing.JButton XmaxButton;
     private javax.swing.JFormattedTextField XmaxField;
     private javax.swing.JButton ZMAButton;
     private javax.swing.JButton ZMAExportButton;

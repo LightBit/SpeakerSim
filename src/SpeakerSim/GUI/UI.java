@@ -198,15 +198,6 @@ public final class UI
         return 0;
     }
     
-    public static void hideButton(JButton button)
-    {
-        button.setText("");
-        button.setOpaque(false);
-        button.setContentAreaFilled(false);
-        button.setBorderPainted(false);
-        button.setEnabled(false);
-    }
-    
     public static void setPanelEnabled(JPanel panel, Boolean isEnabled)
     {
         panel.setEnabled(isEnabled);

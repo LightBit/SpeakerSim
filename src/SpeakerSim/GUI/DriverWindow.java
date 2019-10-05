@@ -121,6 +121,7 @@ public class DriverWindow extends javax.swing.JDialog
         ((JPanel)this.getContentPane()).setBorder(new EmptyBorder(10, 10, 10, 10));
         initComponents();
         setLocationRelativeTo(parent);
+        invertedCheckBox.setVisible(false); //TODO!
         
         this.project = project;
         origDriver = driver;

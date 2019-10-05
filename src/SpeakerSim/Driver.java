@@ -233,7 +233,14 @@ public class Driver implements JSONable
         
         f *= 2 * Math.PI;
         Complex Zas = new Complex(Ras, f * Mas - 1 / (f * Cas));
-        return new Complex(0, f * Mas).divide(Zas.add(Rae));
+        Complex x = new Complex(0, f * Mas).divide(Zas.add(Rae));
+        
+        /*if (Inverted)
+        {
+            x = x.conjugate();
+        }*/
+        
+        return x;
     }
     
     public Complex responseSim(double f)
@@ -245,7 +252,14 @@ public class Driver implements JSONable
     {
         if (hasFRD())
         {
-            return FRD.response(f, SPL_2_83V - SPL_1W);
+            Complex x = FRD.response(f, SPL_2_83V - SPL_1W);
+            
+            /*if (Inverted)
+            {
+                x = x.conjugate();
+            }*/
+
+            return x;
         }
         else
         {
@@ -628,7 +642,7 @@ public class Driver implements JSONable
         CrossStart = jsonObj.get("NormStartF").asDouble();
         CrossEnd = jsonObj.get("NormEndF").asDouble();
         Closed = jsonObj.get("Closed").asBoolean();
-        Inverted = jsonObj.get("Inverted").asBoolean();
+        Inverted = false; //TODO: Inverted = jsonObj.get("Inverted").asBoolean();
         
         FRD = null;
         hFRD = null;

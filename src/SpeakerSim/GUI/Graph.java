@@ -39,6 +39,30 @@ public final class Graph
     private final XYSeriesCollection series;
     private final XYPlot plot;
     
+    private class IdString implements Comparable<IdString>
+    {
+        private final String string;
+        private final int id;
+
+        public IdString(String string, int id)
+        {
+            this.string = string;
+            this.id = id;
+        }
+
+        @Override
+        public String toString()
+        {
+            return string;
+        }
+
+        @Override
+        public int compareTo(IdString x)
+        {
+            return Integer.compare(id, x.id);
+        }
+    }
+    
     public Graph(String xAxis, String yAxis)
     {
         this.xAxis = new LogAxis(xAxis);
@@ -68,23 +92,23 @@ public final class Graph
         }
     }
     
-    public Graph(String graphTitle, String xAxis, String yAxis)
+    public Graph(String title, String xAxis, String yAxis)
     {
         this(xAxis, yAxis);
         
-        series.addSeries(new XYSeries(graphTitle));
+        series.addSeries(new XYSeries(new IdString(title, 0)));
     }
     
-    public Graph(String graphTitle, String xAxis, double[] x, String yAxis, double[] y)
+    public Graph(String title, String xAxis, double[] x, String yAxis, double[] y)
     {
         this(xAxis, yAxis);
         
-        add(graphTitle, x, y);
+        add(title, x, y);
     }
     
     public void add(String title, double[] x, double[] y)
     {
-        XYSeries s = new XYSeries(title);
+        XYSeries s = new XYSeries(new IdString(title, series.getSeriesCount()));
         
         for (int i = 0; i < x.length; i++)
         {
@@ -98,7 +122,7 @@ public final class Graph
     {
         if (series.getSeriesCount() < 1)
         {
-            series.addSeries(new XYSeries(""));
+            series.addSeries(new XYSeries(new IdString("", 0)));
         }
         
         series.getSeries(0).add(x, y);

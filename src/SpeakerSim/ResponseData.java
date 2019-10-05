@@ -47,7 +47,7 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
         // no lower value
         if (data[0].frequency > f)
         {
-            return Complex.toComplex(Double.MIN_NORMAL, 0);
+            return Complex.toComplex(Double.MIN_NORMAL, Math.toRadians(data[0].phase));
         }
 
         for (int i = 1; i < data.length; i++)
@@ -77,7 +77,7 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
         }
 
         // no higher value
-        return Complex.toComplex(Double.MIN_NORMAL, 0);
+        return Complex.toComplex(Double.MIN_NORMAL, Math.toRadians(data[data.length - 1].phase));
     }
     
     public static ResponseEntry[] ImportData(File file, boolean dB) throws IOException

@@ -108,15 +108,14 @@ public class Position implements JSONable
         
         double alpha = Math.toRadians(VerticalAngle);
         double beta = Math.toRadians(-HorizontalAngle);
-        double gamma = 0;
         
-        double a = x * (Math.cos(alpha) * Math.cos(beta))
-                + y * (-Math.sin(beta))
-                + z * (Math.cos(beta) * Math.sin(alpha));
+        double a = x * Math.cos(alpha) * Math.cos(beta)
+                + y * -Math.sin(beta)
+                + z * Math.cos(beta) * Math.sin(alpha);
         
-        double b = x * (Math.sin(alpha) * Math.sin(gamma) + Math.cos(alpha) * Math.cos(gamma) * Math.sin(beta))
-                + y * (Math.cos(beta) * Math.cos(gamma))
-                + z * (-Math.cos(alpha) * Math.sin(gamma) + Math.cos(gamma) * Math.sin(alpha) * Math.sin(beta));
+        double b = x * Math.cos(alpha) * Math.sin(beta)
+                + y * Math.cos(beta)
+                + z * Math.sin(alpha) * Math.sin(beta);
         
         return Math.toDegrees(Math.atan2(b, a));
     }
@@ -129,15 +128,14 @@ public class Position implements JSONable
         
         double alpha = Math.toRadians(HorizontalAngle);
         double beta = Math.toRadians(-VerticalAngle);
-        double gamma = 0;
         
-        double a = x * (Math.cos(alpha) * Math.cos(beta))
-                + y * (Math.cos(beta) * Math.sin(alpha))
-                + z * (-Math.sin(beta));
+        double a = x * Math.cos(alpha) * Math.cos(beta)
+                + y * Math.cos(beta) * Math.sin(alpha)
+                + z * -Math.sin(beta);
         
-        double c = x * (Math.sin(alpha) * Math.sin(gamma) + Math.cos(alpha) * Math.cos(gamma) * Math.sin(beta))
-                + y * (Math.cos(gamma) * Math.sin(alpha) * Math.sin(beta) - Math.cos(alpha) * Math.sin(gamma))
-                + z * (Math.cos(beta) * Math.cos(gamma));
+        double c = x * Math.cos(alpha) * Math.sin(beta)
+                + y * Math.sin(alpha) * Math.sin(beta)
+                + z * Math.cos(beta);
         
         return Math.toDegrees(Math.atan2(c, a));
     }

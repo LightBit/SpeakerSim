@@ -326,7 +326,7 @@ public final class Fnc
         return phase;
     }
     
-    public static double[] unwrapPhase(double[] f, double[] phase)
+    /*public static double[] unwrapPhase(double[] f, double[] phase)
     {
         double[] unwrapped = new double[phase.length];
         double prev = 0;
@@ -354,29 +354,5 @@ public final class Fnc
         }
         
         return unwrapped;
-    }
-    
-    public static double[] wrapPhase(double[] phase)
-    {
-        double[] wrapped = new double[phase.length];
-        
-        for (int i = 0; i < phase.length; i++)
-        {
-            double p = phase[i];
-            
-            while (p > Math.PI)
-            {
-                p -= 2 * Math.PI;
-            }
-
-            while (p <= -Math.PI)
-            {
-                p += 2 * Math.PI;
-            }
-            
-            wrapped[i] = p;
-        }
-        
-        return wrapped;
-    }
+    }*/
 }

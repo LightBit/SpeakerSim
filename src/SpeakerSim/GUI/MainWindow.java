@@ -1732,7 +1732,7 @@ public final class MainWindow extends javax.swing.JFrame
                             listeningWindow[i] = Fnc.toDecibels(item.listeningWindowResponse(f).abs());
                             power[i] = Fnc.toDecibels(item.powerResponse(f).abs());
                             directivity[i] = listeningWindow[i] - power[i];
-                            responsePhase[i] = r.phase();//responsePhase[i] = Math.toDegrees(r.phase());
+                            responsePhase[i] = r.phase();
                             Complex z = item.impedance(f);
                             impedance[i] = z.abs();
                             impedancePhase[i] = z.phase();
@@ -1743,6 +1743,8 @@ public final class MainWindow extends javax.swing.JFrame
                             baffle[i] = Fnc.toDecibels(baffleResponse.abs());
                             room[i] = Fnc.toDecibels(roomResponse.abs());
                         }
+                        
+                        double delay = Fnc.min(Fnc.smooth(groupDelay, (int)Math.round(Project.getInstance().Settings.pointsPerOctave()))) / 1000;
                         
                         if (Project.getInstance().Settings.Smoothing > 0)
                         {
@@ -1756,36 +1758,26 @@ public final class MainWindow extends javax.swing.JFrame
                                 excursions[j] = Fnc.smooth(excursions[j], points);
                                 //phases[j] = Fnc.unwrapPhase(freq, phases[j]);
                                 //phases[j] = Fnc.smooth(phases[j], points);
-                                //phases[j] = Fnc.wrapPhase(phases[j]);
                             }
                             //responsePhase = Fnc.unwrapPhase(freq, responsePhase);
                             //responsePhase = Fnc.smooth(responsePhase, points);
-                            //responsePhase = Fnc.wrapPhase(responsePhase);
                             filter = Fnc.smooth(filter, points);
                             listeningWindow = Fnc.smooth(listeningWindow, points);
                             power = Fnc.smooth(power, points);
                             directivity = Fnc.smooth(directivity, points);
                             maxSPL = Fnc.smooth(maxSPL, points);
                             maxPower = Fnc.smooth(maxPower, points);
-                            //groupDelay = Fnc.smooth(groupDelay, points);
+                            groupDelay = Fnc.smooth(groupDelay, points);
                             baffle = Fnc.smooth(baffle, points);
                             room = Fnc.smooth(room, points);
                         }
-
-                        groupDelay = Fnc.smooth(groupDelay, (int)Math.round(Project.getInstance().Settings.pointsPerOctave()) / (Project.getInstance().Settings.Smoothing > 0 ? Math.min(3, Project.getInstance().Settings.Smoothing) : 3));
                         
-                        double delay = Fnc.min(groupDelay) / 1000;
-                        
-                        for (int i = 1; i < freq.length; i++)
+                        for (int i = 0; i < freq.length; i++)
                         {
-                            Complex cd = Complex.toComplex(1, 2 * Math.PI * freq[i] * delay);
-                            if (false/*phase inverted*/)
-                            {
-                                cd.conjugate();
-                            }
-                            responsePhase[i] = Math.toDegrees(Complex.toComplex(1, responsePhase[i]).multiply(cd).phase());
+                            Complex d = Complex.toComplex(1, 2 * Math.PI * freq[i] * delay);
+                            responsePhase[i] = Math.toDegrees(Complex.toComplex(1, responsePhase[i]).multiply(d).phase());
                         }
-                        
+
                         final Graph graphResponse = new Graph(item.toString(), "Hz", freq, "dB", response);
                         final Graph graphPhase = new Graph("Hz", "");
                         final Graph graphFilters = new Graph(item.toString(), "Hz", freq, "dB", filter);
@@ -1807,12 +1799,8 @@ public final class MainWindow extends javax.swing.JFrame
 
                                 for (int i = 0; i < freq.length; i++)
                                 {
-                                    Complex cd = Complex.toComplex(1, 2 * Math.PI * freq[i] * delay);
-                                    if (false/*phase inverted*/)
-                                    {
-                                        cd.conjugate();
-                                    }
-                                    phases[j][i] = Math.toDegrees(Complex.toComplex(1, phases[j][i]).multiply(cd).phase());
+                                    Complex d = Complex.toComplex(1, 2 * Math.PI * freq[i] * delay);
+                                    phases[j][i] = Math.toDegrees(Complex.toComplex(1, phases[j][i]).multiply(d).phase());
                                 }
                                 graphPhase.add(subitem, freq, phases[j]);
                             }

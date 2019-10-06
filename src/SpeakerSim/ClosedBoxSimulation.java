@@ -74,92 +74,43 @@ public class ClosedBoxSimulation implements ISimulation
     
     private Complex box(double f)
     {
-        Complex x = new Complex(0, 2 * Math.PI * f * Mas).divide(Zat(f).add(Rae));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-
-        return x;
+        return new Complex(0, 2 * Math.PI * f * Mas).divide(Zat(f).add(Rae));
     }
     
     @Override
     public Complex response(double f)
     {
-        Complex x = box(f).multiply(driver.normResponse(f));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x.multiply(distance.response(f));
+        return box(f).multiply(driver.normResponse(f)).multiply(distance.response(f));
     }
     
     @Override
     public Complex response1W(double f)
     {
-        Complex x = box(f).multiply(driver.normResponse1W(f));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x.multiply(distance.response(f));
+        return box(f).multiply(driver.normResponse1W(f)).multiply(distance.response(f));
     }
     
     @Override
     public Complex listeningWindowResponse(double f)
     {
-        Complex x = box(f).multiply(driver.normResponse(f)).multiply(listeningWindow.response(f));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x;
+        return box(f).multiply(driver.normResponse(f)).multiply(listeningWindow.response(f));
     }
     
     @Override
     public Complex powerResponse(double f)
     {
-        Complex x = box(f).multiply(driver.normResponse(f)).multiply(powerResponse.response(f));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x;
+        return box(f).multiply(driver.normResponse(f)).multiply(powerResponse.response(f));
     }
     
     @Override
     public Complex responseWithBaffle(double f)
     {
-        Complex x = box(f).multiply(driver.normResponse(f)).multiply(baffle.response(f));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x.multiply(distance.response(f));
+        return box(f).multiply(driver.normResponse(f)).multiply(baffle.response(f)).multiply(distance.response(f));
     }
     
     @Override
     public Complex responseWithRoom(double f)
     {
-        Complex x = box(f).multiply(driver.normResponse(f)).multiply(room.response(f));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x.multiply(distance.response(f));
+        return box(f).multiply(driver.normResponse(f)).multiply(room.response(f)).multiply(distance.response(f));
     }
     
     @Override

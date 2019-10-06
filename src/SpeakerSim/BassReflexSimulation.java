@@ -79,14 +79,7 @@ public class BassReflexSimulation implements ISimulation
     
     private Complex cone(double f)
     {
-        Complex c = new Complex(0, 2 * Math.PI * f * Mas).divide(Zat(f).add(Rae));
-        
-        /*if (driver.Inverted)
-        {
-            c = c.conjugate();
-        }*/
-        
-        return c;
+        return new Complex(0, 2 * Math.PI * f * Mas).divide(Zat(f).add(Rae));
     }
     
     private Complex port(double f)
@@ -96,14 +89,7 @@ public class BassReflexSimulation implements ISimulation
         Complex Zab = Fnc.zParallel(new Complex(Rab, -1 / (f * Cab)), new Complex(Ral));
         Complex Zap = new Complex(Rap, f * Map);
         Complex Zat = Zas.add(Fnc.zParallel(Zab, Zap));
-        Complex p = new Complex(0, f * Mas).divide(Zat.add(Rae)).multiply(Fnc.zParallel(Zab, Zap)).divide(Zap);
-        
-        /*if (driver.Inverted)
-        {
-            p = p.conjugate();
-        }*/
-        
-        return p;
+        return new Complex(0, f * Mas).divide(Zat.add(Rae)).multiply(Fnc.zParallel(Zab, Zap)).divide(Zap);
     }
     
     private Complex box(double f)
@@ -117,14 +103,7 @@ public class BassReflexSimulation implements ISimulation
         Complex c = cone(f).multiply(distanceCone.response(f));
         Complex p = port(f).multiply(distancePort.response(f));
         
-        Complex x = driver.normResponse(f);
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x.multiply(c.subtract(p));
+        return driver.normResponse(f).multiply(c.subtract(p));
     }
     
     @Override
@@ -133,14 +112,7 @@ public class BassReflexSimulation implements ISimulation
         Complex c = cone(f).multiply(distanceCone.response(f));
         Complex p = port(f).multiply(distancePort.response(f));
         
-        Complex x = driver.normResponse1W(f);
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x.multiply(c.subtract(p));
+        return driver.normResponse1W(f).multiply(c.subtract(p));
     }
     
     @Override
@@ -149,15 +121,7 @@ public class BassReflexSimulation implements ISimulation
         Complex c = cone(f).multiply(listeningWindowCone.response(f));
         Complex p = port(f).multiply(listeningWindowPort.response(f));
         
-        Complex x = c.subtract(p);
-        x = x.multiply(driver.normResponse(f));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x;
+        return driver.normResponse(f).multiply(c.subtract(p));
     }
     
     @Override
@@ -166,15 +130,7 @@ public class BassReflexSimulation implements ISimulation
         Complex c = cone(f).multiply(powerResponseCone.response(f));
         Complex p = port(f).multiply(powerResponsePort.response(f));
         
-        Complex x = c.subtract(p);
-        x = x.multiply(driver.normResponse(f));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x;
+        return driver.normResponse(f).multiply(c.subtract(p));
     }
     
     @Override
@@ -183,15 +139,7 @@ public class BassReflexSimulation implements ISimulation
         Complex c = cone(f).multiply(baffle.response(f).multiply(distanceCone.response(f)));
         Complex p = port(f).divide(2).multiply(distancePort.response(f));
         
-        Complex x = c.subtract(p);
-        x = x.multiply(driver.normResponse(f));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x;
+        return driver.normResponse(f).multiply(c.subtract(p));
     }
     
     @Override
@@ -200,15 +148,7 @@ public class BassReflexSimulation implements ISimulation
         Complex c = cone(f).multiply(roomCone.response(f).multiply(distanceCone.response(f)));
         Complex p = port(f).multiply(roomPort.response(f).multiply(distancePort.response(f)));
         
-        Complex x = c.subtract(p);
-        x = x.multiply(driver.normResponse(f));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x;
+        return driver.normResponse(f).multiply(c.subtract(p));
     }
     
     @Override

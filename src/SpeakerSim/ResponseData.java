@@ -42,7 +42,7 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
     public ResponseEntry[] data;
     private final DistanceSimulation dist;
     
-    public Complex response(double f, double SPLdiff)
+    public Complex response(double f, double SPLdiff, boolean invert)
     {
         // no lower value
         if (data[0].frequency > f)
@@ -55,7 +55,19 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
             if (data[i].frequency >= f)
             {
                 double amplitude = Fnc.interpolate(data[i - 1].frequency, data[i - 1].amplitude, data[i].frequency, data[i].amplitude, f);
-                double phase = Fnc.interpolate(data[i - 1].frequency, data[i - 1].phase, data[i].frequency, data[i].phase, f);
+                double phase = Math.toRadians(Fnc.interpolate(data[i - 1].frequency, data[i - 1].phase, data[i].frequency, data[i].phase, f));
+                
+                if (invert)
+                {
+                    if (phase >= 0)
+                    {
+                        phase -= Math.PI;
+                    }
+                    else
+                    {
+                        phase += Math.PI;
+                    }
+                }
 
                 if (inputIsVoltage)
                 {
@@ -72,12 +84,17 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
                     x = Complex.toComplex(x.abs(), 0);
                 }
 
-                return Complex.toComplex(Fnc.toAmplitude(amplitude), Math.toRadians(phase)).divide(x);
+                return Complex.toComplex(Fnc.toAmplitude(amplitude), phase).divide(x);
             }
         }
 
         // no higher value
         return Complex.toComplex(Double.MIN_NORMAL, Math.toRadians(data[data.length - 1].phase));
+    }
+    
+    public Complex response(double f, double SPLdiff)
+    {
+        return response(f, SPLdiff, false);
     }
     
     public static ResponseEntry[] ImportData(File file, boolean dB) throws IOException

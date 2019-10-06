@@ -235,10 +235,21 @@ public class Driver implements JSONable
         Complex Zas = new Complex(Ras, f * Mas - 1 / (f * Cas));
         Complex x = new Complex(0, f * Mas).divide(Zas.add(Rae));
         
-        /*if (Inverted)
+        if (Inverted)
         {
-            x = x.conjugate();
-        }*/
+            double p = x.phase();
+            
+            if (p >= 0)
+            {
+                p -= Math.PI;
+            }
+            else
+            {
+                p += Math.PI;
+            }
+
+            return Complex.toComplex(x.abs(), p);
+        }
         
         return x;
     }
@@ -252,14 +263,7 @@ public class Driver implements JSONable
     {
         if (hasFRD())
         {
-            Complex x = FRD.response(f, SPL_2_83V - SPL_1W);
-            
-            /*if (Inverted)
-            {
-                x = x.conjugate();
-            }*/
-
-            return x;
+            return FRD.response(f, SPL_2_83V - SPL_1W, Inverted);
         }
         else
         {
@@ -275,7 +279,7 @@ public class Driver implements JSONable
             return normalize(f, response(f), x);
         }
         
-        return new Complex(Fnc.toAmplitude(SPL_2_83V));
+        return Complex.toComplex(Fnc.toAmplitude(SPL_2_83V), Inverted ? -Math.PI : 0);
     }
     
     public Complex response1W(double f)
@@ -291,7 +295,7 @@ public class Driver implements JSONable
             return normalize(f, response1W(f), x);
         }
         
-        return new Complex(Fnc.toAmplitude(SPL_1W));
+        return Complex.toComplex(Fnc.toAmplitude(SPL_1W), Inverted ? -Math.PI : 0);
     }
     
     private double directivity(double angle, boolean dipole)
@@ -642,7 +646,7 @@ public class Driver implements JSONable
         CrossStart = jsonObj.get("NormStartF").asDouble();
         CrossEnd = jsonObj.get("NormEndF").asDouble();
         Closed = jsonObj.get("Closed").asBoolean();
-        Inverted = false; //TODO: Inverted = jsonObj.get("Inverted").asBoolean();
+        Inverted = jsonObj.get("Inverted").asBoolean();
         
         FRD = null;
         hFRD = null;

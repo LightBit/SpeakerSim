@@ -38,53 +38,25 @@ public class NullSimulation extends BaffleSimulation implements ISimulation
     @Override
     public Complex response(double f)
     {
-        Complex x = driver.response(f).multiply(distance.response(f));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x;
+        return driver.response(f).multiply(distance.response(f));
     }
     
     @Override
     public Complex response1W(double f)
     {
-        Complex x = driver.response1W(f);
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x.multiply(distance.response(f));
+        return driver.response1W(f).multiply(distance.response(f));
     }
     
     @Override
     public Complex listeningWindowResponse(double f)
     {
-        Complex x = driver.response(f);
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x.multiply(listeningWindow.response(f));
+        return driver.response(f).multiply(listeningWindow.response(f));
     }
     
     @Override
     public Complex powerResponse(double f)
     {
-        Complex x = driver.response(f);
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x.multiply(powerResponse.response(f));
+        return driver.response(f).multiply(powerResponse.response(f));
     }
     
     @Override
@@ -115,26 +87,12 @@ public class NullSimulation extends BaffleSimulation implements ISimulation
     @Override
     public Complex responseWithBaffle(double f)
     {
-        Complex x = driver.response(f).multiply(super.response(f));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x.multiply(distance.response(f));
+        return driver.response(f).multiply(super.response(f)).multiply(distance.response(f));
     }
     
     @Override
     public Complex responseWithRoom(double f)
     {
-        Complex x = driver.response(f).multiply(room.response(f));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
-        return x.multiply(distance.response(f));
+        return driver.response(f).multiply(room.response(f)).multiply(distance.response(f));
     }
 }

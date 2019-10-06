@@ -46,11 +46,6 @@ public class OpenBaffleSimulation implements ISimulation
         Complex x = driver.normResponse(f).multiply(driver.responseSimRelative(f));
         //x = x.divide(Math.sqrt(1 + Math.pow(listeningQuarterWave / f, 2)));
         
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
         return x.multiply(distance.response(f));
     }
     
@@ -59,11 +54,6 @@ public class OpenBaffleSimulation implements ISimulation
     {
         Complex x = driver.normResponse1W(f).multiply(driver.responseSimRelative(f));
         //x = x.divide(Math.sqrt(1 + Math.pow(listeningQuarterWave / f, 2)));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
         
         return x.multiply(distance.response(f));
     }
@@ -94,11 +84,6 @@ public class OpenBaffleSimulation implements ISimulation
         Complex x = driver.normResponse(f).multiply(driver.responseSimRelative(f)).multiply(listeningWindow.response(f));
         x = x.divide(Math.sqrt(1 + Math.pow(listeningQuarterWave / f, 2)));
         
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
         return x;
     }
 
@@ -108,11 +93,6 @@ public class OpenBaffleSimulation implements ISimulation
         //Complex x = driver.normResponse(f).multiply(driver.responseSimRelative(f)).multiply(powerResponse.response(f).divide(Math.sqrt(1 + Math.pow(wavelength / f, 2))));
         Complex x = driver.normResponse(f).multiply(driver.responseSimRelative(f)).multiply(powerResponse.response(f));
         x = x.divide(Math.sqrt(1 + Math.pow(listeningQuarterWave / f, 2)));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
         
         return x;
     }
@@ -131,11 +111,6 @@ public class OpenBaffleSimulation implements ISimulation
         //x = x.multiply(baffle.response(f).divide(Math.sqrt(1 + Math.pow(wavelength / f, 2))));
         x = x.multiply(baffle.response(f));
         
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
-        
         return x.multiply(distance.response(f));
     }
 
@@ -144,11 +119,6 @@ public class OpenBaffleSimulation implements ISimulation
     {
         Complex x = driver.normResponse(f).multiply(driver.responseSimRelative(f));
         x = x.multiply(room.response(f));
-        
-        /*if (driver.Inverted)
-        {
-            x = x.conjugate();
-        }*/
         
         return x.multiply(distance.response(f));
     }

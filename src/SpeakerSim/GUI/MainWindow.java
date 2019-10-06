@@ -1248,7 +1248,13 @@ public final class MainWindow extends javax.swing.JFrame
                 {
                     for (int i = 0; i < freq.length; i++)
                     {
-                        writer.print(new ResponseEntry(freq[i], response[i], responsePhase[i]).toString());
+                        double a = response[i];
+                        double p = responsePhase[i];
+                        
+                        if (Double.isFinite(a) && Double.isFinite(p))
+                        {
+                            writer.print(new ResponseEntry(freq[i], a, p).toString());
+                        }
                     }
                 }
             }
@@ -1274,7 +1280,13 @@ public final class MainWindow extends javax.swing.JFrame
                 {
                     for (int i = 0; i < freq.length; i++)
                     {
-                        writer.print(new ResponseEntry(freq[i], impedance[i], impedancePhase[i]).toString());
+                        double a = impedance[i];
+                        double p = impedancePhase[i];
+                        
+                        if (Double.isFinite(a) && Double.isFinite(p))
+                        {
+                            writer.print(new ResponseEntry(freq[i], a, p).toString());
+                        }
                     }
                 }
             }

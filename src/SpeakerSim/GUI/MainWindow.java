@@ -342,6 +342,7 @@ public final class MainWindow extends javax.swing.JFrame
                 Speaker speaker = new Speaker();
                 if (editItem(speaker))
                 {
+                    // TODO: select optimal enclosure
                     addItem(speaker, above, node);
                 }
             }

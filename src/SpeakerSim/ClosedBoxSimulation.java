@@ -43,6 +43,12 @@ public class ClosedBoxSimulation implements ISimulation
         return Qtc / Qts * Fs;
     }
     
+    public static double calcVb(double Qtc, double Qts, double Vas)
+    {
+        double Qr = Qtc / Qts;
+        return Vas / (Qr * Qr - 1);
+    }
+    
     public ClosedBoxSimulation(Environment env, ClosedBox box, Driver driver, Baffle baffle, Position driverPos, Position centerPos, Position listeningPos)
     {
         this.driver = driver;

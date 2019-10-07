@@ -33,7 +33,19 @@ public final class ActiveLowPassFilter extends ActivePassFilter
     @Override
     public Complex response(double f)
     {
-        return super.filter(f / getFrequency());
+        if (isCustom())
+        {
+            double f2 = f * f;
+            double frequency2 = frequency * frequency;
+            double frequency4 = frequency2 * frequency2;
+            double t = 1 / q;
+            t = frequency4 - frequency2 * f2 * (2 - t * t) + f2 * f2;
+            
+            double x = (frequency4 - frequency2 * f2) / t;
+            double y = -f * frequency2 * frequency / q / t;
+            return Complex.toComplex(Math.hypot(x, y), Math.atan2(y, x));
+        }
+        return super.filter(f / frequency);
     }
     
     @Override

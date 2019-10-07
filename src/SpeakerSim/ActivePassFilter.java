@@ -23,7 +23,8 @@ import com.eclipsesource.json.JsonValue;
 public abstract class ActivePassFilter implements IActiveFilter
 {
     private int type;
-    private double frequency;
+    protected double frequency;
+    protected double q;
     
     public final static String[] TYPES =
     {
@@ -34,25 +35,49 @@ public abstract class ActivePassFilter implements IActiveFilter
         "Third order Butterworth",
         "Fourth order Butterworth",
         "Fourth order Bessel",
-        "Fourth order Linkwitz-Riley"
+        "Fourth order Linkwitz-Riley",
+        "Fifth order Butterworth",
+        "Fifth order Bessel",
+        "Sixth order Butterworth",
+        "Sixth order Bessel",
+        "Sixth order Linkwitz-Riley",
+        "Eighth order Linkwitz-Riley",
+        "Custom second order"
     };
     
     private final static double[][] CONST =
     {
-        {1, 0, 0, 0},
-        {1.4142, 1, 0, 0},
-        {1.7321, 1, 0, 0},
-        {2, 1, 0, 0},
-        {2, 2, 1, 0},
-        {2.6132, 3.4142, 2.6132, 1},
-        {3.24, 4.5, 3.24, 1.05},
-        {2.8284, 4, 2.8284, 1}
+        {1, 0, 0, 0, 0, 0, 0, 0},
+        {1.4142, 1, 0, 0, 0, 0, 0, 0},
+        {1.7321, 1, 0, 0, 0, 0, 0, 0},
+        {2.0000, 1, 0, 0, 0, 0, 0, 0},
+        {2.0000, 2.0000, 1, 0, 0, 0, 0, 0},
+        {2.6132, 3.4142, 2.6132, 1, 0, 0, 0, 0},
+        {3.2400, 4.5000, 3.2400, 1.0500, 0, 0, 0, 0},
+        {2.8284, 4.0000, 2.8284, 1.0000, 0, 0, 0, 0},
+        {3.2361, 5.2360, 5.2360, 3.2361, 1, 0, 0, 0},
+        {3.9363, 6.8864, 6.7767, 3.8107, 1, 0, 0, 0.},
+        {3.8637, 7.4641, 9.1416, 7.4641, 3.8637, 1, 0, 0},
+        {4.6717, 9.9202, 12.3583, 9.6223, 4.4952, 1, 0, 0},
+        {4.0000, 8.0000, 10.0000, 8.0000, 4.0000, 1, 0, 0},
+        {5.2263, 13.6569, 23.0698, 27.3137, 23.0698, 13.6569, 5.2263, 1}
     };
+    
+    public static boolean isCustom(int type)
+    {
+        return type == TYPES.length - 1;
+    }
+    
+    public final boolean isCustom()
+    {
+        return isCustom(type);
+    }
     
     public ActivePassFilter()
     {
         type = 0;
         frequency = 1000;
+        q = 0.707;
     }
     
     public ActivePassFilter(JsonValue json)
@@ -60,7 +85,8 @@ public abstract class ActivePassFilter implements IActiveFilter
         JsonObject jsonObj = json.asObject();
         
         setType(jsonObj.get("Type").asString());
-        setFrequency(jsonObj.get("Frequency").asDouble());
+        setFrequency(JSON.getDouble(jsonObj, "Frequency", 1000));
+        setQ(JSON.getDouble(jsonObj, "Q", 0.707));
     }
     
     public final void setType(int type)
@@ -100,13 +126,36 @@ public abstract class ActivePassFilter implements IActiveFilter
         return frequency;
     }
     
+    public final void setQ(double q)
+    {
+        this.q = q;
+    }
+    
+    public final double getQ()
+    {
+        return q;
+    }
+    
     protected Complex filter(double fn)
     {
         double fn2 = fn * fn;
         double fn3 = fn2 * fn;
         double fn4 = fn2 * fn2;
-        double x = 1 + CONST[type][3] * fn4 - CONST[type][1] * fn2;
-        double y = -CONST[type][2] * fn3 + CONST[type][0] * fn;
+        double fn5 = fn4 * fn;
+        double fn6 = fn3 * fn3;
+        double fn7 = fn6 * fn;
+        double fn8 = fn4 * fn4;
+        
+        double x = 1
+                - CONST[type][1] * fn2
+                + CONST[type][3] * fn4
+                - CONST[type][5] * fn6
+                + CONST[type][7] * fn8;
+        
+        double y = CONST[type][0] * fn
+                - CONST[type][2] * fn3
+                + CONST[type][4] * fn5
+                - CONST[type][6] * fn7;
         
         return Complex.toComplex(1 / Math.hypot(x, y), -Math.atan2(y, x));
     }
@@ -121,7 +170,8 @@ public abstract class ActivePassFilter implements IActiveFilter
     {
         String s = name() + " (";
         
-        s += getTypeString() + " at " + Fnc.decimalFormat(getFrequency()) + "Hz";
+        s += isCustom() ? Fnc.decimalFormat(getQ()) : getTypeString();
+        s += " at " + Fnc.decimalFormat(getFrequency()) + "Hz";
         
         return s + ")";
     }
@@ -133,6 +183,7 @@ public abstract class ActivePassFilter implements IActiveFilter
         
         json.add("Type", Json.value(getTypeString()));
         json.add("Frequency", Json.value(getFrequency()));
+        json.add("Q", Json.value(getQ()));
         
         return json;
     }

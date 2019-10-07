@@ -92,7 +92,7 @@ public class AmplifierWindow extends javax.swing.JDialog
                     int index = list.getSelectedIndex();
                     if (index >= 0)
                     {
-                        edit((IActiveFilter) model.get(index));
+                        edit(model.get(index));
                     }
                 }
             }
@@ -118,7 +118,7 @@ public class AmplifierWindow extends javax.swing.JDialog
                     int index = list.getSelectedIndex();
                     if (index >= 0)
                     {
-                        IActiveFilter item = edit((IActiveFilter) model.get(index));
+                        IActiveFilter item = edit(model.get(index));
                         if (item != null)
                         {
                             model.setElementAt(item, index);
@@ -302,7 +302,7 @@ public class AmplifierWindow extends javax.swing.JDialog
         amp.Filters = new IActiveFilter[model.size()];
         for (int i = 0; i < amp.Filters.length; i++)
         {
-            amp.Filters[i] = (IActiveFilter) model.get(i);
+            amp.Filters[i] = model.get(i);
         }
 
         dispose();
@@ -343,30 +343,46 @@ public class AmplifierWindow extends javax.swing.JDialog
         {
             ActivePassFilter filter = (ActivePassFilter) item;
             
+            final JFormattedTextField frequencyField = new JFormattedTextField();
+            frequencyField.setFormatterFactory(UI.FORMATTER);
+            frequencyField.setValue(filter.getFrequency());
+            frequencyField.addPropertyChangeListener("value", UI.validator());
+            
+            final JFormattedTextField qField = new JFormattedTextField();
+            qField.setFormatterFactory(UI.FORMATTER);
+            qField.setValue(filter.getQ());
+            qField.addPropertyChangeListener("value", UI.validator(0.1));
+            
             DefaultComboBoxModel<String> typesModel = new DefaultComboBoxModel<String>();
             for (String t : ActivePassFilter.TYPES)
             {
                 typesModel.addElement(t);
             }
             
-            JComboBox<String> typeComboBox = new JComboBox<String>();
+            final JComboBox<String> typeComboBox = new JComboBox<String>();
             typeComboBox.setModel(typesModel);
+            typeComboBox.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    qField.setEnabled(ActivePassFilter.isCustom(typeComboBox.getSelectedIndex()));
+                }
+            });
             typeComboBox.setSelectedIndex(filter.getType());
-            
-            JFormattedTextField frequencyField = new JFormattedTextField();
-            frequencyField.setFormatterFactory(UI.FORMATTER);
-            frequencyField.setValue(filter.getFrequency());
             
             final JComponent[] inputs = new JComponent[]
             {
                 new JLabel("Type: "), typeComboBox,
-                new JLabel("Frequency (Hz): "), frequencyField
+                new JLabel("Frequency (Hz): "), frequencyField,
+                new JLabel("Q: "), qField
             };
             
             if (UI.dialog(this, filter.name(), inputs))
             {
                 filter.setType(typeComboBox.getSelectedIndex());
                 filter.setFrequency(UI.getDouble(frequencyField));
+                filter.setQ(UI.getDouble(qField));
                 return filter;
             }
         }

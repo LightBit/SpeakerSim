@@ -22,28 +22,34 @@ public class HighPassFilter extends PassFilter
 {
     private final static double[][] C =
     {
-        {0.159, 0}, // First order Butterworth
-        {0.1125, 0}, // Second order Butterworth
-        {0.0912, 0}, // Second order Bessel
-        {0.0796, 0}, // Second order Linkwitz-Riley
-        {0.1592, 0}, // Second order Chebychev
+        {0.1590, 0.0000}, // First order Butterworth
+        {0.1125, 0.0000}, // Second order Butterworth
+        {0.0912, 0.0000}, // Second order Bessel
+        {0.0796, 0.0000}, // Second order Linkwitz-Riley
+        {0.1592, 0.0000}, // Second order Chebychev
         {0.1061, 0.3183}, // Third order Butterworth
         {0.1040, 0.1470}, // Fourth order Butterworth
         {0.0702, 0.0719}, // Fourth order Bessel
-        {0.0844, 0.1688} // Fourth order Linkwitz-Riley
+        {0.0844, 0.1688}, // Fourth order Linkwitz-Riley
+        {0.1104, 0.1246}, // Fourth order Legendre
+        {0.0767, 0.1491}, // Fourth order Gaussian
+        {0.0741, 0.1524}  // Fourth order Linear-Phase
     };
     
     private final static double[][] L =
     {
-        {0, 0}, // First order Butterworth
-        {0.2251, 0}, // Second order Butterworth
-        {0.2756, 0}, // Second order Bessel
-        {0.3183, 0}, // Second order Linkwitz-Riley
-        {0.1592, 0}, // Second order Chebychev
-        {0.1194, 0}, // Third order Butterworth
+        {0.0000, 0.0000}, // First order Butterworth
+        {0.2251, 0.0000}, // Second order Butterworth
+        {0.2756, 0.0000}, // Second order Bessel
+        {0.3183, 0.0000}, // Second order Linkwitz-Riley
+        {0.1592, 0.0000}, // Second order Chebychev
+        {0.1194, 0.0000}, // Third order Butterworth
         {0.1009, 0.4159}, // Fourth order Butterworth
         {0.0862, 0.4983}, // Fourth order Bessel
-        {0.1, 0.4501} // Fourth order Linkwitz-Riley
+        {0.1000, 0.4501}, // Fourth order Linkwitz-Riley
+        {0.1073, 0.2783}, // Fourth order Legendre
+        {0.1116, 0.3251}, // Fourth order Gaussian
+        {0.1079, 0.3853}  // Fourth order Linear-Phase
     };
     
     @Override

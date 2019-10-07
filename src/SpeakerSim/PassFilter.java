@@ -45,6 +45,9 @@ public abstract class PassFilter extends Filter
         "Fourth order Butterworth",
         "Fourth order Bessel",
         "Fourth order Linkwitz-Riley",
+        "Fourth order Legendre",
+        "Fourth order Gaussian",
+        "Fourth order Linear-Phase",
         "Custom"
     };
     

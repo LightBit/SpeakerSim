@@ -318,8 +318,7 @@ public class BassReflexSimulation implements ISimulation
             box.Vb = 20 * Math.pow(driver.Qts, 3.3) * driver.Vas;
             box.Fb = Math.pow(driver.Vas / box.Vb, 0.31) * driver.Fs;
         }
-        
-        if (driver.Qts < 0.2)
+        else if (driver.Qts < 0.2)
         {
             calcQB3(box, driver);
         }

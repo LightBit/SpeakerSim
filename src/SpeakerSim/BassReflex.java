@@ -74,7 +74,7 @@ public final class BassReflex implements JSONable
         {
             Vb = 0.05;
             Fb = 30;
-            Ql = 10;
+            Ql = 7;
             Qa = 50;
             Qp = 100;
             Np = 1;

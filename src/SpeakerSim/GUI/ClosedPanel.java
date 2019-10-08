@@ -53,7 +53,7 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 5, 100))
+                if (listen && UI.validate(e, 3, 15))
                 {
                     speaker.ClosedBox.Ql = UI.getDouble(e);
                     main.refresh();
@@ -180,7 +180,7 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         add(jLabel4, gridBagConstraints);
 
         qlField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
-        qlField.setToolTipText("Enclosure leakage losses [5 - 100]");
+        qlField.setToolTipText("Enclosure leakage losses [3 - 15]");
         qlField.setMaximumSize(new java.awt.Dimension(80, 19));
         qlField.setMinimumSize(new java.awt.Dimension(80, 19));
         qlField.setName(""); // NOI18N

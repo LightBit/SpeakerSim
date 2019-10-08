@@ -947,4 +947,9 @@ public class Driver implements JSONable
     {
         return Bl * Bl / (Sd * Sd * Re);
     }
+    
+    public double calcEBP()
+    {
+        return Fs / Qes;
+    }
 }

@@ -33,13 +33,13 @@ public class ClosedBox implements JSONable
             JsonObject jsonObj = json.asObject();
 
             Vb = JSON.getDouble(jsonObj, "Vb", 0.05);
-            Ql = JSON.getDouble(jsonObj, "Ql", 10);
+            Ql = JSON.getDouble(jsonObj, "Ql", 7);
             Qa = JSON.getDouble(jsonObj, "Qa", 8);
         }
         else
         {
             Vb = 0.05;
-            Ql = 10;
+            Ql = 7;
             Qa = 8;
         }
     }

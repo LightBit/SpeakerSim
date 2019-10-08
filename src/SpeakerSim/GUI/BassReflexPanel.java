@@ -65,7 +65,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 5, 100))
+                if (listen && UI.validate(e, 3, 15))
                 {
                     speaker.BassReflex.Ql = UI.getDouble(e);
                     main.refresh();
@@ -366,6 +366,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
         bassReflexPanel.add(qlField, gridBagConstraints);
+        qlField.getAccessibleContext().setAccessibleDescription("Enclosure leakage losses [3 - 15]");
 
         qaField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         qaField.setToolTipText("Enclosure absorption losses (damping) [3 - 100]");

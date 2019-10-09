@@ -342,19 +342,7 @@ public final class MainWindow extends javax.swing.JFrame
                 Speaker speaker = new Speaker();
                 if (editItem(speaker))
                 {
-                    // select "best" enclosure type
-                    if (speaker.Driver.Qts > 1.2)
-                    {
-                        speaker.setSimulator(Speaker.SimulatorType.OPEN_BAFFLE);
-                    }
-                    else if (speaker.Driver.Qts > 0.7 || speaker.Driver.calcEBP() < 50)
-                    {
-                        speaker.setSimulator(Speaker.SimulatorType.CLOSED_BOX);
-                    }
-                    
-                    // calculate enclosure
-                    // TODO
-                    
+                    speaker.setSimulators();
                     addItem(speaker, above, node);
                 }
             }

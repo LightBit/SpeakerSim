@@ -33,9 +33,9 @@ public class ClosedBoxSimulation implements ISimulation
     private final double Rab;
     private final double Ral;
     
-    public static double calcQtc(double Vb, double Vas, double Qts)
+    public static double calcQtc(double Vb, double Vas, double Qts, double Qa)
     {
-        return Math.sqrt(Vas / Vb + 1) * Qts;
+        return Math.sqrt(Vas / Vb + 1) * Qts - 1 / Qa;
     }
     
     public static double calcFb(double Qtc, double Qts, double Fs)
@@ -47,6 +47,13 @@ public class ClosedBoxSimulation implements ISimulation
     {
         double Qr = Qtc / Qts;
         return Vas / (Qr * Qr - 1);
+    }
+    
+    public static void calcBox(ClosedBox box, Driver driver)
+    {
+        box.Qa = 10;
+        box.Ql = 7;
+        box.Vb = calcVb(0.707 + 1 / box.Qa, driver.Qts, driver.Vas);
     }
     
     public ClosedBoxSimulation(Environment env, ClosedBox box, Driver driver, Baffle baffle, Position driverPos, Position centerPos, Position listeningPos)

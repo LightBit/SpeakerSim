@@ -195,6 +195,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         qaField = new javax.swing.JFormattedTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        calculateButton = new javax.swing.JButton();
 
         java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.LEADING, 5, 0);
         flowLayout1.setAlignOnBaseline(true);
@@ -277,7 +278,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         bassReflexPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Aperiodic"));
         java.awt.GridBagLayout bassReflexPanelLayout = new java.awt.GridBagLayout();
         bassReflexPanelLayout.columnWidths = new int[] {0, 5, 0};
-        bassReflexPanelLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0};
+        bassReflexPanelLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0};
         bassReflexPanel.setLayout(bassReflexPanelLayout);
 
         vbField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
@@ -286,13 +287,13 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         vbField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         bassReflexPanel.add(vbField, gridBagConstraints);
 
         jLabel4.setText("Volume (l):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         bassReflexPanel.add(jLabel4, gridBagConstraints);
 
@@ -306,7 +307,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         bassReflexPanel.add(portCalcButton, gridBagConstraints);
@@ -317,7 +318,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         qlField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 4;
         bassReflexPanel.add(qlField, gridBagConstraints);
 
         qaField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
@@ -326,22 +327,37 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         qaField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         bassReflexPanel.add(qaField, gridBagConstraints);
 
         jLabel1.setText("Ql:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         bassReflexPanel.add(jLabel1, gridBagConstraints);
 
         jLabel3.setText("Qa:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         bassReflexPanel.add(jLabel3, gridBagConstraints);
+
+        calculateButton.setText("Calculate");
+        calculateButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                calculateButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        bassReflexPanel.add(calculateButton, gridBagConstraints);
 
         add(bassReflexPanel);
     }// </editor-fold>//GEN-END:initComponents
@@ -354,9 +370,17 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         }
     }//GEN-LAST:event_portCalcButtonActionPerformed
 
+    private void calculateButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_calculateButtonActionPerformed
+    {//GEN-HEADEREND:event_calculateButtonActionPerformed
+        AperiodicSimulation.calcBox(speaker.Aperiodic, speaker.Driver);
+        show(speaker);
+        main.refresh();
+    }//GEN-LAST:event_calculateButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bassReflexPanel;
+    private javax.swing.JButton calculateButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel15;

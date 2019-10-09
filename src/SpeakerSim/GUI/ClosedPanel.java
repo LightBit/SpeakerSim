@@ -85,7 +85,7 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         vbField.setValue(speaker.ClosedBox.Vb * 1000);
         qlField.setValue(speaker.ClosedBox.Ql);
         qaField.setValue(speaker.ClosedBox.Qa);
-        qtcField.setValue(ClosedBoxSimulation.calcQtc(speaker.ClosedBox.Vb, speaker.Driver.Vas, speaker.Driver.Qts));
+        qtcField.setValue(ClosedBoxSimulation.calcQtc(speaker.ClosedBox.Vb, speaker.Driver.Vas, speaker.Driver.Qts, speaker.ClosedBox.Qa));
         
         listen = true;
     }
@@ -129,17 +129,18 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         qaField = new javax.swing.JFormattedTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        calculateButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Closed Box"));
         java.awt.GridBagLayout layout = new java.awt.GridBagLayout();
         layout.columnWidths = new int[] {0, 5, 0};
-        layout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0};
+        layout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0};
         setLayout(layout);
 
         jLabel1.setText("Qtc:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel1, gridBagConstraints);
 
@@ -152,7 +153,7 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         qtcField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -166,7 +167,7 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         vbField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -175,7 +176,7 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         jLabel4.setText("Volume (l):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel4, gridBagConstraints);
 
@@ -187,7 +188,7 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         qlField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -201,7 +202,7 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         qaField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -210,20 +211,43 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         jLabel2.setText("Ql:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel2, gridBagConstraints);
 
         jLabel3.setText("Qa:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel3, gridBagConstraints);
+
+        calculateButton.setText("Calculate");
+        calculateButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                calculateButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(calculateButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void calculateButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_calculateButtonActionPerformed
+    {//GEN-HEADEREND:event_calculateButtonActionPerformed
+        ClosedBoxSimulation.calcBox(speaker.ClosedBox, speaker.Driver);
+        show(speaker);
+        main.refresh();
+    }//GEN-LAST:event_calculateButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton calculateButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

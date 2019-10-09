@@ -79,6 +79,28 @@ public class Speaker extends Item
         }
     }
     
+    public void setSimulators()
+    {
+        // select "best" enclosure type
+        if (Driver.Qts > 1.2)
+        {
+            setSimulator(Speaker.SimulatorType.OPEN_BAFFLE);
+        }
+        else if (Driver.Qts > 0.7 || Driver.calcEBP() < 50)
+        {
+            setSimulator(Speaker.SimulatorType.CLOSED_BOX);
+        }
+        else
+        {
+            setSimulator(Speaker.SimulatorType.BASS_REFLEX);
+        }
+
+        // calculate enclosures
+        BassReflexSimulation.calcBox(BassReflex, Driver);
+        ClosedBoxSimulation.calcBox(ClosedBox, Driver);
+        AperiodicSimulation.calcBox(Aperiodic, Driver);
+    }
+    
     public final void setSimulator(SimulatorType simulator)
     {
         Simulator = simulator;
@@ -99,7 +121,7 @@ public class Speaker extends Item
         ClosedBox = new ClosedBox();
         BassReflex = new BassReflex();
         Aperiodic = new Aperiodic();
-        Simulator = SimulatorType.BASS_REFLEX;
+        setSimulator(SimulatorType.BASS_REFLEX);
     }
     
     public Speaker(JsonValue json)

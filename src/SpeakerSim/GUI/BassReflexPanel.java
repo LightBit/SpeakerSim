@@ -17,8 +17,12 @@
 package SpeakerSim.GUI;
 
 import SpeakerSim.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 
 public final class BassReflexPanel extends javax.swing.JPanel implements ISpeakerPanel
@@ -140,6 +144,69 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
                 }
             }
         });
+        
+        final JPopupMenu menu = new JPopupMenu();
+        
+        JMenuItem mi = new JMenuItem("Auto");
+        mi.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                BassReflexSimulation.calcBox(speaker.BassReflex, speaker.Driver);
+                show(speaker);
+                main.refresh();
+            }
+        });
+        menu.add(mi);
+        
+        mi = new JMenuItem("SBB4 / BB4");
+        mi.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                BassReflexSimulation.calcBB4(speaker.BassReflex, speaker.Driver);
+                show(speaker);
+                main.refresh();
+            }
+        });
+        menu.add(mi);
+        
+        mi = new JMenuItem("QB3 / SQB3");
+        mi.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                BassReflexSimulation.calcQB3(speaker.BassReflex, speaker.Driver);
+                show(speaker);
+                main.refresh();
+            }
+        });
+        menu.add(mi);
+        
+        mi = new JMenuItem("SC4 / C4");
+        mi.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                BassReflexSimulation.calcC4(speaker.BassReflex, speaker.Driver);
+                show(speaker);
+                main.refresh();
+            }
+        });
+        menu.add(mi);
+
+        calculateButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent ae)
+            {
+                menu.show(calculateButton, 0, calculateButton.getHeight());
+            }
+        });
     }
 
     @Override
@@ -226,6 +293,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        calculateButton = new javax.swing.JButton();
 
         java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.LEADING, 5, 0);
         flowLayout1.setAlignOnBaseline(true);
@@ -308,7 +376,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         bassReflexPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Bass Reflex"));
         java.awt.GridBagLayout bassReflexPanelLayout = new java.awt.GridBagLayout();
         bassReflexPanelLayout.columnWidths = new int[] {0, 5, 0};
-        bassReflexPanelLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
+        bassReflexPanelLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
         bassReflexPanel.setLayout(bassReflexPanelLayout);
 
         fbField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
@@ -317,7 +385,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         fbField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 4;
         bassReflexPanel.add(fbField, gridBagConstraints);
 
         vbField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
@@ -326,20 +394,20 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         vbField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         bassReflexPanel.add(vbField, gridBagConstraints);
 
         jLabel2.setText("Frequency (Hz):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         bassReflexPanel.add(jLabel2, gridBagConstraints);
 
         jLabel4.setText("Volume (l):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         bassReflexPanel.add(jLabel4, gridBagConstraints);
 
@@ -353,7 +421,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         bassReflexPanel.add(portCalcButton, gridBagConstraints);
@@ -364,7 +432,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         qlField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         bassReflexPanel.add(qlField, gridBagConstraints);
         qlField.getAccessibleContext().setAccessibleDescription("Enclosure leakage losses [3 - 15]");
 
@@ -374,7 +442,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         qaField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 8;
         bassReflexPanel.add(qaField, gridBagConstraints);
 
         qpField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
@@ -383,29 +451,37 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         qpField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 10;
         bassReflexPanel.add(qpField, gridBagConstraints);
 
         jLabel1.setText("Ql:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         bassReflexPanel.add(jLabel1, gridBagConstraints);
 
         jLabel3.setText("Qa:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         bassReflexPanel.add(jLabel3, gridBagConstraints);
 
         jLabel5.setText("Qp:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         bassReflexPanel.add(jLabel5, gridBagConstraints);
+
+        calculateButton.setText("Calculate");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        bassReflexPanel.add(calculateButton, gridBagConstraints);
 
         add(bassReflexPanel);
     }// </editor-fold>//GEN-END:initComponents
@@ -421,6 +497,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bassReflexPanel;
+    private javax.swing.JButton calculateButton;
     private javax.swing.JFormattedTextField fbField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;

@@ -270,7 +270,7 @@ public class BassReflexSimulation implements ISimulation
         box.Qp = 100;
         int i = (int)Math.round(driver.Qts * 100) - 10;
         box.Vb = driver.Vas / QB3_A[i];
-        box.Fb = driver.Fs / QB3_H[i];
+        box.Fb = driver.Fs * QB3_H[i];
     }
     
     private final static double[] C4_A =
@@ -305,7 +305,7 @@ public class BassReflexSimulation implements ISimulation
         box.Qp = 100;
         int i = (int)Math.round(driver.Qts * 100) - 25;
         box.Vb = driver.Vas / C4_A[i];
-        box.Fb = driver.Fs / C4_H[i];
+        box.Fb = driver.Fs * C4_H[i];
     }
     
     public static void calcBox(BassReflex box, Driver driver)

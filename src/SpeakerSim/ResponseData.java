@@ -47,7 +47,7 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
         // no lower value
         if (data[0].frequency > f)
         {
-            return Complex.toComplex(Double.MIN_NORMAL, Math.toRadians(data[0].phase));
+            return Complex.toComplex(0.00000000000001, Math.toRadians(data[0].phase));
         }
 
         for (int i = 1; i < data.length; i++)
@@ -89,7 +89,7 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
         }
 
         // no higher value
-        return Complex.toComplex(Double.MIN_NORMAL, Math.toRadians(data[data.length - 1].phase));
+        return Complex.toComplex(0.00000000000001, Math.toRadians(data[data.length - 1].phase));
     }
     
     public Complex response(double f, double SPLdiff)

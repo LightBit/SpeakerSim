@@ -16,29 +16,33 @@
 
 package SpeakerSim;
 
-public class NullSimulation extends BaffleSimulation implements ISimulation
+public class NullSimulation implements ISimulation
 {
     private final Driver driver;
     private final DistanceSimulation distance;
+    private final BaffleSimulation baffle;
     private final RoomSimulation room;
     private final PowerResponseSimulation powerResponse;
     private final ListeningWindowSimulation listeningWindow;
+    private final double horizontalAngle;
+    private final double verticalAngle;
     
     public NullSimulation(Environment env, Driver driver, Baffle baffle, Position driverPos, Position centerPos, Position listeningPos)
     {
-        super(baffle, driver, driverPos, listeningPos, env, false);
-        
         this.driver = driver;
         this.distance = new DistanceSimulation(driverPos, listeningPos, env);
+        this.baffle = new BaffleSimulation(baffle, driver, driverPos, listeningPos, env, false);
         this.room = new RoomSimulation(baffle, driver, driverPos, listeningPos, env, false);
         this.powerResponse = new PowerResponseSimulation(baffle, driver, driverPos, centerPos, env, false);
         this.listeningWindow = new ListeningWindowSimulation(baffle, driver, driverPos, centerPos, env, false);
+        horizontalAngle = driverPos.horizontalAngle(listeningPos);
+        verticalAngle = driverPos.verticalAngle(listeningPos);
     }
     
     @Override
     public Complex response(double f)
     {
-        return driver.response(f).multiply(distance.response(f));
+        return driver.response(f, horizontalAngle, verticalAngle, false).multiply(distance.response(f));
     }
     
     @Override
@@ -87,12 +91,12 @@ public class NullSimulation extends BaffleSimulation implements ISimulation
     @Override
     public Complex responseWithBaffle(double f)
     {
-        return driver.response(f).multiply(super.response(f)).multiply(distance.response(f));
+        return driver.response(f, horizontalAngle, verticalAngle, false).multiply(baffle.response(f)).multiply(distance.response(f));
     }
     
     @Override
     public Complex responseWithRoom(double f)
     {
-        return driver.response(f).multiply(room.response(f)).multiply(distance.response(f));
+        return driver.response(f, horizontalAngle, verticalAngle, false).multiply(room.response(f)).multiply(distance.response(f));
     }
 }

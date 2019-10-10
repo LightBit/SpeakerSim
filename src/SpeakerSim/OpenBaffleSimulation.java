@@ -24,6 +24,8 @@ public class OpenBaffleSimulation implements ISimulation
     private final RoomSimulation room;
     private final PowerResponseSimulation powerResponse;
     private final ListeningWindowSimulation listeningWindow;
+    private final double horizontalAngle;
+    private final double verticalAngle;
     //private final double wavelength;
     private final double listeningQuarterWave;
     
@@ -35,6 +37,8 @@ public class OpenBaffleSimulation implements ISimulation
         this.room = new RoomSimulation(baffle, driver, driverPos, listeningPos, env, true);
         this.powerResponse = new PowerResponseSimulation(baffle, driver, driverPos, centerPos, env, true);
         this.listeningWindow = new ListeningWindowSimulation(baffle, driver, driverPos, centerPos, env, true);
+        horizontalAngle = driverPos.horizontalAngle(listeningPos);
+        verticalAngle = driverPos.verticalAngle(listeningPos);
         
         //wavelength = env.SpeedOfSound / Math.min(baffle.Width, baffle.Height);
         listeningQuarterWave = env.SpeedOfSound / driverPos.distance(listeningPos) / 4;
@@ -43,7 +47,7 @@ public class OpenBaffleSimulation implements ISimulation
     @Override
     public Complex response(double f)
     {
-        Complex x = driver.normResponse(f).multiply(driver.responseSimRelative(f));
+        Complex x = driver.normResponse(f, horizontalAngle, verticalAngle, true).multiply(driver.responseSimRelative(f));
         //x = x.divide(Math.sqrt(1 + Math.pow(listeningQuarterWave / f, 2)));
         
         return x.multiply(distance.response(f));
@@ -106,7 +110,8 @@ public class OpenBaffleSimulation implements ISimulation
     @Override
     public Complex responseWithBaffle(double f)
     {
-        Complex x = driver.normResponse(f).multiply(driver.responseSimRelative(f));
+        Complex x = driver.normResponse(f, horizontalAngle, verticalAngle, true);
+        x = x.multiply(driver.responseSimRelative(f));
         x = x.divide(Math.sqrt(1 + Math.pow(listeningQuarterWave / f, 2)));
         //x = x.multiply(baffle.response(f).divide(Math.sqrt(1 + Math.pow(wavelength / f, 2))));
         x = x.multiply(baffle.response(f));
@@ -117,7 +122,8 @@ public class OpenBaffleSimulation implements ISimulation
     @Override
     public Complex responseWithRoom(double f)
     {
-        Complex x = driver.normResponse(f).multiply(driver.responseSimRelative(f));
+        Complex x = driver.normResponse(f, horizontalAngle, verticalAngle, true);
+        x = x.multiply(driver.responseSimRelative(f));
         x = x.multiply(room.response(f));
         
         return x.multiply(distance.response(f));

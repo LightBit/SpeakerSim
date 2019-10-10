@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Driver implements JSONable
+public class Driver implements JSONable, ISource
 {
     public enum Shape
     {
@@ -248,7 +248,7 @@ public class Driver implements JSONable
                 p += Math.PI;
             }
 
-            return Complex.toComplex(x.abs(), p);
+            x = Complex.toComplex(x.abs(), p);
         }
         
         return x;
@@ -310,7 +310,7 @@ public class Driver implements JSONable
         }
     }
     
-    private double relativeOffAxisSim(double f, double horizontalAngle, double verticalAngle, boolean dipole)
+    private Complex relativeOffAxisSim(double f, double horizontalAngle, double verticalAngle, boolean dipole)
     {
         double x = Math.PI * f / Environment.getInstance().SpeedOfSound;
         horizontalAngle = Math.abs(horizontalAngle);
@@ -319,125 +319,168 @@ public class Driver implements JSONable
         if (shape == Shape.Circular)
         {
             x *= Dia * directivity(Math.max(horizontalAngle, verticalAngle), dipole);
-            return x > 0 ? Math.abs(2 * Fnc.besselJ1(x) / x) : 1;
+            return new Complex(x > 0 ? Math.abs(2 * Fnc.besselJ1(x) / x) : 1);
         }
         else
         {
             double w = x * Width * directivity(horizontalAngle, dipole);
             double h = x * Height * directivity(verticalAngle, dipole);
-            return Math.abs(Fnc.sinc(w) * Fnc.sinc(h));
+            return new Complex(Math.abs(Fnc.sinc(w) * Fnc.sinc(h)));
         }
     }
     
-    private double horizontalAxis(double f, double horizontalAngle)
+    private Complex offAxisSim(double f, double horizontalAngle, double verticalAngle, boolean dipole)
+    {
+        return FRD.response(f, SPL_2_83V - SPL_1W).multiply(relativeOffAxisSim(f, horizontalAngle, verticalAngle, dipole));
+    }
+    
+    private Complex horizontalAxis(double f, double horizontalAngle, boolean dipole)
     {
         double SPLdiff = SPL_2_83V - SPL_1W;
+        
+        if (hFRD != null)
+        {
+            if (hFRD[0].horizontalAngle >= 0)
+            {
+                horizontalAngle = Math.abs(horizontalAngle);
+            }
+        }
 
         // no lower value
         if (hFRD[0].horizontalAngle > horizontalAngle)
         {
-            return -hFRD[0].response(f, SPLdiff).abs();
+            return offAxisSim(f, horizontalAngle, 0, dipole);
         }
 
         for (int i = 1; i < hFRD.length; i++)
         {
             if (hFRD[i].horizontalAngle >= horizontalAngle)
             {
-                return Fnc.interpolate
+                return Complex.toComplex
                 (
-                        hFRD[i - 1].horizontalAngle,
-                        hFRD[i - 1].response(f, SPLdiff).abs(),
-                        hFRD[i].horizontalAngle,
-                        hFRD[i].response(f, SPLdiff).abs(),
-                        horizontalAngle
+                    Fnc.interpolate
+                    (
+                            hFRD[i - 1].horizontalAngle,
+                            hFRD[i - 1].response(f, SPLdiff).abs(),
+                            hFRD[i].horizontalAngle,
+                            hFRD[i].response(f, SPLdiff).abs(),
+                            horizontalAngle
+                    ),
+                    Fnc.interpolate
+                    (
+                            hFRD[i - 1].horizontalAngle,
+                            hFRD[i - 1].response(f, SPLdiff).phase(),
+                            hFRD[i].horizontalAngle,
+                            hFRD[i].response(f, SPLdiff).phase(),
+                            horizontalAngle
+                    )
                 );
             }
         }
 
         // no higher value
-        return -hFRD[vFRD.length - 1].response(f, SPLdiff).abs();
+        return offAxisSim(f, horizontalAngle, 0, dipole);
     }
     
-    private double verticalAxis(double f, double verticalAngle)
+    private Complex verticalAxis(double f, double verticalAngle, boolean dipole)
     {
         double SPLdiff = SPL_2_83V - SPL_1W;
+        
+        if (vFRD != null)
+        {
+            if (vFRD[0].verticalAngle >= 0)
+            {
+                verticalAngle = Math.abs(verticalAngle);
+            }
+        }
 
         // no lower value
         if (vFRD[0].verticalAngle > verticalAngle)
         {
-            return -vFRD[0].response(f, SPLdiff).abs();
+            return offAxisSim(f, verticalAngle, 0, dipole);
         }
 
         for (int i = 1; i < vFRD.length; i++)
         {
             if (vFRD[i].verticalAngle >= verticalAngle)
             {
-                return Fnc.interpolate
+                return Complex.toComplex
                 (
-                    vFRD[i - 1].verticalAngle,
-                    vFRD[i - 1].response(f, SPLdiff).abs(),
-                    vFRD[i].verticalAngle,
-                    vFRD[i].response(f, SPLdiff).abs(),
-                    verticalAngle
+                    Fnc.interpolate
+                    (
+                            vFRD[i - 1].verticalAngle,
+                            vFRD[i - 1].response(f, SPLdiff).abs(),
+                            vFRD[i].verticalAngle,
+                            vFRD[i].response(f, SPLdiff).abs(),
+                            verticalAngle
+                    ),
+                    Fnc.interpolate
+                    (
+                            vFRD[i - 1].verticalAngle,
+                            vFRD[i - 1].response(f, SPLdiff).phase(),
+                            vFRD[i].verticalAngle,
+                            vFRD[i].response(f, SPLdiff).phase(),
+                            verticalAngle
+                    )
                 );
             }
         }
 
         // no higher value
-        return -vFRD[vFRD.length - 1].response(f, SPLdiff).abs();
+        return offAxisSim(f, verticalAngle, 0, dipole);
     }
     
-    public double relativeOffAxis(double f, double horizontalAngle, double verticalAngle, boolean dipole)
+    public Complex response(double f, double horizontalAngle, double verticalAngle, boolean dipole)
     {
+        Complex x;
+        
         if (hasFRD() && (hFRD != null || vFRD != null))
         {
-            if (hFRD != null)
-            {
-                if (hFRD[0].horizontalAngle >= 0)
-                {
-                    horizontalAngle = Math.abs(horizontalAngle);
-                }
-                
-                /*if (dipole && Math.abs(horizontalAngle) > 90 && hFRD[0].horizontalAngle >= -90 && hFRD[hFRD.length - 1].horizontalAngle <= 90)
-                {
-                    horizontalAngle = (180 - horizontalAngle) % 180;
-                }*/
-            }
+            Complex h = horizontalAxis(f, horizontalAngle, dipole);
+            Complex v = verticalAxis(f, verticalAngle, dipole);
             
-            if (vFRD != null)
-            {
-                if (vFRD[0].verticalAngle >= 0)
-                {
-                    verticalAngle = Math.abs(verticalAngle);
-                }
-                
-                /*if (dipole && Math.abs(verticalAngle) > 90 && vFRD[0].verticalAngle >= -90 && vFRD[vFRD.length - 1].verticalAngle <= 90)
-                {
-                    verticalAngle = (180 - verticalAngle) % 180;
-                }*/
-            }
-            
-            double axial = FRD.response(f, SPL_2_83V - SPL_1W).abs();
-            double horizontal = horizontalAxis(f, horizontalAngle);
-            double vertical = verticalAxis(f, verticalAngle);
-            
-            if (horizontal < 0 && vertical < 0)
-            {
-                return Math.min(relativeOffAxisSim(f, horizontalAngle, verticalAngle, dipole), Math.min(-horizontal, -vertical) / axial);
-            }
-            else if (horizontal < 0)
-            {
-                horizontal = Math.min(relativeOffAxisSim(f, horizontalAngle, 0, dipole) * axial, -horizontal);
-            }
-            else if (vertical < 0)
-            {
-                vertical = Math.min(relativeOffAxisSim(f, 0, verticalAngle, dipole) * axial, -vertical);
-            }
-            
-            return Math.min(horizontal, vertical) / axial;
+            x = v.abs() < h.abs() ? v : h;
+        }
+        else
+        {
+            x = offAxisSim(f, horizontalAngle, verticalAngle, dipole);
         }
         
-        return relativeOffAxisSim(f, horizontalAngle, verticalAngle, dipole);
+        // invert phase, if behind dipole
+        if (dipole && Math.max(Math.abs(horizontalAngle), Math.abs(verticalAngle)) > 90)
+        {
+            double p = x.phase();
+            
+            if (p >= 0)
+            {
+                p -= Math.PI;
+            }
+            else
+            {
+                p += Math.PI;
+            }
+
+            x = Complex.toComplex(x.abs(), p);
+        }
+        
+        return x;
+    }
+    
+    public Complex normResponse(double f, double horizontalAngle, double verticalAngle, boolean dipole)
+    {
+        if (FRD != null)
+        {
+            Complex x = Complex.toComplex(Fnc.toAmplitude(SPL_2_83V), response(CrossEnd).phase());
+            return normalize(f, response(f, horizontalAngle, verticalAngle, dipole), x);
+        }
+        
+        return Complex.toComplex(Fnc.toAmplitude(SPL_2_83V), Inverted ? -Math.PI : 0);
+    }
+    
+    @Override
+    public Complex relativeOffAxis(double f, double horizontalAngle, double verticalAngle, boolean dipole)
+    {
+        return response(f, horizontalAngle, verticalAngle, dipole).divide(FRD.response(f, SPL_2_83V - SPL_1W));
     }
     
     public double excursion(double f, double Pe)

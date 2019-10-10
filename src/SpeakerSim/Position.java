@@ -190,4 +190,40 @@ public class Position implements JSONable
                 VerticalAngle / x
         );
     }
+    
+    public Position addX(double x)
+    {
+        return new Position
+        (
+            X + x,
+            Y,
+            Z,
+            HorizontalAngle,
+            VerticalAngle
+        );
+    }
+    
+    public Position addY(double y)
+    {
+        return new Position
+        (
+            X,
+            Y + y,
+            Z,
+            HorizontalAngle,
+            VerticalAngle
+        );
+    }
+    
+    public Position addZ(double z)
+    {
+        return new Position
+        (
+            X,
+            Y,
+            Z + z,
+            HorizontalAngle,
+            VerticalAngle
+        );
+    }
 }

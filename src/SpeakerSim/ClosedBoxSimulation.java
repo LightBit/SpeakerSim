@@ -24,6 +24,8 @@ public class ClosedBoxSimulation implements ISimulation
     private final RoomSimulation room;
     private final PowerResponseSimulation powerResponse;
     private final ListeningWindowSimulation listeningWindow;
+    private final double horizontalAngle;
+    private final double verticalAngle;
     
     private final double Cas;
     private final double Mas;
@@ -64,6 +66,8 @@ public class ClosedBoxSimulation implements ISimulation
         this.room = new RoomSimulation(baffle, driver, driverPos, listeningPos, env, false);
         this.powerResponse = new PowerResponseSimulation(baffle, driver, driverPos, centerPos, env, false);
         this.listeningWindow = new ListeningWindowSimulation(baffle, driver, driverPos, centerPos, env, false);
+        horizontalAngle = driverPos.horizontalAngle(listeningPos);
+        verticalAngle = driverPos.verticalAngle(listeningPos);
         
         Cas = driver.calcCas();
         Mas = driver.calcMas();
@@ -93,7 +97,7 @@ public class ClosedBoxSimulation implements ISimulation
     @Override
     public Complex response(double f)
     {
-        return box(f).multiply(driver.normResponse(f)).multiply(distance.response(f));
+        return box(f).multiply(driver.normResponse(f, horizontalAngle, verticalAngle, false)).multiply(distance.response(f));
     }
     
     @Override
@@ -117,13 +121,13 @@ public class ClosedBoxSimulation implements ISimulation
     @Override
     public Complex responseWithBaffle(double f)
     {
-        return box(f).multiply(driver.normResponse(f)).multiply(baffle.response(f)).multiply(distance.response(f));
+        return box(f).multiply(driver.normResponse(f, horizontalAngle, verticalAngle, false)).multiply(baffle.response(f)).multiply(distance.response(f));
     }
     
     @Override
     public Complex responseWithRoom(double f)
     {
-        return box(f).multiply(driver.normResponse(f)).multiply(room.response(f)).multiply(distance.response(f));
+        return box(f).multiply(driver.normResponse(f, horizontalAngle, verticalAngle, false)).multiply(room.response(f)).multiply(distance.response(f));
     }
     
     @Override

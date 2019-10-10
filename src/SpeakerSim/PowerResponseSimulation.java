@@ -18,13 +18,11 @@ package SpeakerSim;
 
 public class PowerResponseSimulation
 {
-    private final BaffleSimulation[] bs;
-    private final DistanceSimulation[] distance;
+    private final PositionSimulation[] s;
     
-    public PowerResponseSimulation(Baffle baffle, Driver driver, Position sourcePos, Position centerPos, Environment env, boolean dipole)
+    public PowerResponseSimulation(Baffle baffle, ISource source, Position sourcePos, Position centerPos, Environment env, boolean dipole)
     {
-        bs = new BaffleSimulation[70];
-        distance = new DistanceSimulation[70];
+        s = new PositionSimulation[70];
         
         for (int i = 0; i < 35; i++)
         {
@@ -32,12 +30,10 @@ public class PowerResponseSimulation
             int angle = i * 10;
             
             pos = centerPos.moveHorizontally(2, angle);
-            bs[i] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
-            distance[i] = new DistanceSimulation(sourcePos, pos, env);
+            s[i] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
             
             pos = centerPos.moveVertically(2, angle);
-            bs[35 + i] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
-            distance[35 + i] = new DistanceSimulation(sourcePos, pos, env);
+            s[35 + i] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         }
     }
     
@@ -45,11 +41,11 @@ public class PowerResponseSimulation
     {
         Complex sum = new Complex();
         
-        for (int i = 0; i < bs.length; i++)
+        for (PositionSimulation item : s)
         {
-            sum = sum.add(bs[i].response(f).multiply(distance[i].response(f)));
+            sum = sum.add(item.response(f));
         }
         
-        return sum.divide(bs.length / 2);
+        return sum.divide(35);
     }
 }

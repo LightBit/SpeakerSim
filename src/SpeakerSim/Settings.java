@@ -52,7 +52,7 @@ public class Settings implements JSONable
         dBRange = 30;
         MaxImpedance = 80;
         MaxPower = 1000;
-        RoomSimulation = false;
+        RoomSimulation = true;
         BaffleSimulation = true;
         PowerFilter = new PowerFilter();
     }
@@ -69,7 +69,7 @@ public class Settings implements JSONable
         MaxImpedance = JSON.getInt(jsonObj, "MaxImpedance", 80);
         MaxPower = JSON.getInt(jsonObj, "MaxPower", 1000);
         RoomSimulation = JSON.getBoolean(jsonObj, "RoomSimulationEnabled", false);
-        BaffleSimulation = JSON.getBoolean(jsonObj, "BaffleSimulationEnabled", true);
+        BaffleSimulation = JSON.getBoolean(jsonObj, "BaffleSimulationEnabled", false);
         PowerFilter = new PowerFilter(jsonObj.get("PowerFilter"));
     }
 

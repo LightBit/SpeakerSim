@@ -18,15 +18,13 @@ package SpeakerSim;
 
 public class BaffleSimulation
 {
-    private final double horizontalAngle;
-    private final double verticalAngle;
     private final double angle;
     private final boolean enabled;
     private final double[] mean;
     private final double[] length;
     private final double averageWavelength;
     private final double edge;
-    private final Driver driver;
+    private final ISource source;
     private final boolean dipole;
     
     private static double edgeDistance(double angle, double distanceX, double distanceY)
@@ -43,12 +41,14 @@ public class BaffleSimulation
         }
     }
     
-    public BaffleSimulation(Baffle baffle, Driver driver, double distance, double horizontalAngle, double verticalAngle, Environment env, boolean dipole)
+    public BaffleSimulation(Baffle baffle, ISource source, Position sourcePos, Position listeningPos, Environment env, boolean dipole)
     {
-        this.horizontalAngle = horizontalAngle;
-        this.verticalAngle = verticalAngle;
-        this.driver = driver;
+        this.source = source;
         this.dipole = dipole;
+        
+        double distance = sourcePos.distance(listeningPos) + 0.0000001;
+        double horizontalAngle = sourcePos.horizontalAngle(listeningPos);
+        double verticalAngle = sourcePos.verticalAngle(listeningPos);
         angle = Math.max(Math.abs(horizontalAngle), Math.abs(verticalAngle));
         
         if (baffle == null || !baffle.Enabled)
@@ -131,14 +131,9 @@ public class BaffleSimulation
         edge = (env.SpeedOfSound / 4) / (baffle.EdgeRadius + Double.MIN_VALUE) / 2;
     }
     
-    public BaffleSimulation(Baffle baffle, Driver driver, Position sourcePos, Position listeningPos, Environment env, boolean dipole)
+    private Complex offAxis(double f)
     {
-        this(baffle, driver, sourcePos.distance(listeningPos) + 0.0000001, sourcePos.horizontalAngle(listeningPos), sourcePos.verticalAngle(listeningPos), env, dipole);
-    }
-    
-    private double offAxis(double f, double horizontalAngle, double verticalAngle)
-    {
-        return driver != null ? driver.relativeOffAxis(f, horizontalAngle, verticalAngle, dipole) : 1;
+        return source.relativeOffAxis(f, 90, 90, dipole);
     }
     
     private double diffraction(double f)
@@ -148,7 +143,7 @@ public class BaffleSimulation
             return 1;
         }
         
-        double t = offAxis(f, 90, 90) / Math.sqrt(1 + Math.pow(f / edge, 2)); // TODO: 90, 90!
+        double t = offAxis(f).abs() / Math.sqrt(1 + Math.pow(f / edge, 2));
         double average = 0;
         
         for (int i = 0; i < 36; i++)
@@ -173,14 +168,6 @@ public class BaffleSimulation
     
     public Complex response(double f)
     {
-        Complex x = Complex.toComplex((enabled ? 0.5 : 1) * offAxis(f, horizontalAngle, verticalAngle) * diffraction(f), 0);
-        
-        // invert phase, if behind dipole
-        if (dipole && (angle < 270 && angle > 90))
-        {
-            x = x.conjugate();
-        }
-        
-        return x;
+        return Complex.toComplex((enabled ? 0.5 * diffraction(f) : 1), 0);
     }
 }

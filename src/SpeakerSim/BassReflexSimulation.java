@@ -29,6 +29,8 @@ public class BassReflexSimulation implements ISimulation
     private final PowerResponseSimulation powerResponsePort;
     private final ListeningWindowSimulation listeningWindowCone;
     private final ListeningWindowSimulation listeningWindowPort;
+    private final double horizontalAngle;
+    private final double verticalAngle;
     
     private final double Cas;
     private final double Mas;
@@ -40,19 +42,52 @@ public class BassReflexSimulation implements ISimulation
     private final double Map;
     private final double Rap;
     
+    private class Port implements ISource
+    {
+        private final double Dv;
+        
+        public Port(double Dv)
+        {
+            this.Dv = Dv;
+        }
+        
+        @Override
+        public Complex relativeOffAxis(double f, double horizontalAngle, double verticalAngle, boolean dipole)
+        {
+            double x = Math.PI * f / Environment.getInstance().SpeedOfSound;
+            double angle = Math.max(Math.abs(horizontalAngle), Math.abs(verticalAngle));
+            
+            x *= Dv;
+            
+            if (angle > 90)
+            {
+                x *= 1 + Math.sin(Math.toRadians(angle - 90));
+            }
+            else
+            {
+                x *= Math.sin(Math.toRadians(angle));
+            }
+            
+            return new Complex(x > 0 ? Math.abs(2 * Fnc.besselJ1(x) / x) : 1);
+        }
+    }
+    
     public BassReflexSimulation(Environment env, BassReflex box, Driver driver, Baffle baffle, Position driverPos, Position centerPos, Position listeningPos)
     {
         this.box = box;
         this.driver = driver;
+        Port port = new Port(box.Dv);
         this.baffle = new BaffleSimulation(baffle, driver, driverPos, listeningPos, env, false);
         this.distanceCone = new DistanceSimulation(driverPos, listeningPos, env);
-        this.distancePort = new DistanceSimulation(/*driverPos.distance(box.PortPosition) + */box.PortPosition.distance(listeningPos), env);
+        this.distancePort = new DistanceSimulation(box.PortPosition.distance(listeningPos), env);
         this.roomCone = new RoomSimulation(baffle, driver, driverPos, listeningPos, env, false);
-        this.roomPort = new RoomSimulation(null, null, box.PortPosition, listeningPos, env, false);
+        this.roomPort = new RoomSimulation(null, port, box.PortPosition, listeningPos, env, false);
         this.powerResponseCone = new PowerResponseSimulation(baffle, driver, driverPos, centerPos, env, false);
-        this.powerResponsePort = new PowerResponseSimulation(baffle, null, box.PortPosition, centerPos, env, false);
+        this.powerResponsePort = new PowerResponseSimulation(baffle, port, box.PortPosition, centerPos, env, false);
         this.listeningWindowCone = new ListeningWindowSimulation(baffle, driver, driverPos, centerPos, env, false);
-        this.listeningWindowPort = new ListeningWindowSimulation(baffle, null, box.PortPosition, centerPos, env, false);
+        this.listeningWindowPort = new ListeningWindowSimulation(baffle, port, box.PortPosition, centerPos, env, false);
+        horizontalAngle = driverPos.horizontalAngle(listeningPos);
+        verticalAngle = driverPos.verticalAngle(listeningPos);
         
         double Qp = box.Qp + 0.00000000000001;
         
@@ -103,7 +138,7 @@ public class BassReflexSimulation implements ISimulation
         Complex c = cone(f).multiply(distanceCone.response(f));
         Complex p = port(f).multiply(distancePort.response(f));
         
-        return driver.normResponse(f).multiply(c.subtract(p));
+        return driver.normResponse(f, horizontalAngle, verticalAngle, false).multiply(c.subtract(p));
     }
     
     @Override
@@ -139,7 +174,7 @@ public class BassReflexSimulation implements ISimulation
         Complex c = cone(f).multiply(baffle.response(f).multiply(distanceCone.response(f)));
         Complex p = port(f).divide(2).multiply(distancePort.response(f));
         
-        return driver.normResponse(f).multiply(c.subtract(p));
+        return driver.normResponse(f, horizontalAngle, verticalAngle, false).multiply(c.subtract(p));
     }
     
     @Override
@@ -148,7 +183,7 @@ public class BassReflexSimulation implements ISimulation
         Complex c = cone(f).multiply(roomCone.response(f).multiply(distanceCone.response(f)));
         Complex p = port(f).multiply(roomPort.response(f).multiply(distancePort.response(f)));
         
-        return driver.normResponse(f).multiply(c.subtract(p));
+        return driver.normResponse(f, horizontalAngle, verticalAngle, false).multiply(c.subtract(p));
     }
     
     @Override

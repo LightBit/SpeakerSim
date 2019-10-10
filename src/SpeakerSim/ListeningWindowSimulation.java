@@ -18,61 +18,50 @@ package SpeakerSim;
 
 public class ListeningWindowSimulation
 {
-    private final BaffleSimulation[] bs;
-    private final DistanceSimulation[] distance;
+    private final PositionSimulation[] s;
     
-    public ListeningWindowSimulation(Baffle baffle, Driver driver, Position sourcePos, Position centerPos, Environment env, boolean dipole)
+    public ListeningWindowSimulation(Baffle baffle, ISource source, Position sourcePos, Position centerPos, Environment env, boolean dipole)
     {
-        bs = new BaffleSimulation[9];
-        distance = new DistanceSimulation[9];
+        s = new PositionSimulation[9];
         Position pos;
         
         pos = centerPos.moveVertically(2, 0);
-        bs[0] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
-        distance[0] = new DistanceSimulation(sourcePos, pos, env);
+        s[0] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
         pos = centerPos.moveVertically(2, 10);
-        bs[1] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
-        distance[1] = new DistanceSimulation(sourcePos, pos, env);
+        s[1] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
         pos = centerPos.moveVertically(2, -10);
-        bs[2] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
-        distance[2] = new DistanceSimulation(sourcePos, pos, env);
+        s[2] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
         pos = centerPos.moveHorizontally(2, 10);
-        bs[3] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
-        distance[3] = new DistanceSimulation(sourcePos, pos, env);
+        s[3] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
         pos = centerPos.moveHorizontally(2, -10);
-        bs[4] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
-        distance[4] = new DistanceSimulation(sourcePos, pos, env);
+        s[4] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
         pos = centerPos.moveHorizontally(2, 20);
-        bs[5] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
-        distance[5] = new DistanceSimulation(sourcePos, pos, env);
+        s[5] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
         pos = centerPos.moveHorizontally(2, -20);
-        bs[6] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
-        distance[6] = new DistanceSimulation(sourcePos, pos, env);
+        s[6] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
         pos = centerPos.moveHorizontally(2, 30);
-        bs[7] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
-        distance[7] = new DistanceSimulation(sourcePos, pos, env);
+        s[7] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
         pos = centerPos.moveHorizontally(2, -30);
-        bs[8] = new BaffleSimulation(baffle, driver, sourcePos, pos, env, dipole);
-        distance[8] = new DistanceSimulation(sourcePos, pos, env);
+        s[8] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
     }
     
     public Complex response(double f)
     {
         Complex sum = new Complex();
         
-        for (int i = 0; i < bs.length; i++)
+        for (PositionSimulation item : s)
         {
-            sum = sum.add(bs[i].response(f).multiply(distance[i].response(f)));
+            sum = sum.add(item.response(f));
         }
         
-        return sum.divide(bs.length / 2);
+        return sum.divide(s.length / 2);
     }
 }

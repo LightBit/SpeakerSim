@@ -81,24 +81,27 @@ public class Speaker extends Item
     
     public void setSimulators()
     {
-        // select "best" enclosure type
-        if (Driver.Qts > 1.2)
+        if (!Driver.Closed)
         {
-            setSimulator(Speaker.SimulatorType.OPEN_BAFFLE);
-        }
-        else if (Driver.Qts > 0.7 || Driver.calcEBP() < 50)
-        {
-            setSimulator(Speaker.SimulatorType.CLOSED_BOX);
-        }
-        else
-        {
-            setSimulator(Speaker.SimulatorType.BASS_REFLEX);
-        }
+            // select "best" enclosure type
+            if (Driver.Qts > 1.2)
+            {
+                setSimulator(Speaker.SimulatorType.OPEN_BAFFLE);
+            }
+            else if (Driver.Qts > 0.7 || Driver.calcEBP() < 50)
+            {
+                setSimulator(Speaker.SimulatorType.CLOSED_BOX);
+            }
+            else
+            {
+                setSimulator(Speaker.SimulatorType.BASS_REFLEX);
+            }
 
-        // calculate enclosures
-        BassReflexSimulation.calcBox(BassReflex, Driver);
-        ClosedBoxSimulation.calcBox(ClosedBox, Driver);
-        AperiodicSimulation.calcBox(Aperiodic, Driver);
+            // calculate enclosures
+            BassReflexSimulation.calcBox(BassReflex, Driver);
+            ClosedBoxSimulation.calcBox(ClosedBox, Driver);
+            AperiodicSimulation.calcBox(Aperiodic, Driver);
+        }
     }
     
     public final void setSimulator(SimulatorType simulator)

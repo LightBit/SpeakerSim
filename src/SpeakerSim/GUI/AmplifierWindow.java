@@ -27,6 +27,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
@@ -149,7 +150,8 @@ public class AmplifierWindow extends javax.swing.JDialog
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
         java.awt.GridBagConstraints gridBagConstraints;
 
         mainPanel = new javax.swing.JPanel();
@@ -171,7 +173,7 @@ public class AmplifierWindow extends javax.swing.JDialog
         setTitle("Amplifier");
         setBounds(new java.awt.Rectangle(0, 0, 0, 0));
         setModal(true);
-        setPreferredSize(new java.awt.Dimension(600, 400));
+        setPreferredSize(new java.awt.Dimension(600, 600));
         getContentPane().setLayout(new java.awt.BorderLayout(0, 5));
 
         java.awt.GridBagLayout jPanel1Layout = new java.awt.GridBagLayout();
@@ -225,8 +227,10 @@ public class AmplifierWindow extends javax.swing.JDialog
         filtersPanel.add(scrollPane, gridBagConstraints);
 
         addButton.setText("Add");
-        addButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        addButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 addButtonActionPerformed(evt);
             }
         });
@@ -238,8 +242,10 @@ public class AmplifierWindow extends javax.swing.JDialog
 
         removeButton.setText("Remove");
         removeButton.setEnabled(false);
-        removeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        removeButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 removeButtonActionPerformed(evt);
             }
         });
@@ -252,8 +258,10 @@ public class AmplifierWindow extends javax.swing.JDialog
 
         editButton.setText("Edit");
         editButton.setEnabled(false);
-        editButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        editButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 editButtonActionPerformed(evt);
             }
         });
@@ -267,16 +275,20 @@ public class AmplifierWindow extends javax.swing.JDialog
         getContentPane().add(filtersPanel, java.awt.BorderLayout.CENTER);
 
         okButton.setText("Save");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        okButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 okButtonActionPerformed(evt);
             }
         });
         controlPanel.add(okButton);
 
         cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cancelButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -326,16 +338,22 @@ public class AmplifierWindow extends javax.swing.JDialog
             dbField.setFormatterFactory(UI.FORMATTER);
             dbField.setValue(filter.getDecibels());
             
+            JCheckBox linearPhaseCheckBox = new JCheckBox();
+            linearPhaseCheckBox.setText("Linear phase (FIR)");
+            linearPhaseCheckBox.setSelected(filter.isLinearPhase());
+            
             final JComponent[] inputs = new JComponent[]
             {
                 new JLabel("Frequency (Hz): "), fField,
                 new JLabel("Q: "), qField,
-                new JLabel("Amplitude (dB): "), dbField
+                new JLabel("Amplitude (dB): "), dbField,
+                linearPhaseCheckBox
             };
             
             if (UI.dialog(this, "Equalizer", inputs))
             {
                 filter.set(UI.getDouble(fField), UI.getDouble(qField), UI.getDouble(dbField));
+                filter.setLinearPhase(linearPhaseCheckBox.isSelected());
                 return filter;
             }
         }
@@ -371,11 +389,16 @@ public class AmplifierWindow extends javax.swing.JDialog
             });
             typeComboBox.setSelectedIndex(filter.getType());
             
+            JCheckBox linearPhaseCheckBox = new JCheckBox();
+            linearPhaseCheckBox.setText("Linear phase (FIR)");
+            linearPhaseCheckBox.setSelected(filter.isLinearPhase());
+            
             final JComponent[] inputs = new JComponent[]
             {
                 new JLabel("Type: "), typeComboBox,
                 new JLabel("Frequency (Hz): "), frequencyField,
-                new JLabel("Q: "), qField
+                new JLabel("Q: "), qField,
+                linearPhaseCheckBox
             };
             
             if (UI.dialog(this, filter.name(), inputs))
@@ -383,6 +406,7 @@ public class AmplifierWindow extends javax.swing.JDialog
                 filter.setType(typeComboBox.getSelectedIndex());
                 filter.setFrequency(UI.getDouble(frequencyField));
                 filter.setQ(UI.getDouble(qField));
+                filter.setLinearPhase(linearPhaseCheckBox.isSelected());
                 return filter;
             }
         }

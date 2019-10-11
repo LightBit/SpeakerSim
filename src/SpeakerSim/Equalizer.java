@@ -26,6 +26,7 @@ public class Equalizer implements IActiveFilter
     private double Q;
     private double a;
     private double c;
+    protected boolean linearPhase;
     
     private void _set(double F, double Q, double dB)
     {
@@ -63,6 +64,16 @@ public class Equalizer implements IActiveFilter
         return Q;
     }
     
+    public boolean isLinearPhase()
+    {
+        return linearPhase;
+    }
+    
+    public void setLinearPhase(boolean linearPhase)
+    {
+        this.linearPhase = linearPhase;
+    }
+    
     public double getDecibels()
     {
         return Fnc.toDecibels(a);
@@ -70,8 +81,15 @@ public class Equalizer implements IActiveFilter
     
     private double phase(double f)
     {
-        double fn = f / this.F;
-        return -Math.atan(((1 - fn * fn) * 2 * c * fn * (a - 1)) / (Math.pow(1 - fn * fn, 2) + 4 * c * c * fn * 2 * a));
+        if (isLinearPhase())
+        {
+            return 0;
+        }
+        else
+        {
+            double fn = f / this.F;
+            return -Math.atan(((1 - fn * fn) * 2 * c * fn * (a - 1)) / (Math.pow(1 - fn * fn, 2) + 4 * c * c * fn * 2 * a));
+        }
     }
     
     private double amplitude(double f)

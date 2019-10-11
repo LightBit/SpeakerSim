@@ -25,6 +25,7 @@ public abstract class ActivePassFilter implements IActiveFilter
     private int type;
     protected double frequency;
     protected double q;
+    protected boolean linearPhase;
     
     public final static String[] TYPES =
     {
@@ -71,6 +72,16 @@ public abstract class ActivePassFilter implements IActiveFilter
     public final boolean isCustom()
     {
         return isCustom(type);
+    }
+    
+    public boolean isLinearPhase()
+    {
+        return linearPhase;
+    }
+    
+    public void setLinearPhase(boolean linearPhase)
+    {
+        this.linearPhase = linearPhase;
     }
     
     public ActivePassFilter()
@@ -157,7 +168,14 @@ public abstract class ActivePassFilter implements IActiveFilter
                 + CONST[type][4] * fn5
                 - CONST[type][6] * fn7;
         
-        return Complex.toComplex(1 / Math.hypot(x, y), -Math.atan2(y, x));
+        Complex f = Complex.toComplex(1 / Math.hypot(x, y), -Math.atan2(y, x));
+        
+        if (isLinearPhase())
+        {
+            f = Complex.toComplex(f.abs(), 0);
+        }
+        
+        return f;
     }
     
     public String name()

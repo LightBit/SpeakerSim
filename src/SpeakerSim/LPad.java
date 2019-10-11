@@ -19,6 +19,7 @@ package SpeakerSim;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import java.util.List;
 
 public class LPad extends Filter
 {
@@ -86,5 +87,27 @@ public class LPad extends Filter
     public String toString()
     {
         return "L pad (" + Fnc.decimalFormat(Rs) + "Ω / " + Fnc.decimalFormat(Rp) + "Ω)";
+    }
+    
+    public double Zmin()
+    {
+        if (getChildren().isEmpty())
+        {
+            return 0;
+        }
+        
+        double f = Project.getInstance().Settings.StartFrequency;
+        double m = Project.getInstance().Settings.multiplier();
+        double[] z = new double[Project.getInstance().Settings.Points - 1];
+        
+        for (int i = 0; i < z.length; i++)
+        {
+            z[i] = super.impedance(f).abs();
+            f *= m;
+        }
+        
+        z = Fnc.smooth(z, (int)Math.round(Project.getInstance().Settings.pointsPerOctave()));
+        
+        return Fnc.min(z);
     }
 }

@@ -340,6 +340,12 @@ public final class MainWindow extends javax.swing.JFrame
             public void actionPerformed(ActionEvent e)
             {
                 Speaker speaker = new Speaker();
+                
+                if (above)
+                {
+                    speaker.getChildren().add((IItem) node.getUserObject());
+                }
+                
                 if (editItem(speaker))
                 {
                     speaker.setSimulators();
@@ -358,11 +364,7 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                LowPassFilter filter = new LowPassFilter();
-                if (editItem(filter))
-                {
-                    addItem(filter, above, node);
-                }
+                addingItem(new LowPassFilter(), above, node);
             }
         });
         mi.setEnabled(!(target instanceof Speaker));
@@ -374,11 +376,7 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                HighPassFilter filter = new HighPassFilter();
-                if (editItem(filter))
-                {
-                    addItem(filter, above, node);
-                }
+                addingItem(new HighPassFilter(), above, node);
             }
         });
         mi.setEnabled(!(target instanceof Speaker));
@@ -392,11 +390,7 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                LPad filter = new LPad();
-                if (editItem(filter))
-                {
-                    addItem(filter, above, node);
-                }
+                addingItem(new LPad(), above, node);
             }
         });
         mi.setEnabled(!(target instanceof Speaker));
@@ -408,11 +402,7 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                Zobel filter = new Zobel();
-                if (editItem(filter))
-                {
-                    addItem(filter, above, node);
-                }
+                addingItem(new Zobel(), above, node);
             }
         });
         mi.setEnabled(!(target instanceof Speaker));
@@ -426,11 +416,7 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                ParallelNotchFilter filter = new ParallelNotchFilter();
-                if (editItem(filter))
-                {
-                    addItem(filter, above, node);
-                }
+                addingItem(new ParallelNotchFilter(), above, node);
             }
         });
         menu.add(mi);
@@ -441,11 +427,7 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                SerialNotchFilter filter = new SerialNotchFilter();
-                if (editItem(filter))
-                {
-                    addItem(filter, above, node);
-                }
+                addingItem(new SerialNotchFilter(), above, node);
             }
         });
         menu.add(mi);
@@ -458,11 +440,7 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                Resistor filter = new Resistor();
-                if (editItem(filter))
-                {
-                    addItem(filter, above, node);
-                }
+                addingItem(new Resistor(), above, node);
             }
         });
         menu.add(mi);
@@ -473,11 +451,7 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                Capacitor filter = new Capacitor();
-                if (editItem(filter))
-                {
-                    addItem(filter, above, node);
-                }
+                addingItem(new Capacitor(), above, node);
             }
         });
         menu.add(mi);
@@ -488,11 +462,7 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                Inductor filter = new Inductor();
-                if (editItem(filter))
-                {
-                    addItem(filter, above, node);
-                }
+                addingItem(new Inductor(), above, node);
             }
         });
         menu.add(mi);
@@ -831,7 +801,6 @@ public final class MainWindow extends javax.swing.JFrame
             
             int i = parentItem.getChildren().indexOf(targetItem);
             parentItem.getChildren().set(i, item);
-            item.getChildren().add(targetItem);
         }
         else
         {
@@ -843,6 +812,19 @@ public final class MainWindow extends javax.swing.JFrame
         Project.getInstance().setModified();
         selectNode(node);
         showNode(node);
+    }
+    
+    protected void addingItem(IItem item, boolean above, DefaultMutableTreeNode target)
+    {
+        if (above)
+        {
+            item.getChildren().add((IItem) target.getUserObject());
+        }
+        
+        if (editItem(item))
+        {
+            addItem(item, above, target);
+        }
     }
     
     protected void addItem(IItem item, DefaultMutableTreeNode target)
@@ -918,9 +900,7 @@ public final class MainWindow extends javax.swing.JFrame
         else if (item instanceof LPad)
         {
             final LPad filter = (LPad) item;
-            
-            List<Speaker> speakers = getSpeakers((DefaultMutableTreeNode) tree.getLastSelectedPathComponent()); // TODO?
-            final double Z = speakers.size() == 1 ? speakers.get(0).Driver.Re : 0;
+            final double Z = filter.Zmin();
             
             final JFormattedTextField attenuation = new JFormattedTextField();
             attenuation.setFormatterFactory(UI.FORMATTER);
@@ -970,7 +950,10 @@ public final class MainWindow extends javax.swing.JFrame
                         }
                         z = z / (z + Rs);
                         
-                        attenuation.setValue(Math.abs(Fnc.toDecibels(z)));
+                        if (Z != 0)
+                        {
+                            attenuation.setValue(Math.abs(Fnc.toDecibels(z)));
+                        }
                         
                         listen = true;
                     }

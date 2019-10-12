@@ -857,17 +857,17 @@ public final class MainWindow extends javax.swing.JFrame
         }
         else if (item instanceof NotchFilter)
         {
-            NotchFilter filter = (NotchFilter) item;
+            final NotchFilter filter = (NotchFilter) item;
             
-            JFormattedTextField l = new JFormattedTextField();
+            final JFormattedTextField l = new JFormattedTextField();
             l.setFormatterFactory(UI.FORMATTER);
             l.setValue(filter.L * 1000);
             
-            JFormattedTextField c = new JFormattedTextField();
+            final JFormattedTextField c = new JFormattedTextField();
             c.setFormatterFactory(UI.FORMATTER);
             c.setValue(filter.C * 1000000);
             
-            JFormattedTextField r = new JFormattedTextField();
+            final JFormattedTextField r = new JFormattedTextField();
             r.setFormatterFactory(UI.FORMATTER);
             r.setValue(filter.R);
             
@@ -881,14 +881,71 @@ public final class MainWindow extends javax.swing.JFrame
                 
             }
             
+            JButton calc = new JButton();
+            calc.setText("Calculate");
+            calc.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    JFormattedTextField f1 = new JFormattedTextField();
+                    f1.setFormatterFactory(UI.FORMATTER);
+
+                    JFormattedTextField f2 = new JFormattedTextField();
+                    f2.setFormatterFactory(UI.FORMATTER);
+
+                    if (filter instanceof ParallelNotchFilter)
+                    {
+                        final JComponent[] inputs = new JComponent[]
+                        {
+                            new JLabel("Start frequency (Hz): "), f1,
+                            new JLabel("End frequency (Hz): "), f2
+                        };
+                        
+                        if (UI.dialog(FocusManager.getCurrentManager().getActiveWindow(), "Calculate", inputs))
+                        {
+                            ParallelNotchFilter f = (ParallelNotchFilter) filter;
+                            f = f.calculate(UI.getDouble(f1), UI.getDouble(f2));
+
+                            l.setValue(f.L * 1000);
+                            c.setValue(f.C * 1000000);
+                            r.setValue(f.R);
+                        }
+                    }
+                    else if (filter instanceof SerialNotchFilter)
+                    {
+                        JFormattedTextField z = new JFormattedTextField();
+                        z.setFormatterFactory(UI.FORMATTER);
+                        
+                        final JComponent[] inputs = new JComponent[]
+                        {
+                            new JLabel("Start frequency (Hz): "), f1,
+                            new JLabel("End frequency (Hz): "), f2,
+                            new JLabel("Impedance (Ω): "), z
+                        };
+                        
+                        if (UI.dialog(FocusManager.getCurrentManager().getActiveWindow(), "Calculate", inputs))
+                        {
+                            SerialNotchFilter f = (SerialNotchFilter) filter;
+                            f = f.calculate(UI.getDouble(f1), UI.getDouble(f2), UI.getDouble(z));
+
+                            l.setValue(f.L * 1000);
+                            c.setValue(f.C * 1000000);
+                            r.setValue(f.R);
+                        }
+                    }
+                }
+            });
+            
             final JComponent[] inputs = new JComponent[]
             {
                 picture == null ? new JPanel() : picture,
+                calc,
                 new JLabel("Inductance (mH): "), l,
                 new JLabel("Capacitance (μF): "), c,
                 new JLabel("Resistance (Ω): "), r
             };
-            
+
             if (UI.dialog(this, filter.name(), inputs))
             {
                 filter.L = UI.getDouble(l) / 1000;
@@ -977,8 +1034,8 @@ public final class MainWindow extends javax.swing.JFrame
             
             final JComponent[] inputs = new JComponent[]
             {
-                picture == null ? new JPanel() : picture,
                 new JLabel("Attenuation (dB): "), attenuation,
+                picture == null ? new JPanel() : picture,
                 new JLabel("Serial resistance (Ω): "), s,
                 new JLabel("Parallel resistance (Ω): "), p,
             };

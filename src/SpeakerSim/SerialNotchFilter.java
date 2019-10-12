@@ -41,4 +41,15 @@ public class SerialNotchFilter extends NotchFilter
     {
         return "Serial notch filter";
     }
+    
+    public SerialNotchFilter calculate(double f1, double f2, double z)
+    {
+        SerialNotchFilter filter = new SerialNotchFilter();
+           
+        filter.C = 0.1590 / (z * f1);
+        filter.L = 0.1590 * z / f2;
+        filter.R = z;
+        
+        return filter;
+    }
 }

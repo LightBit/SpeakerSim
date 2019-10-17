@@ -40,7 +40,7 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e))
+                if (listen)
                 {
                     speaker.ClosedBox.Vb = UI.getDouble(e) / 1000;
                     main.refresh();
@@ -53,7 +53,7 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 3, 15))
+                if (listen)
                 {
                     speaker.ClosedBox.Ql = UI.getDouble(e);
                     main.refresh();
@@ -66,7 +66,7 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 3, 100))
+                if (listen)
                 {
                     speaker.ClosedBox.Qa = UI.getDouble(e);
                     main.refresh();
@@ -122,11 +122,11 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel1 = new javax.swing.JLabel();
-        qtcField = new javax.swing.JFormattedTextField();
-        vbField = new javax.swing.JFormattedTextField();
+        qtcField = UI.decimalField(0);
+        vbField = UI.decimalField(0.01);
         jLabel4 = new javax.swing.JLabel();
-        qlField = new javax.swing.JFormattedTextField();
-        qaField = new javax.swing.JFormattedTextField();
+        qlField = UI.decimalField(3, 15);
+        qaField = UI.decimalField(3, 100);
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         calculateButton = new javax.swing.JButton();
@@ -145,7 +145,6 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         add(jLabel1, gridBagConstraints);
 
         qtcField.setEditable(false);
-        qtcField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         qtcField.setToolTipText("Total system Q");
         qtcField.setMaximumSize(new java.awt.Dimension(80, 19));
         qtcField.setMinimumSize(new java.awt.Dimension(80, 19));
@@ -159,7 +158,6 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         gridBagConstraints.weighty = 1.0;
         add(qtcField, gridBagConstraints);
 
-        vbField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         vbField.setToolTipText("Internal enclousure volume");
         vbField.setMaximumSize(new java.awt.Dimension(80, 19));
         vbField.setMinimumSize(new java.awt.Dimension(80, 19));
@@ -180,7 +178,6 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(jLabel4, gridBagConstraints);
 
-        qlField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         qlField.setToolTipText("Enclosure leakage losses [3 - 15]");
         qlField.setMaximumSize(new java.awt.Dimension(80, 19));
         qlField.setMinimumSize(new java.awt.Dimension(80, 19));
@@ -194,7 +191,6 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         gridBagConstraints.weighty = 1.0;
         add(qlField, gridBagConstraints);
 
-        qaField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         qaField.setToolTipText("Enclosure absorption losses (damping) [3 - 100]");
         qaField.setMaximumSize(new java.awt.Dimension(80, 19));
         qaField.setMinimumSize(new java.awt.Dimension(80, 19));

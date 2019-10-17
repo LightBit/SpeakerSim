@@ -58,7 +58,7 @@ public class BafflePanel extends javax.swing.JPanel
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0))
+                if (listen)
                 {
                     baffle.Width = UI.getDouble(e) / 100;
                     main.refresh();
@@ -71,7 +71,7 @@ public class BafflePanel extends javax.swing.JPanel
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0))
+                if (listen)
                 {
                     baffle.Height = UI.getDouble(e) / 100;
                     main.refresh();
@@ -84,7 +84,7 @@ public class BafflePanel extends javax.swing.JPanel
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, baffle.Width * 100))
+                if (listen)
                 {
                     baffle.X = UI.getDouble(e) / 100;
                     main.refresh();
@@ -97,7 +97,7 @@ public class BafflePanel extends javax.swing.JPanel
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, baffle.Height * 100))
+                if (listen)
                 {
                     baffle.Y = UI.getDouble(e) / 100;
                     main.refresh();
@@ -110,7 +110,7 @@ public class BafflePanel extends javax.swing.JPanel
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0))
+                if (listen)
                 {
                     baffle.EdgeRadius = UI.getDouble(e) / 1000;
                     main.refresh();
@@ -144,15 +144,15 @@ public class BafflePanel extends javax.swing.JPanel
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel1 = new javax.swing.JLabel();
-        widthField = new javax.swing.JFormattedTextField();
+        widthField = UI.decimalField(0.01);
         jLabel2 = new javax.swing.JLabel();
-        heightField = new javax.swing.JFormattedTextField();
+        heightField = UI.decimalField(0.01);
         jLabel5 = new javax.swing.JLabel();
-        leftField = new javax.swing.JFormattedTextField();
+        leftField = UI.decimalField(0);
         jLabel6 = new javax.swing.JLabel();
-        bottomField = new javax.swing.JFormattedTextField();
+        bottomField = UI.decimalField(0);
         jLabel3 = new javax.swing.JLabel();
-        edgeField = new javax.swing.JFormattedTextField();
+        edgeField = UI.decimalField(0);
         enabledCheckBox = new javax.swing.JCheckBox();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Baffle"));
@@ -169,7 +169,6 @@ public class BafflePanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(jLabel1, gridBagConstraints);
 
-        widthField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         widthField.setMinimumSize(new java.awt.Dimension(80, 19));
         widthField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -185,7 +184,6 @@ public class BafflePanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(jLabel2, gridBagConstraints);
 
-        heightField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         heightField.setMinimumSize(new java.awt.Dimension(80, 19));
         heightField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -201,7 +199,6 @@ public class BafflePanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(jLabel5, gridBagConstraints);
 
-        leftField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         leftField.setMinimumSize(new java.awt.Dimension(80, 19));
         leftField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -217,7 +214,6 @@ public class BafflePanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(jLabel6, gridBagConstraints);
 
-        bottomField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         bottomField.setMinimumSize(new java.awt.Dimension(80, 19));
         bottomField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -233,7 +229,6 @@ public class BafflePanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(jLabel3, gridBagConstraints);
 
-        edgeField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         edgeField.setMinimumSize(new java.awt.Dimension(80, 19));
         edgeField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();

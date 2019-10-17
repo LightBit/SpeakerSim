@@ -51,60 +51,19 @@ public class EnvironmentWindow extends javax.swing.JDialog
         roomYField.setEnabled(roomEnabled);
         roomZField.setEnabled(roomEnabled);
         
-        roomXField.addPropertyChangeListener("value", UI.validator());
-        roomYField.addPropertyChangeListener("value", UI.validator());
-        roomZField.addPropertyChangeListener("value", UI.validator());
+        PropertyChangeListener calc = new PropertyChangeListener()
+        {
+            @Override
+            public void propertyChange(PropertyChangeEvent e)
+            {
+                calculateFields();
+            }
+        };
 
-        tempField.addPropertyChangeListener("value", new PropertyChangeListener()
-        {
-            @Override
-            public void propertyChange(PropertyChangeEvent e)
-            {
-                if (UI.validate(e, -273.15))
-                {
-                    calculateFields();
-                }
-            }
-        });
-        
-        humidityField.addPropertyChangeListener("value", new PropertyChangeListener()
-        {
-            @Override
-            public void propertyChange(PropertyChangeEvent e)
-            {
-                if (UI.validate(e, 0, 100))
-                {
-                    calculateFields();
-                }
-            }
-        });
-        
-        altitudeField.addPropertyChangeListener("value", new PropertyChangeListener()
-        {
-            @Override
-            public void propertyChange(PropertyChangeEvent e)
-            {
-                if (UI.validate(e, 0))
-                {
-                    calculateFields();
-                }
-            }
-        });
-        
-        pressureField.addPropertyChangeListener("value", new PropertyChangeListener()
-        {
-            @Override
-            public void propertyChange(PropertyChangeEvent e)
-            {
-                if (UI.validate(e, 0))
-                {
-                    calculateFields();
-                }
-            }
-        });
-        
-        densityField.addPropertyChangeListener("value", UI.validator());
-        speedField.addPropertyChangeListener("value", UI.validator());
+        tempField.addPropertyChangeListener("value", calc);
+        humidityField.addPropertyChangeListener("value", calc);
+        altitudeField.addPropertyChangeListener("value", calc);
+        pressureField.addPropertyChangeListener("value", calc);
     }
     
     public boolean showDialog()
@@ -122,29 +81,30 @@ public class EnvironmentWindow extends javax.swing.JDialog
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel7 = new javax.swing.JLabel();
-        roomYField = new javax.swing.JFormattedTextField();
+        roomYField = UI.decimalField(1);
         jLabel1 = new javax.swing.JLabel();
-        tempField = new javax.swing.JFormattedTextField();
+        tempField = UI.decimalField(-273.15);
         jLabel2 = new javax.swing.JLabel();
-        humidityField = new javax.swing.JFormattedTextField();
+        humidityField = UI.decimalField(0, 100);
         jLabel6 = new javax.swing.JLabel();
-        altitudeField = new javax.swing.JFormattedTextField();
+        altitudeField = UI.decimalField(0);
         jLabel3 = new javax.swing.JLabel();
-        pressureField = new javax.swing.JFormattedTextField();
+        pressureField = UI.decimalField(0);
         jLabel4 = new javax.swing.JLabel();
-        speedField = new javax.swing.JFormattedTextField();
+        speedField = UI.decimalField(1);
         jLabel5 = new javax.swing.JLabel();
-        densityField = new javax.swing.JFormattedTextField();
+        densityField = UI.decimalField(0.1);
         controlPanel = new javax.swing.JPanel();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        roomZField = new javax.swing.JFormattedTextField();
+        roomZField = UI.decimalField(1);
         jLabel9 = new javax.swing.JLabel();
-        roomXField = new javax.swing.JFormattedTextField();
+        roomXField = UI.decimalField(1);
         jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -165,7 +125,6 @@ public class EnvironmentWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel7, gridBagConstraints);
 
-        roomYField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         roomYField.setMinimumSize(new java.awt.Dimension(80, 19));
         roomYField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -183,7 +142,6 @@ public class EnvironmentWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel1, gridBagConstraints);
 
-        tempField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         tempField.setMinimumSize(new java.awt.Dimension(80, 19));
         tempField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -201,7 +159,6 @@ public class EnvironmentWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel2, gridBagConstraints);
 
-        humidityField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         humidityField.setMinimumSize(new java.awt.Dimension(80, 19));
         humidityField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -219,7 +176,6 @@ public class EnvironmentWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel6, gridBagConstraints);
 
-        altitudeField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         altitudeField.setMinimumSize(new java.awt.Dimension(80, 19));
         altitudeField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -238,7 +194,6 @@ public class EnvironmentWindow extends javax.swing.JDialog
         getContentPane().add(jLabel3, gridBagConstraints);
 
         pressureField.setEditable(false);
-        pressureField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         pressureField.setMinimumSize(new java.awt.Dimension(80, 19));
         pressureField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -256,7 +211,6 @@ public class EnvironmentWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel4, gridBagConstraints);
 
-        speedField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         speedField.setMinimumSize(new java.awt.Dimension(80, 19));
         speedField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -274,7 +228,6 @@ public class EnvironmentWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel5, gridBagConstraints);
 
-        densityField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         densityField.setMinimumSize(new java.awt.Dimension(80, 19));
         densityField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -285,16 +238,20 @@ public class EnvironmentWindow extends javax.swing.JDialog
         getContentPane().add(densityField, gridBagConstraints);
 
         okButton.setText("Save");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        okButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 okButtonActionPerformed(evt);
             }
         });
         controlPanel.add(okButton);
 
         cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cancelButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -307,7 +264,6 @@ public class EnvironmentWindow extends javax.swing.JDialog
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         getContentPane().add(controlPanel, gridBagConstraints);
 
-        roomZField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         roomZField.setMinimumSize(new java.awt.Dimension(80, 19));
         roomZField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -325,7 +281,6 @@ public class EnvironmentWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel9, gridBagConstraints);
 
-        roomXField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         roomXField.setMinimumSize(new java.awt.Dimension(80, 19));
         roomXField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();

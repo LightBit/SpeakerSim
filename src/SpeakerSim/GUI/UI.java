@@ -16,7 +16,6 @@
 
 package SpeakerSim.GUI;
 
-import SpeakerSim.Fnc;
 import SpeakerSim.HandledException;
 import SpeakerSim.Project;
 import io.sentry.Sentry;
@@ -27,7 +26,6 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.filechooser.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -36,118 +34,52 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Enumeration;
 
 public final class UI
 {
-    public final static DefaultFormatterFactory FORMATTER = new DefaultFormatterFactory(new NumberFormatter(Fnc.DECIMAL_FORMAT));
-    
     private UI()
     {
         
     }
     
-    public static PropertyChangeListener validator()
+    private static JFormattedTextField field(NumberFormat format, Comparable<?> min, Comparable<?> max)
     {
-        return new PropertyChangeListener()
-        {
-            @Override
-            public void propertyChange(PropertyChangeEvent e)
-            {
-                UI.validate(e);
-            }
-        };
-    }
-    
-    public static PropertyChangeListener validator(final double min, final double max)
-    {
-        return new PropertyChangeListener()
-        {
-            @Override
-            public void propertyChange(PropertyChangeEvent e)
-            {
-                UI.validate(e, min, max);
-            }
-        };
-    }
-    
-    public static PropertyChangeListener validator(final double min)
-    {
-        return validator(min, Double.MAX_VALUE);
-    }
-    
-    public static boolean validate(PropertyChangeEvent e)
-    {
-        Number number = (Number) e.getNewValue();
-
-        if (number == null || number.doubleValue() <= 0)
-        {
-            number = (Number) e.getOldValue();
-            
-            if (number == null || number.doubleValue() <= 0)
-            {
-                ((JFormattedTextField) e.getSource()).setValue(1);
-            }
-            else
-            {
-                ((JFormattedTextField) e.getSource()).setValue(number);
-            }
-            return false;
-        }
+        NumberFormatter f = new NumberFormatter(format);
+        //f.setValueClass(Double.class);
+        f.setMinimum(min);
+        f.setMaximum(max);
+        //f.setAllowsInvalid(false);
+        //f.setCommitsOnValidEdit(true);
         
-        return true;
+        return new JFormattedTextField(f);
     }
     
-    public static boolean validate(PropertyChangeEvent e, double min, double max)
+    private static JFormattedTextField field(NumberFormat format, Comparable<?> min)
     {
-        Number number = (Number) e.getNewValue();
+        NumberFormatter f = new NumberFormatter(format);
+        //f.setValueClass(Double.class);
+        f.setMinimum(min);
+        //f.setAllowsInvalid(false);
+        //f.setCommitsOnValidEdit(true);
         
-        if (number == null)
-        {
-            number = (Number) e.getOldValue();
-            
-            if (number == null || number.doubleValue() < min)
-            {
-                ((JFormattedTextField) e.getSource()).setValue(min);
-            }
-            else if (number.doubleValue() > max)
-            {
-                ((JFormattedTextField) e.getSource()).setValue(max);
-            }
-            else
-            {
-                ((JFormattedTextField) e.getSource()).setValue(number);
-            }
-            return false;
-        }
-        
-        double value = number.doubleValue();
-
-        if (value < min || value > max)
-        {
-            number = (Number) e.getOldValue();
-            
-            if (number == null || number.doubleValue() < min)
-            {
-                ((JFormattedTextField) e.getSource()).setValue(min);
-            }
-            else if (number.doubleValue() > max)
-            {
-                ((JFormattedTextField) e.getSource()).setValue(max);
-            }
-            else
-            {
-                ((JFormattedTextField) e.getSource()).setValue(number);
-            }
-            return false;
-        }
-        
-        return true;
+        return new JFormattedTextField(f);
     }
     
-    public static boolean validate(PropertyChangeEvent e, double min)
+    public static JFormattedTextField decimalField(double min, double max)
     {
-        return validate(e, min, Double.MAX_VALUE);
+        NumberFormat format = DecimalFormat.getInstance();
+        format.setMaximumFractionDigits(10);
+        return field(format, min, max);
+    }
+    
+    public static JFormattedTextField decimalField(double min)
+    {
+        NumberFormat format = DecimalFormat.getInstance();
+        format.setMaximumFractionDigits(10);
+        return field(format, min);
     }
     
     public static double getDouble(JFormattedTextField field)

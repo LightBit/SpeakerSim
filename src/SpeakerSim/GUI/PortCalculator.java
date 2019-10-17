@@ -89,10 +89,7 @@ public class PortCalculator extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e))
-                {
-                    calc();
-                }
+                calc();
             }
         };
         
@@ -153,31 +150,32 @@ public class PortCalculator extends javax.swing.JDialog
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel7 = new javax.swing.JLabel();
         shapeComboBox = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
-        diameterField = new javax.swing.JFormattedTextField();
+        diameterField = UI.decimalField(0.01);
         jLabel10 = new javax.swing.JLabel();
-        widthField = new javax.swing.JFormattedTextField();
+        widthField = UI.decimalField(0.01);
         jLabel9 = new javax.swing.JLabel();
-        heightField = new javax.swing.JFormattedTextField();
+        heightField = UI.decimalField(0.01);
         jLabel12 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         controlPanel = new javax.swing.JPanel();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        lengthField = new javax.swing.JFormattedTextField();
+        lengthField = UI.decimalField(0);
         endsComboBox = new javax.swing.JComboBox<>();
-        numberField = new javax.swing.JFormattedTextField();
+        numberField = UI.decimalField(1);
         jLabel13 = new javax.swing.JLabel();
         graphPanel = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        thicknessField = new javax.swing.JFormattedTextField();
-        volumeField = new javax.swing.JFormattedTextField();
+        thicknessField = UI.decimalField(0);
+        volumeField = UI.decimalField(0);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Port calculator");
@@ -209,8 +207,6 @@ public class PortCalculator extends javax.swing.JDialog
         gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel8, gridBagConstraints);
-
-        diameterField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
@@ -224,8 +220,6 @@ public class PortCalculator extends javax.swing.JDialog
         gridBagConstraints.gridy = 16;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel10, gridBagConstraints);
-
-        widthField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 6;
@@ -239,8 +233,6 @@ public class PortCalculator extends javax.swing.JDialog
         gridBagConstraints.gridy = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel9, gridBagConstraints);
-
-        heightField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 8;
@@ -264,16 +256,20 @@ public class PortCalculator extends javax.swing.JDialog
         getContentPane().add(jLabel11, gridBagConstraints);
 
         okButton.setText("Save");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        okButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 okButtonActionPerformed(evt);
             }
         });
         controlPanel.add(okButton);
 
         cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cancelButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -286,7 +282,6 @@ public class PortCalculator extends javax.swing.JDialog
         getContentPane().add(controlPanel, gridBagConstraints);
 
         lengthField.setEditable(false);
-        lengthField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 14;
@@ -298,8 +293,6 @@ public class PortCalculator extends javax.swing.JDialog
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         getContentPane().add(endsComboBox, gridBagConstraints);
-
-        numberField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 10;
@@ -339,8 +332,6 @@ public class PortCalculator extends javax.swing.JDialog
         gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel15, gridBagConstraints);
-
-        thicknessField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 12;
@@ -348,7 +339,6 @@ public class PortCalculator extends javax.swing.JDialog
         getContentPane().add(thicknessField, gridBagConstraints);
 
         volumeField.setEditable(false);
-        volumeField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 16;

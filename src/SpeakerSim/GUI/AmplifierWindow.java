@@ -57,8 +57,6 @@ public class AmplifierWindow extends javax.swing.JDialog
         this.amp = amp;
         result = false;
         
-        PeField.setFormatterFactory(UI.FORMATTER);
-        ZoField.setFormatterFactory(UI.FORMATTER);
         PeField.setValue(amp.Pe);
         ZoField.setValue(amp.Zo);
         
@@ -156,8 +154,8 @@ public class AmplifierWindow extends javax.swing.JDialog
 
         mainPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        PeField = new javax.swing.JFormattedTextField();
-        ZoField = new javax.swing.JFormattedTextField();
+        PeField = UI.decimalField(1);
+        ZoField = UI.decimalField(0);
         jLabel2 = new javax.swing.JLabel();
         filtersPanel = new javax.swing.JPanel();
         scrollPane = new javax.swing.JScrollPane();
@@ -326,16 +324,13 @@ public class AmplifierWindow extends javax.swing.JDialog
         {
             Equalizer filter = (Equalizer) item;
             
-            JFormattedTextField fField = new JFormattedTextField();
-            fField.setFormatterFactory(UI.FORMATTER);
+            JFormattedTextField fField = UI.decimalField(1);
             fField.setValue(filter.getF());
             
-            JFormattedTextField qField = new JFormattedTextField();
-            qField.setFormatterFactory(UI.FORMATTER);
+            JFormattedTextField qField = UI.decimalField(0.000001);
             qField.setValue(filter.getQ());
             
-            JFormattedTextField dbField = new JFormattedTextField();
-            dbField.setFormatterFactory(UI.FORMATTER);
+            JFormattedTextField dbField = UI.decimalField(0);
             dbField.setValue(filter.getDecibels());
             
             JCheckBox linearPhaseCheckBox = new JCheckBox();
@@ -361,15 +356,11 @@ public class AmplifierWindow extends javax.swing.JDialog
         {
             ActivePassFilter filter = (ActivePassFilter) item;
             
-            final JFormattedTextField frequencyField = new JFormattedTextField();
-            frequencyField.setFormatterFactory(UI.FORMATTER);
+            final JFormattedTextField frequencyField = UI.decimalField(1);
             frequencyField.setValue(filter.getFrequency());
-            frequencyField.addPropertyChangeListener("value", UI.validator());
             
-            final JFormattedTextField qField = new JFormattedTextField();
-            qField.setFormatterFactory(UI.FORMATTER);
+            final JFormattedTextField qField = UI.decimalField(0.000001);
             qField.setValue(filter.getQ());
-            qField.addPropertyChangeListener("value", UI.validator(0.1));
             
             DefaultComboBoxModel<String> typesModel = new DefaultComboBoxModel<String>();
             for (String t : ActivePassFilter.TYPES)
@@ -414,8 +405,7 @@ public class AmplifierWindow extends javax.swing.JDialog
         {
             Gain filter = (Gain) item;
             
-            JFormattedTextField dbField = new JFormattedTextField();
-            dbField.setFormatterFactory(UI.FORMATTER);
+            JFormattedTextField dbField = UI.decimalField(0);
             dbField.setValue(filter.dB);
             
             final JComponent[] inputs = new JComponent[]
@@ -434,18 +424,15 @@ public class AmplifierWindow extends javax.swing.JDialog
             final Delay filter = (Delay) item;
             final double speedOfSound = Environment.getInstance().SpeedOfSound;
             
-            final JFormattedTextField timeField = new JFormattedTextField();
-            timeField.setFormatterFactory(UI.FORMATTER);
-            
-            final JFormattedTextField distanceField = new JFormattedTextField();
-            distanceField.setFormatterFactory(UI.FORMATTER);
+            final JFormattedTextField timeField = UI.decimalField(0);
+            final JFormattedTextField distanceField = UI.decimalField(0);
             
             timeField.addPropertyChangeListener("value", new PropertyChangeListener()
             {
                 @Override
                 public void propertyChange(PropertyChangeEvent e)
                 {
-                    if (listen && UI.validate(e))
+                    if (listen)
                     {
                         listen = false;
                         distanceField.setValue(Delay.calcDistance(speedOfSound, UI.getDouble(e) / 1000) * 100);
@@ -459,7 +446,7 @@ public class AmplifierWindow extends javax.swing.JDialog
                 @Override
                 public void propertyChange(PropertyChangeEvent e)
                 {
-                    if (listen && UI.validate(e))
+                    if (listen)
                     {
                         listen = false;
                         timeField.setValue(Delay.calcTime(speedOfSound, UI.getDouble(e) / 100) * 1000);

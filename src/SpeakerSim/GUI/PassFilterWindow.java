@@ -103,10 +103,7 @@ public class PassFilterWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e))
-                {
-                    calc();
-                }
+                calc();
             }
         });
         
@@ -115,7 +112,7 @@ public class PassFilterWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0) && events)
+                if (events)
                 {
                     typeComboBox.setSelectedIndex(PassFilter.TYPES.length - 1);
                 }
@@ -126,12 +123,6 @@ public class PassFilterWindow extends javax.swing.JDialog
         C2Field.addPropertyChangeListener("value", switchToCustom);
         L1Field.addPropertyChangeListener("value", switchToCustom);
         L2Field.addPropertyChangeListener("value", switchToCustom);
-        
-        PropertyChangeListener validate = UI.validator(0);
-        RC1Field.addPropertyChangeListener("value", validate);
-        RC2Field.addPropertyChangeListener("value", validate);
-        RL1Field.addPropertyChangeListener("value", validate);
-        RL2Field.addPropertyChangeListener("value", validate);
     }
     
     private void calc()
@@ -174,26 +165,26 @@ public class PassFilterWindow extends javax.swing.JDialog
         jLabel7 = new javax.swing.JLabel();
         typeComboBox = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
-        frequencyField = new javax.swing.JFormattedTextField();
+        frequencyField = UI.decimalField(1);
         jLabel10 = new javax.swing.JLabel();
-        C1Field = new javax.swing.JFormattedTextField();
+        C1Field = UI.decimalField(0);
         jLabel9 = new javax.swing.JLabel();
-        L1Field = new javax.swing.JFormattedTextField();
+        L1Field = UI.decimalField(0);
         jLabel12 = new javax.swing.JLabel();
-        C2Field = new javax.swing.JFormattedTextField();
-        L2Field = new javax.swing.JFormattedTextField();
+        C2Field = UI.decimalField(0);
+        L2Field = UI.decimalField(0);
         controlPanel = new javax.swing.JPanel();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
-        RL1Field = new javax.swing.JFormattedTextField();
-        RL2Field = new javax.swing.JFormattedTextField();
+        RL1Field = UI.decimalField(0);
+        RL2Field = UI.decimalField(0);
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
-        RC1Field = new javax.swing.JFormattedTextField();
+        RC1Field = UI.decimalField(0);
         jLabel17 = new javax.swing.JLabel();
-        RC2Field = new javax.swing.JFormattedTextField();
+        RC2Field = UI.decimalField(0);
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
 
@@ -229,8 +220,6 @@ public class PassFilterWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel8, gridBagConstraints);
-
-        frequencyField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
@@ -246,8 +235,6 @@ public class PassFilterWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel10, gridBagConstraints);
-
-        C1Field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 8;
@@ -262,8 +249,6 @@ public class PassFilterWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel9, gridBagConstraints);
-
-        L1Field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 12;
@@ -278,16 +263,12 @@ public class PassFilterWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 18;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel12, gridBagConstraints);
-
-        C2Field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 18;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         getContentPane().add(C2Field, gridBagConstraints);
-
-        L2Field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 22;
@@ -329,16 +310,12 @@ public class PassFilterWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 22;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel13, gridBagConstraints);
-
-        RL1Field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 14;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         getContentPane().add(RL1Field, gridBagConstraints);
-
-        RL2Field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 24;
@@ -369,8 +346,6 @@ public class PassFilterWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 14;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel16, gridBagConstraints);
-
-        RC1Field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 10;
@@ -385,8 +360,6 @@ public class PassFilterWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 24;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel17, gridBagConstraints);
-
-        RC2Field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 20;

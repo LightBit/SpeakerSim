@@ -160,11 +160,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Vas = UI.getDouble(VasField) / 1000;
-                    refresh();
-                }
+                drv.Vas = UI.getDouble(VasField) / 1000;
+                refresh();
             }
         });
         
@@ -173,11 +170,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Fs = UI.getDouble(FsField);
-                    refresh();
-                }
+                drv.Fs = UI.getDouble(FsField);
+                refresh();
             }
         });
         
@@ -186,11 +180,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Qes = UI.getDouble(QesField);
-                    refresh();
-                }
+                drv.Qes = UI.getDouble(QesField);
+                refresh();
             }
         });
         
@@ -199,11 +190,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Qms = UI.getDouble(QmsField);
-                    refresh();
-                }
+                drv.Qms = UI.getDouble(QmsField);
+                refresh();
             }
         });
         
@@ -212,11 +200,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Qts = UI.getDouble(QtsField);
-                    refresh();
-                }
+                drv.Qts = UI.getDouble(QtsField);
+                refresh();
             }
         });
         
@@ -225,11 +210,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e))
-                {
-                    drv.Re = UI.getDouble(ReField);
-                    refresh();
-                }
+                drv.Re = UI.getDouble(ReField);
+                refresh();
             }
         });
         
@@ -238,11 +220,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Bl = UI.getDouble(BLField);
-                    refresh();
-                }
+                drv.Bl = UI.getDouble(BLField);
+                refresh();
             }
         });
         
@@ -251,11 +230,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Le = UI.getDouble(LeField) / 1000;
-                    refresh();
-                }
+                drv.Le = UI.getDouble(LeField) / 1000;
+                refresh();
             }
         });
         
@@ -264,11 +240,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Xmax = UI.getDouble(XmaxField) / 1000;
-                    refresh();
-                }
+                drv.Xmax = UI.getDouble(XmaxField) / 1000;
+                refresh();
             }
         });
         
@@ -293,11 +266,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Dia = UI.getDouble(DiaField) / 1000;
-                    refresh();
-                }
+                drv.Dia = UI.getDouble(DiaField) / 1000;
+                refresh();
             }
         });
         
@@ -306,11 +276,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Width = UI.getDouble(WidthField) / 1000;
-                    refresh();
-                }
+                drv.Width = UI.getDouble(WidthField) / 1000;
+                refresh();
             }
         });
         
@@ -319,11 +286,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Height = UI.getDouble(HeightField) / 1000;
-                    refresh();
-                }
+                drv.Height = UI.getDouble(HeightField) / 1000;
+                refresh();
             }
         });
         
@@ -332,11 +296,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Sd = UI.getDouble(SdField) / 10000;
-                    refresh();
-                }
+                drv.Sd = UI.getDouble(SdField) / 10000;
+                refresh();
             }
         });
         
@@ -345,11 +306,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Vd = UI.getDouble(VdField) / 1000000;
-                    refresh();
-                }
+                drv.Vd = UI.getDouble(VdField) / 1000000;
+                refresh();
             }
         });
         
@@ -358,11 +316,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Cms = UI.getDouble(CmsField) / 1000;
-                    refresh();
-                }
+                drv.Cms = UI.getDouble(CmsField) / 1000;
+                refresh();
             }
         });
         
@@ -371,11 +326,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Mms = UI.getDouble(MmsField) / 1000;
-                    refresh();
-                }
+                drv.Mms = UI.getDouble(MmsField) / 1000;
+                refresh();
             }
         });
         
@@ -384,11 +336,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.Rms = UI.getDouble(RmsField);
-                    refresh();
-                }
+                drv.Rms = UI.getDouble(RmsField);
+                refresh();
             }
         });
         
@@ -397,11 +346,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.n0 = UI.getDouble(n0Field) / 100;
-                    refresh();
-                }
+                drv.n0 = UI.getDouble(n0Field) / 100;
+                refresh();
             }
         });
         
@@ -410,11 +356,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e))
-                {
-                    drv.SPL_1W = UI.getDouble(SPL_1WField);
-                    refresh();
-                }
+                drv.SPL_1W = UI.getDouble(SPL_1WField);
+                refresh();
             }
         });
         
@@ -423,10 +366,7 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e))
-                {
-                    drv.SPL_2_83V = UI.getDouble(SPL_2_83VField);
-                }
+                drv.SPL_2_83V = UI.getDouble(SPL_2_83VField);
             }
         });
         
@@ -435,10 +375,7 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e))
-                {
-                    drv.Pe = UI.getDouble(PeField);
-                }
+                drv.Pe = UI.getDouble(PeField);
             }
         });
         
@@ -456,10 +393,7 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0))
-                {
-                    drv.PeF = UI.getDouble(PeFField);
-                }
+                drv.PeF = UI.getDouble(PeFField);
             }
         });
         
@@ -468,11 +402,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 1, drv.CrossEnd))
-                {
-                    drv.CrossStart = UI.getDouble(CrossStartField);
-                    refresh();
-                }
+                drv.CrossStart = UI.getDouble(CrossStartField);
+                refresh();
             }
         });
         
@@ -481,11 +412,8 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, drv.CrossStart))
-                {
-                    drv.CrossEnd = UI.getDouble(CrossEndField);
-                    refresh();
-                }
+                drv.CrossEnd = UI.getDouble(CrossEndField);
+                refresh();
             }
         });
         
@@ -617,17 +545,17 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel = new javax.swing.JPanel();
         lblName = new javax.swing.JLabel();
         lblCrossStart = new javax.swing.JLabel();
-        ReField = new javax.swing.JFormattedTextField();
+        ReField = UI.decimalField(0);
         FsButton = new javax.swing.JButton();
-        FsField = new javax.swing.JFormattedTextField();
+        FsField = UI.decimalField(0);
         lblVas = new javax.swing.JLabel();
         QmsButton = new javax.swing.JButton();
         lblQes = new javax.swing.JLabel();
-        QmsField = new javax.swing.JFormattedTextField();
+        QmsField = UI.decimalField(0);
         lblQms = new javax.swing.JLabel();
-        LeField = new javax.swing.JFormattedTextField();
+        LeField = UI.decimalField(0);
         lblQts = new javax.swing.JLabel();
-        DiaField = new javax.swing.JFormattedTextField();
+        DiaField = UI.decimalField(0);
         DiaButton = new javax.swing.JButton();
         lblSPL_2_83V = new javax.swing.JLabel();
         lblBL = new javax.swing.JLabel();
@@ -635,19 +563,19 @@ public class DriverWindow extends javax.swing.JDialog
         lblXmax = new javax.swing.JLabel();
         lblDia = new javax.swing.JLabel();
         lblSd = new javax.swing.JLabel();
-        VdField = new javax.swing.JFormattedTextField();
-        MmsField = new javax.swing.JFormattedTextField();
-        n0Field = new javax.swing.JFormattedTextField();
-        PeField = new javax.swing.JFormattedTextField();
-        VasField = new javax.swing.JFormattedTextField();
-        QesField = new javax.swing.JFormattedTextField();
-        QtsField = new javax.swing.JFormattedTextField();
-        BLField = new javax.swing.JFormattedTextField();
-        XmaxField = new javax.swing.JFormattedTextField();
-        SdField = new javax.swing.JFormattedTextField();
-        CmsField = new javax.swing.JFormattedTextField();
-        RmsField = new javax.swing.JFormattedTextField();
-        SPL_1WField = new javax.swing.JFormattedTextField();
+        VdField = UI.decimalField(0);
+        MmsField = UI.decimalField(0);
+        n0Field = UI.decimalField(0);
+        PeField = UI.decimalField(0);
+        VasField = UI.decimalField(0);
+        QesField = UI.decimalField(0);
+        QtsField = UI.decimalField(0);
+        BLField = UI.decimalField(0);
+        XmaxField = UI.decimalField(0);
+        SdField = UI.decimalField(0);
+        CmsField = UI.decimalField(0);
+        RmsField = UI.decimalField(0);
+        SPL_1WField = UI.decimalField(1);
         VasButton = new javax.swing.JButton();
         VdButton = new javax.swing.JButton();
         MmsButton = new javax.swing.JButton();
@@ -668,28 +596,28 @@ public class DriverWindow extends javax.swing.JDialog
         lblPowerFilter = new javax.swing.JLabel();
         FRDButton = new javax.swing.JButton();
         lblZMA = new javax.swing.JLabel();
-        SPL_2_83VField = new javax.swing.JFormattedTextField();
+        SPL_2_83VField = UI.decimalField(1);
         lblFRD = new javax.swing.JLabel();
         ZMAButton = new javax.swing.JButton();
         lblRe = new javax.swing.JLabel();
         invertedCheckBox = new javax.swing.JCheckBox();
         closedCheckBox = new javax.swing.JCheckBox();
         NameField = new javax.swing.JTextField();
-        CrossStartField = new javax.swing.JFormattedTextField();
+        CrossStartField = UI.decimalField(0);
         lblCrossEnd = new javax.swing.JLabel();
-        CrossEndField = new javax.swing.JFormattedTextField();
+        CrossEndField = UI.decimalField(0);
         lblFs = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         ZMAExportButton = new javax.swing.JButton();
-        PeFField = new javax.swing.JFormattedTextField();
+        PeFField = UI.decimalField(0);
         lblPeF = new javax.swing.JLabel();
         lblPe = new javax.swing.JLabel();
         powerFilterComboBox = new javax.swing.JComboBox(PowerFilter.FILTERS);
         shapeComboBox = new javax.swing.JComboBox(Driver.Shape.values());
         lblShape = new javax.swing.JLabel();
-        HeightField = new javax.swing.JFormattedTextField();
+        HeightField = UI.decimalField(0);
         lblHeight = new javax.swing.JLabel();
-        WidthField = new javax.swing.JFormattedTextField();
+        WidthField = UI.decimalField(0);
         lblWidth = new javax.swing.JLabel();
         SPL_2_83VButton = new javax.swing.JButton();
 
@@ -777,7 +705,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblCrossStart, gridBagConstraints);
 
-        ReField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         ReField.setToolTipText("DC resistance of the voice coil");
         ReField.setMinimumSize(new java.awt.Dimension(80, 19));
         ReField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -791,7 +718,6 @@ public class DriverWindow extends javax.swing.JDialog
         FsButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         FsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         FsButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        FsButton.setOpaque(true);
         FsButton.setPreferredSize(new java.awt.Dimension(120, 19));
         FsButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -806,7 +732,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(FsButton, gridBagConstraints);
 
-        FsField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         FsField.setToolTipText("Free air resonance frequency");
         FsField.setMinimumSize(new java.awt.Dimension(80, 19));
         FsField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -827,7 +752,6 @@ public class DriverWindow extends javax.swing.JDialog
         QmsButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         QmsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         QmsButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        QmsButton.setOpaque(true);
         QmsButton.setPreferredSize(new java.awt.Dimension(120, 19));
         QmsButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -849,7 +773,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblQes, gridBagConstraints);
 
-        QmsField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         QmsField.setToolTipText("Mechanical Q at resonance");
         QmsField.setMinimumSize(new java.awt.Dimension(80, 19));
         QmsField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -865,7 +788,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblQms, gridBagConstraints);
 
-        LeField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         LeField.setToolTipText("Voice coil inductance at 1kHz");
         LeField.setMinimumSize(new java.awt.Dimension(80, 19));
         LeField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -881,7 +803,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblQts, gridBagConstraints);
 
-        DiaField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         DiaField.setToolTipText("Effective diameter (membrane + 1/3 surround)");
         DiaField.setMinimumSize(new java.awt.Dimension(80, 19));
         DiaField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -895,7 +816,6 @@ public class DriverWindow extends javax.swing.JDialog
         DiaButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         DiaButton.setMaximumSize(new java.awt.Dimension(120, 19));
         DiaButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        DiaButton.setOpaque(true);
         DiaButton.setPreferredSize(new java.awt.Dimension(120, 19));
         DiaButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -952,7 +872,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblSd, gridBagConstraints);
 
-        VdField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         VdField.setToolTipText("Peak displacement volume");
         VdField.setMinimumSize(new java.awt.Dimension(80, 19));
         VdField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -961,7 +880,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 34;
         propertiesPanel.add(VdField, gridBagConstraints);
 
-        MmsField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         MmsField.setToolTipText("Mass of the diaphragm and coil, including acoustic load");
         MmsField.setMinimumSize(new java.awt.Dimension(80, 19));
         MmsField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -970,7 +888,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 38;
         propertiesPanel.add(MmsField, gridBagConstraints);
 
-        n0Field.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         n0Field.setToolTipText("Reference efficiency");
         n0Field.setMinimumSize(new java.awt.Dimension(80, 19));
         n0Field.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -979,7 +896,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 42;
         propertiesPanel.add(n0Field, gridBagConstraints);
 
-        PeField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         PeField.setToolTipText("Nominal input power");
         PeField.setMinimumSize(new java.awt.Dimension(80, 19));
         PeField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -988,7 +904,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 48;
         propertiesPanel.add(PeField, gridBagConstraints);
 
-        VasField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         VasField.setToolTipText("Volume of air equal to compliance");
         VasField.setMinimumSize(new java.awt.Dimension(80, 19));
         VasField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -997,7 +912,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 6;
         propertiesPanel.add(VasField, gridBagConstraints);
 
-        QesField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         QesField.setToolTipText("Electrical Q at resonance");
         QesField.setMinimumSize(new java.awt.Dimension(80, 19));
         QesField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -1006,7 +920,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 10;
         propertiesPanel.add(QesField, gridBagConstraints);
 
-        QtsField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         QtsField.setToolTipText("Total Q at resonance");
         QtsField.setMinimumSize(new java.awt.Dimension(80, 19));
         QtsField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -1015,7 +928,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 14;
         propertiesPanel.add(QtsField, gridBagConstraints);
 
-        BLField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         BLField.setToolTipText("Motor strength");
         BLField.setMinimumSize(new java.awt.Dimension(80, 19));
         BLField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -1024,7 +936,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 18;
         propertiesPanel.add(BLField, gridBagConstraints);
 
-        XmaxField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         XmaxField.setToolTipText("Peak linear displacement of cone");
         XmaxField.setMinimumSize(new java.awt.Dimension(80, 19));
         XmaxField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -1033,7 +944,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 22;
         propertiesPanel.add(XmaxField, gridBagConstraints);
 
-        SdField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         SdField.setToolTipText("Effective driver radiating area");
         SdField.setMinimumSize(new java.awt.Dimension(80, 19));
         SdField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -1042,7 +952,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 32;
         propertiesPanel.add(SdField, gridBagConstraints);
 
-        CmsField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         CmsField.setToolTipText("Compliance of suspension");
         CmsField.setMinimumSize(new java.awt.Dimension(80, 19));
         CmsField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -1051,7 +960,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 36;
         propertiesPanel.add(CmsField, gridBagConstraints);
 
-        RmsField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         RmsField.setToolTipText("Mechanical resistance of suspension");
         RmsField.setMinimumSize(new java.awt.Dimension(80, 19));
         RmsField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -1060,7 +968,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 40;
         propertiesPanel.add(RmsField, gridBagConstraints);
 
-        SPL_1WField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         SPL_1WField.setToolTipText("Reference sound pressure level at 1W/1m");
         SPL_1WField.setMinimumSize(new java.awt.Dimension(80, 19));
         SPL_1WField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -1074,7 +981,6 @@ public class DriverWindow extends javax.swing.JDialog
         VasButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         VasButton.setMaximumSize(new java.awt.Dimension(120, 19));
         VasButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        VasButton.setOpaque(true);
         VasButton.setPreferredSize(new java.awt.Dimension(120, 19));
         VasButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1094,7 +1000,6 @@ public class DriverWindow extends javax.swing.JDialog
         VdButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         VdButton.setMaximumSize(new java.awt.Dimension(120, 19));
         VdButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        VdButton.setOpaque(true);
         VdButton.setPreferredSize(new java.awt.Dimension(120, 19));
         VdButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1114,7 +1019,6 @@ public class DriverWindow extends javax.swing.JDialog
         MmsButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         MmsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         MmsButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        MmsButton.setOpaque(true);
         MmsButton.setPreferredSize(new java.awt.Dimension(120, 19));
         MmsButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1134,7 +1038,6 @@ public class DriverWindow extends javax.swing.JDialog
         n0Button.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         n0Button.setMaximumSize(new java.awt.Dimension(120, 19));
         n0Button.setMinimumSize(new java.awt.Dimension(120, 19));
-        n0Button.setOpaque(true);
         n0Button.setPreferredSize(new java.awt.Dimension(120, 19));
         n0Button.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1154,7 +1057,6 @@ public class DriverWindow extends javax.swing.JDialog
         QesButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         QesButton.setMaximumSize(new java.awt.Dimension(120, 19));
         QesButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        QesButton.setOpaque(true);
         QesButton.setPreferredSize(new java.awt.Dimension(120, 19));
         QesButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1174,7 +1076,6 @@ public class DriverWindow extends javax.swing.JDialog
         QtsButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         QtsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         QtsButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        QtsButton.setOpaque(true);
         QtsButton.setPreferredSize(new java.awt.Dimension(120, 19));
         QtsButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1194,7 +1095,6 @@ public class DriverWindow extends javax.swing.JDialog
         BLButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         BLButton.setMaximumSize(new java.awt.Dimension(120, 19));
         BLButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        BLButton.setOpaque(true);
         BLButton.setPreferredSize(new java.awt.Dimension(120, 19));
         BLButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1214,7 +1114,6 @@ public class DriverWindow extends javax.swing.JDialog
         SdButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         SdButton.setMaximumSize(new java.awt.Dimension(120, 19));
         SdButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        SdButton.setOpaque(true);
         SdButton.setPreferredSize(new java.awt.Dimension(120, 19));
         SdButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1234,7 +1133,6 @@ public class DriverWindow extends javax.swing.JDialog
         CmsButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         CmsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         CmsButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        CmsButton.setOpaque(true);
         CmsButton.setPreferredSize(new java.awt.Dimension(120, 19));
         CmsButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1254,7 +1152,6 @@ public class DriverWindow extends javax.swing.JDialog
         RmsButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         RmsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         RmsButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        RmsButton.setOpaque(true);
         RmsButton.setPreferredSize(new java.awt.Dimension(120, 19));
         RmsButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1274,7 +1171,6 @@ public class DriverWindow extends javax.swing.JDialog
         SPL_1WButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         SPL_1WButton.setMaximumSize(new java.awt.Dimension(120, 19));
         SPL_1WButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        SPL_1WButton.setOpaque(true);
         SPL_1WButton.setPreferredSize(new java.awt.Dimension(120, 19));
         SPL_1WButton.addActionListener(new java.awt.event.ActionListener()
         {
@@ -1360,7 +1256,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblZMA, gridBagConstraints);
 
-        SPL_2_83VField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         SPL_2_83VField.setToolTipText("Reference sound pressure level at 2.83V/1m");
         SPL_2_83VField.setMinimumSize(new java.awt.Dimension(80, 19));
         SPL_2_83VField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -1428,7 +1323,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         propertiesPanel.add(NameField, gridBagConstraints);
 
-        CrossStartField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         CrossStartField.setToolTipText("Frequency where enclousure simulation starts to merge with FRD/ZMA");
         CrossStartField.setEnabled(false);
         CrossStartField.setMinimumSize(new java.awt.Dimension(80, 19));
@@ -1445,7 +1339,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblCrossEnd, gridBagConstraints);
 
-        CrossEndField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         CrossEndField.setToolTipText("Frequency where enclousure simulation ends merging with FRD/ZMA");
         CrossEndField.setEnabled(false);
         CrossEndField.setMinimumSize(new java.awt.Dimension(80, 19));
@@ -1485,7 +1378,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         propertiesPanel.add(ZMAExportButton, gridBagConstraints);
 
-        PeFField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         PeFField.setToolTipText("High pass filter frequency (12dB/octave)");
         PeFField.setMinimumSize(new java.awt.Dimension(80, 19));
         PeFField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -1527,7 +1419,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblShape, gridBagConstraints);
 
-        HeightField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         HeightField.setToolTipText("Effective height (membrane + 1/3 surround)");
         HeightField.setMinimumSize(new java.awt.Dimension(80, 19));
         HeightField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -1543,7 +1434,6 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblHeight, gridBagConstraints);
 
-        WidthField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.###"))));
         WidthField.setToolTipText("Effective width (membrane + 1/3 surround)");
         WidthField.setMinimumSize(new java.awt.Dimension(80, 19));
         WidthField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -1564,7 +1454,6 @@ public class DriverWindow extends javax.swing.JDialog
         SPL_2_83VButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         SPL_2_83VButton.setMaximumSize(new java.awt.Dimension(120, 19));
         SPL_2_83VButton.setMinimumSize(new java.awt.Dimension(120, 19));
-        SPL_2_83VButton.setOpaque(true);
         SPL_2_83VButton.setPreferredSize(new java.awt.Dimension(120, 19));
         SPL_2_83VButton.addActionListener(new java.awt.event.ActionListener()
         {

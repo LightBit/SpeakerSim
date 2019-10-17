@@ -38,7 +38,7 @@ public class DriverPositionPanel extends javax.swing.JPanel
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, Environment.getInstance().RoomX * 100))
+                if (listen)
                 {
                     position.X = UI.getDouble(e) / 100;
                     distanceField.setValue(Project.getInstance().ListeningPosition.distance(position) * 100);
@@ -54,7 +54,7 @@ public class DriverPositionPanel extends javax.swing.JPanel
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, Environment.getInstance().RoomY * 100))
+                if (listen)
                 {
                     position.Y = UI.getDouble(e) / 100;
                     distanceField.setValue(Project.getInstance().ListeningPosition.distance(position) * 100);
@@ -70,7 +70,7 @@ public class DriverPositionPanel extends javax.swing.JPanel
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, Environment.getInstance().RoomZ * 100))
+                if (listen)
                 {
                     position.Z = UI.getDouble(e) / 100;
                     distanceField.setValue(Project.getInstance().ListeningPosition.distance(position) * 100);
@@ -86,7 +86,7 @@ public class DriverPositionPanel extends javax.swing.JPanel
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, -180, 180))
+                if (listen)
                 {
                     position.VerticalAngle = UI.getDouble(e);
                     relativeVerticalAngleField.setValue(Math.round(position.verticalAngle(Project.getInstance().ListeningPosition)));
@@ -101,7 +101,7 @@ public class DriverPositionPanel extends javax.swing.JPanel
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, -180, 180))
+                if (listen)
                 {
                     position.HorizontalAngle = UI.getDouble(e);
                     relativeVerticalAngleField.setValue(Math.round(position.verticalAngle(Project.getInstance().ListeningPosition)));
@@ -137,19 +137,19 @@ public class DriverPositionPanel extends javax.swing.JPanel
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel9 = new javax.swing.JLabel();
-        xField = new javax.swing.JFormattedTextField();
+        xField = UI.decimalField(0);
         jLabel12 = new javax.swing.JLabel();
-        yField = new javax.swing.JFormattedTextField();
+        yField = UI.decimalField(0);
         jLabel10 = new javax.swing.JLabel();
-        zField = new javax.swing.JFormattedTextField();
-        verticalAngleField = new javax.swing.JFormattedTextField();
+        zField = UI.decimalField(0);
+        verticalAngleField = UI.decimalField(-180, 180);
         jLabel14 = new javax.swing.JLabel();
-        horizontalAngleField = new javax.swing.JFormattedTextField();
+        horizontalAngleField = UI.decimalField(-180, 180);
         jLabel15 = new javax.swing.JLabel();
-        relativeHorizontalAngleField = new javax.swing.JFormattedTextField();
-        relativeVerticalAngleField = new javax.swing.JFormattedTextField();
+        relativeHorizontalAngleField = UI.decimalField(-180, 180);
+        relativeVerticalAngleField = UI.decimalField(-180, 180);
         jLabel16 = new javax.swing.JLabel();
-        distanceField = new javax.swing.JFormattedTextField();
+        distanceField = UI.decimalField(0);
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Driver position in room"));
         java.awt.GridBagLayout layout = new java.awt.GridBagLayout();
@@ -165,7 +165,6 @@ public class DriverPositionPanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(jLabel9, gridBagConstraints);
 
-        xField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         xField.setMinimumSize(new java.awt.Dimension(85, 19));
         xField.setPreferredSize(new java.awt.Dimension(85, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -182,7 +181,6 @@ public class DriverPositionPanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(jLabel12, gridBagConstraints);
 
-        yField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         yField.setMinimumSize(new java.awt.Dimension(85, 19));
         yField.setPreferredSize(new java.awt.Dimension(85, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -199,7 +197,6 @@ public class DriverPositionPanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(jLabel10, gridBagConstraints);
 
-        zField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         zField.setMinimumSize(new java.awt.Dimension(85, 19));
         zField.setPreferredSize(new java.awt.Dimension(85, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -208,7 +205,6 @@ public class DriverPositionPanel extends javax.swing.JPanel
         gridBagConstraints.gridwidth = 3;
         add(zField, gridBagConstraints);
 
-        verticalAngleField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         verticalAngleField.setToolTipText("Relative to room walls");
         verticalAngleField.setMinimumSize(new java.awt.Dimension(40, 19));
         verticalAngleField.setPreferredSize(new java.awt.Dimension(40, 19));
@@ -225,7 +221,6 @@ public class DriverPositionPanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(jLabel14, gridBagConstraints);
 
-        horizontalAngleField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         horizontalAngleField.setToolTipText("Relative to room walls");
         horizontalAngleField.setMinimumSize(new java.awt.Dimension(40, 19));
         horizontalAngleField.setPreferredSize(new java.awt.Dimension(40, 19));
@@ -243,7 +238,6 @@ public class DriverPositionPanel extends javax.swing.JPanel
         add(jLabel15, gridBagConstraints);
 
         relativeHorizontalAngleField.setEditable(false);
-        relativeHorizontalAngleField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         relativeHorizontalAngleField.setToolTipText("Relative to listening position");
         relativeHorizontalAngleField.setMinimumSize(new java.awt.Dimension(40, 19));
         relativeHorizontalAngleField.setPreferredSize(new java.awt.Dimension(40, 19));
@@ -253,7 +247,6 @@ public class DriverPositionPanel extends javax.swing.JPanel
         add(relativeHorizontalAngleField, gridBagConstraints);
 
         relativeVerticalAngleField.setEditable(false);
-        relativeVerticalAngleField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         relativeVerticalAngleField.setToolTipText("Relative to listening position");
         relativeVerticalAngleField.setMinimumSize(new java.awt.Dimension(40, 19));
         relativeVerticalAngleField.setPreferredSize(new java.awt.Dimension(40, 19));
@@ -271,7 +264,6 @@ public class DriverPositionPanel extends javax.swing.JPanel
         add(jLabel16, gridBagConstraints);
 
         distanceField.setEditable(false);
-        distanceField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         distanceField.setToolTipText("Distance to listening position");
         distanceField.setMinimumSize(new java.awt.Dimension(85, 19));
         distanceField.setPreferredSize(new java.awt.Dimension(85, 19));

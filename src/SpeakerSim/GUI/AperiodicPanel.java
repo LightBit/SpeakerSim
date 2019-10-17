@@ -40,7 +40,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e))
+                if (listen)
                 {
                     speaker.Aperiodic.Vb = UI.getDouble(e) / 1000;
                     main.refresh();
@@ -53,7 +53,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 5, 100))
+                if (listen)
                 {
                     speaker.Aperiodic.Ql = UI.getDouble(e);
                     main.refresh();
@@ -66,7 +66,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 3, 100))
+                if (listen)
                 {
                     speaker.Aperiodic.Qa = UI.getDouble(e);
                     main.refresh();
@@ -79,7 +79,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, Environment.getInstance().RoomX * 100))
+                if (listen)
                 {
                     speaker.Aperiodic.VentPosition.X = UI.getDouble(e) / 100;
                     portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
@@ -93,7 +93,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, Environment.getInstance().RoomY * 100))
+                if (listen)
                 {
                     speaker.Aperiodic.VentPosition.Y = UI.getDouble(e) / 100;
                     portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
@@ -107,7 +107,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, Environment.getInstance().RoomZ * 100))
+                if (listen)
                 {
                     speaker.Aperiodic.VentPosition.Z = UI.getDouble(e) / 100;
                     portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
@@ -180,19 +180,19 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
 
         portPositionPanel = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        portPositionXField = new javax.swing.JFormattedTextField();
-        portPositionYField = new javax.swing.JFormattedTextField();
+        portPositionXField = UI.decimalField(0);
+        portPositionYField = UI.decimalField(0);
         jLabel12 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        portPositionZField = new javax.swing.JFormattedTextField();
-        portPositionDistanceField = new javax.swing.JFormattedTextField();
+        portPositionZField = UI.decimalField(0);
+        portPositionDistanceField = UI.decimalField(0);
         jLabel16 = new javax.swing.JLabel();
         bassReflexPanel = new javax.swing.JPanel();
-        vbField = new javax.swing.JFormattedTextField();
+        vbField = UI.decimalField(0.01);
         jLabel4 = new javax.swing.JLabel();
         portCalcButton = new javax.swing.JButton();
-        qlField = new javax.swing.JFormattedTextField();
-        qaField = new javax.swing.JFormattedTextField();
+        qlField = UI.decimalField(3, 15);
+        qaField = UI.decimalField(3, 100);
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         calculateButton = new javax.swing.JButton();
@@ -215,7 +215,6 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         portPositionPanel.add(jLabel9, gridBagConstraints);
 
-        portPositionXField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         portPositionXField.setMinimumSize(new java.awt.Dimension(80, 19));
         portPositionXField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -223,7 +222,6 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         gridBagConstraints.gridy = 0;
         portPositionPanel.add(portPositionXField, gridBagConstraints);
 
-        portPositionYField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         portPositionYField.setMinimumSize(new java.awt.Dimension(80, 19));
         portPositionYField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -247,7 +245,6 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         portPositionPanel.add(jLabel15, gridBagConstraints);
 
-        portPositionZField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         portPositionZField.setMinimumSize(new java.awt.Dimension(80, 19));
         portPositionZField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -256,7 +253,6 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         portPositionPanel.add(portPositionZField, gridBagConstraints);
 
         portPositionDistanceField.setEditable(false);
-        portPositionDistanceField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         portPositionDistanceField.setToolTipText("Distance to listening position");
         portPositionDistanceField.setMinimumSize(new java.awt.Dimension(80, 19));
         portPositionDistanceField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -281,7 +277,6 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         bassReflexPanelLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0};
         bassReflexPanel.setLayout(bassReflexPanelLayout);
 
-        vbField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         vbField.setToolTipText("Internal enclousure volume");
         vbField.setMinimumSize(new java.awt.Dimension(80, 19));
         vbField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -312,7 +307,6 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         bassReflexPanel.add(portCalcButton, gridBagConstraints);
 
-        qlField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         qlField.setToolTipText("Enclosure leakage losses [5 - 100]");
         qlField.setMinimumSize(new java.awt.Dimension(80, 19));
         qlField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -321,7 +315,6 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         gridBagConstraints.gridy = 4;
         bassReflexPanel.add(qlField, gridBagConstraints);
 
-        qaField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         qaField.setToolTipText("Enclosure absorption losses (damping) [3 - 100]");
         qaField.setMinimumSize(new java.awt.Dimension(80, 19));
         qaField.setPreferredSize(new java.awt.Dimension(80, 19));

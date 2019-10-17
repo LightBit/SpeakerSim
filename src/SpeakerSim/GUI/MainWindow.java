@@ -224,11 +224,8 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0, Environment.getInstance().RoomX * 100))
-                {
-                    Project.getInstance().ListeningPosition.X = UI.getDouble(e) / 100;
-                    refresh();
-                }
+                Project.getInstance().ListeningPosition.X = UI.getDouble(e) / 100;
+                refresh();
             }
         });
         
@@ -237,11 +234,8 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0, Environment.getInstance().RoomY * 100))
-                {
-                    Project.getInstance().ListeningPosition.Y = UI.getDouble(e) / 100;
-                    refresh();
-                }
+                Project.getInstance().ListeningPosition.Y = UI.getDouble(e) / 100;
+                refresh();
             }
         });
         
@@ -250,13 +244,11 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (UI.validate(e, 0, Environment.getInstance().RoomZ * 100))
-                {
-                    Project.getInstance().ListeningPosition.Z = UI.getDouble(e) / 100;
-                    refresh();
-                }
+                Project.getInstance().ListeningPosition.Z = UI.getDouble(e) / 100;
+                refresh();
             }
         });
+
         
         newerVersionCheck();
     }
@@ -859,16 +851,13 @@ public final class MainWindow extends javax.swing.JFrame
         {
             final NotchFilter filter = (NotchFilter) item;
             
-            final JFormattedTextField l = new JFormattedTextField();
-            l.setFormatterFactory(UI.FORMATTER);
+            final JFormattedTextField l = UI.decimalField(0);
             l.setValue(filter.L * 1000);
             
-            final JFormattedTextField c = new JFormattedTextField();
-            c.setFormatterFactory(UI.FORMATTER);
+            final JFormattedTextField c = UI.decimalField(0);
             c.setValue(filter.C * 1000000);
             
-            final JFormattedTextField r = new JFormattedTextField();
-            r.setFormatterFactory(UI.FORMATTER);
+            final JFormattedTextField r = UI.decimalField(0);
             r.setValue(filter.R);
             
             Picture picture = null;
@@ -888,11 +877,8 @@ public final class MainWindow extends javax.swing.JFrame
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    JFormattedTextField f1 = new JFormattedTextField();
-                    f1.setFormatterFactory(UI.FORMATTER);
-
-                    JFormattedTextField f2 = new JFormattedTextField();
-                    f2.setFormatterFactory(UI.FORMATTER);
+                    JFormattedTextField f1 = UI.decimalField(1);
+                    JFormattedTextField f2 = UI.decimalField(1);
 
                     if (filter instanceof ParallelNotchFilter)
                     {
@@ -914,8 +900,7 @@ public final class MainWindow extends javax.swing.JFrame
                     }
                     else if (filter instanceof SerialNotchFilter)
                     {
-                        JFormattedTextField z = new JFormattedTextField();
-                        z.setFormatterFactory(UI.FORMATTER);
+                        JFormattedTextField z = UI.decimalField(0);
                         
                         final JComponent[] inputs = new JComponent[]
                         {
@@ -959,23 +944,20 @@ public final class MainWindow extends javax.swing.JFrame
             final LPad filter = (LPad) item;
             final double Z = filter.Zmin();
             
-            final JFormattedTextField attenuation = new JFormattedTextField();
-            attenuation.setFormatterFactory(UI.FORMATTER);
+            final JFormattedTextField attenuation = UI.decimalField(0);
             attenuation.setEnabled(Z != 0);
             
-            final JFormattedTextField s = new JFormattedTextField();
-            s.setFormatterFactory(UI.FORMATTER);
+            final JFormattedTextField s = UI.decimalField(0);
             s.setValue(filter.Rs);
             
-            final JFormattedTextField p = new JFormattedTextField();
-            p.setFormatterFactory(UI.FORMATTER);
+            final JFormattedTextField p = UI.decimalField(0);
             
             attenuation.addPropertyChangeListener("value", new PropertyChangeListener()
             {
                 @Override
                 public void propertyChange(PropertyChangeEvent e)
                 {
-                    if (listen && UI.validate(e, 0))
+                    if (listen)
                     {
                         listen = false;
                         
@@ -993,7 +975,7 @@ public final class MainWindow extends javax.swing.JFrame
                 @Override
                 public void propertyChange(PropertyChangeEvent e)
                 {
-                    if (listen && UI.validate(e, 0))
+                    if (listen)
                     {
                         listen = false;
                         
@@ -1058,12 +1040,10 @@ public final class MainWindow extends javax.swing.JFrame
             final JButton calc = new JButton("Calculate");
             calc.setEnabled(R != 0 && Le != 0);
             
-            final JFormattedTextField c = new JFormattedTextField();
-            c.setFormatterFactory(UI.FORMATTER);
+            final JFormattedTextField c = UI.decimalField(0);
             c.setValue(filter.C * 1000000);
             
-            final JFormattedTextField r = new JFormattedTextField();
-            r.setFormatterFactory(UI.FORMATTER);
+            final JFormattedTextField r = UI.decimalField(0);
             r.setValue(filter.R);
             
             calc.addActionListener(new ActionListener()
@@ -1104,8 +1084,7 @@ public final class MainWindow extends javax.swing.JFrame
         else if (item instanceof Resistor)
         {
             Resistor resistor = (Resistor) item;
-            JFormattedTextField value = new JFormattedTextField();
-            value.setFormatterFactory(UI.FORMATTER);
+            JFormattedTextField value = UI.decimalField(0);
             value.setValue(resistor.R);
             final JComponent[] inputs = new JComponent[] { new JLabel("Resistance (Ω): "), value };
             
@@ -1118,8 +1097,7 @@ public final class MainWindow extends javax.swing.JFrame
         else if (item instanceof Capacitor)
         {
             Capacitor capacitor = (Capacitor) item;
-            JFormattedTextField value = new JFormattedTextField();
-            value.setFormatterFactory(UI.FORMATTER);
+            JFormattedTextField value = UI.decimalField(0);
             value.setValue(capacitor.C * 1000000);
             final JComponent[] inputs = new JComponent[] { new JLabel("Capacitance (μF): "), value };
             
@@ -1132,8 +1110,7 @@ public final class MainWindow extends javax.swing.JFrame
         else if (item instanceof Inductor)
         {
             Inductor inductor = (Inductor) item;
-            JFormattedTextField value = new JFormattedTextField();
-            value.setFormatterFactory(UI.FORMATTER);
+            JFormattedTextField value = UI.decimalField(0);
             value.setValue(inductor.L * 1000);
             final JComponent[] inputs = new JComponent[] { new JLabel("Inductance (mH): "), value };
             
@@ -2027,11 +2004,11 @@ public final class MainWindow extends javax.swing.JFrame
         propertiesPanel = new javax.swing.JPanel();
         listeningPanel = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
-        listeningPosXField = new javax.swing.JFormattedTextField();
-        listeningPosYField = new javax.swing.JFormattedTextField();
+        listeningPosXField = UI.decimalField(0);
+        listeningPosYField = UI.decimalField(0);
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        listeningPosZField = new javax.swing.JFormattedTextField();
+        listeningPosZField = UI.decimalField(0);
         treeScrollPane = new javax.swing.JScrollPane();
         tree = new javax.swing.JTree();
         menuBar = new javax.swing.JMenuBar();
@@ -2085,7 +2062,6 @@ public final class MainWindow extends javax.swing.JFrame
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         listeningPanel.add(jLabel11, gridBagConstraints);
 
-        listeningPosXField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         listeningPosXField.setMinimumSize(new java.awt.Dimension(140, 19));
         listeningPosXField.setPreferredSize(new java.awt.Dimension(140, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2093,7 +2069,6 @@ public final class MainWindow extends javax.swing.JFrame
         gridBagConstraints.gridy = 0;
         listeningPanel.add(listeningPosXField, gridBagConstraints);
 
-        listeningPosYField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         listeningPosYField.setMinimumSize(new java.awt.Dimension(140, 19));
         listeningPosYField.setPreferredSize(new java.awt.Dimension(140, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2117,7 +2092,6 @@ public final class MainWindow extends javax.swing.JFrame
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         listeningPanel.add(jLabel14, gridBagConstraints);
 
-        listeningPosZField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         listeningPosZField.setMinimumSize(new java.awt.Dimension(140, 19));
         listeningPosZField.setPreferredSize(new java.awt.Dimension(140, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();

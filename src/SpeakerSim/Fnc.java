@@ -20,8 +20,7 @@ import java.text.*;
 
 public final class Fnc
 {
-    public final static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.########");
-    public final static DecimalFormat DECIMAL_FORMAT2 = new DecimalFormat("#.##");
+    private final static DecimalFormat DECIMAL_FORMAT2 = new DecimalFormat("#.##");
     
     private Fnc()
     {
@@ -30,7 +29,9 @@ public final class Fnc
 
     public static String decimalFormat(double x)
     {
-        return DECIMAL_FORMAT.format(x);
+        NumberFormat format = DecimalFormat.getInstance();
+        format.setMaximumFractionDigits(Integer.MAX_VALUE);
+        return format.format(x);
     }
     
     public static String roundedDecimalFormat(double x)
@@ -40,7 +41,9 @@ public final class Fnc
     
     public static Number parseNumber(String x) throws ParseException
     {
-        return DECIMAL_FORMAT.parse(x);
+        NumberFormat format = DecimalFormat.getInstance();
+        format.setMaximumFractionDigits(Integer.MAX_VALUE);
+        return format.parse(x);
     }
     
     public static double parseDouble(String value)

@@ -19,8 +19,6 @@ package SpeakerSim.GUI;
 import SpeakerSim.Fnc;
 import SpeakerSim.PowerFilter;
 import SpeakerSim.Settings;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.ParseException;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -58,29 +56,6 @@ public class SettingsWindow extends javax.swing.JDialog
         simulateRoomCheckBox.setSelected(this.settings.RoomSimulation);
         simulateBaffleCheckBox.setSelected(this.settings.BaffleSimulation);
         powerFilterComboBox.setSelectedItem(this.settings.PowerFilter.toString());
-        
-        startFrequencyField.addPropertyChangeListener("value", new PropertyChangeListener()
-        {
-            @Override
-            public void propertyChange(PropertyChangeEvent e)
-            {
-                UI.validate(e, 1, UI.getInt(endFrequencyField) / 2);
-            }
-        });
-        
-        endFrequencyField.addPropertyChangeListener("value", new PropertyChangeListener()
-        {
-            @Override
-            public void propertyChange(PropertyChangeEvent e)
-            {
-                UI.validate(e, UI.getInt(startFrequencyField) * 2);
-            }
-        });
-        
-        pointsField.addPropertyChangeListener("value", UI.validator(2));
-        dbRangeField.addPropertyChangeListener("value", UI.validator(3));
-        maxImpedanceField.addPropertyChangeListener("value", UI.validator(3));
-        maxPowerField.addPropertyChangeListener("value", UI.validator(3));
     }
     
     public boolean showDialog()
@@ -91,25 +66,26 @@ public class SettingsWindow extends javax.swing.JDialog
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel7 = new javax.swing.JLabel();
-        endFrequencyField = new javax.swing.JFormattedTextField();
+        endFrequencyField = UI.decimalField(2);
         controlPanel = new javax.swing.JPanel();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        pointsField = new javax.swing.JFormattedTextField();
+        pointsField = UI.decimalField(2);
         jLabel9 = new javax.swing.JLabel();
-        startFrequencyField = new javax.swing.JFormattedTextField();
+        startFrequencyField = UI.decimalField(1);
         jLabel10 = new javax.swing.JLabel();
-        dbRangeField = new javax.swing.JFormattedTextField();
+        dbRangeField = UI.decimalField(3);
         jLabel11 = new javax.swing.JLabel();
         simulateRoomCheckBox = new javax.swing.JCheckBox();
         simulateBaffleCheckBox = new javax.swing.JCheckBox();
-        maxImpedanceField = new javax.swing.JFormattedTextField();
+        maxImpedanceField = UI.decimalField(3);
         jLabel12 = new javax.swing.JLabel();
-        maxPowerField = new javax.swing.JFormattedTextField();
+        maxPowerField = UI.decimalField(3);
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         smoothingComboBox = new javax.swing.JComboBox<>();
@@ -134,7 +110,6 @@ public class SettingsWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel7, gridBagConstraints);
 
-        endFrequencyField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         endFrequencyField.setMinimumSize(new java.awt.Dimension(80, 19));
         endFrequencyField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -145,16 +120,20 @@ public class SettingsWindow extends javax.swing.JDialog
         getContentPane().add(endFrequencyField, gridBagConstraints);
 
         okButton.setText("Save");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        okButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 okButtonActionPerformed(evt);
             }
         });
         controlPanel.add(okButton);
 
         cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        cancelButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 cancelButtonActionPerformed(evt);
             }
         });
@@ -167,7 +146,6 @@ public class SettingsWindow extends javax.swing.JDialog
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         getContentPane().add(controlPanel, gridBagConstraints);
 
-        pointsField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         pointsField.setMinimumSize(new java.awt.Dimension(80, 19));
         pointsField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -185,7 +163,6 @@ public class SettingsWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel9, gridBagConstraints);
 
-        startFrequencyField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         startFrequencyField.setMinimumSize(new java.awt.Dimension(80, 19));
         startFrequencyField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -203,7 +180,6 @@ public class SettingsWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel10, gridBagConstraints);
 
-        dbRangeField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         dbRangeField.setMinimumSize(new java.awt.Dimension(80, 19));
         dbRangeField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -235,7 +211,6 @@ public class SettingsWindow extends javax.swing.JDialog
         gridBagConstraints.gridwidth = 3;
         getContentPane().add(simulateBaffleCheckBox, gridBagConstraints);
 
-        maxImpedanceField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         maxImpedanceField.setMinimumSize(new java.awt.Dimension(80, 19));
         maxImpedanceField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -253,7 +228,6 @@ public class SettingsWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel12, gridBagConstraints);
 
-        maxPowerField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.###"))));
         maxPowerField.setMinimumSize(new java.awt.Dimension(80, 19));
         maxPowerField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();

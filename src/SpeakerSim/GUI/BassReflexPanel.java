@@ -43,7 +43,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e))
+                if (listen)
                 {
                     speaker.BassReflex.Vb = UI.getDouble(e) / 1000;
                     main.refresh();
@@ -56,7 +56,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e))
+                if (listen)
                 {
                     speaker.BassReflex.Fb = UI.getDouble(e);
                     main.refresh();
@@ -69,7 +69,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 3, 15))
+                if (listen)
                 {
                     speaker.BassReflex.Ql = UI.getDouble(e);
                     main.refresh();
@@ -82,7 +82,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 3, 100))
+                if (listen)
                 {
                     speaker.BassReflex.Qa = UI.getDouble(e);
                     main.refresh();
@@ -95,7 +95,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, 100))
+                if (listen)
                 {
                     speaker.BassReflex.Qp = UI.getDouble(e);
                     main.refresh();
@@ -108,7 +108,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, Environment.getInstance().RoomX * 100))
+                if (listen)
                 {
                     speaker.BassReflex.PortPosition.X = UI.getDouble(e) / 100;
                     portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
@@ -122,7 +122,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, Environment.getInstance().RoomY * 100))
+                if (listen)
                 {
                     speaker.BassReflex.PortPosition.Y = UI.getDouble(e) / 100;
                     portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
@@ -136,7 +136,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                if (listen && UI.validate(e, 0, Environment.getInstance().RoomZ * 100))
+                if (listen)
                 {
                     speaker.BassReflex.PortPosition.Z = UI.getDouble(e) / 100;
                     portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
@@ -274,22 +274,22 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
 
         portPositionPanel = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        portPositionXField = new javax.swing.JFormattedTextField();
-        portPositionYField = new javax.swing.JFormattedTextField();
+        portPositionXField = UI.decimalField(0);
+        portPositionYField = UI.decimalField(0);
         jLabel12 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        portPositionZField = new javax.swing.JFormattedTextField();
-        portPositionDistanceField = new javax.swing.JFormattedTextField();
+        portPositionZField = UI.decimalField(0);
+        portPositionDistanceField = UI.decimalField(0);
         jLabel16 = new javax.swing.JLabel();
         bassReflexPanel = new javax.swing.JPanel();
-        fbField = new javax.swing.JFormattedTextField();
-        vbField = new javax.swing.JFormattedTextField();
+        fbField = UI.decimalField(1);
+        vbField = UI.decimalField(0.01);
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         portCalcButton = new javax.swing.JButton();
-        qlField = new javax.swing.JFormattedTextField();
-        qaField = new javax.swing.JFormattedTextField();
-        qpField = new javax.swing.JFormattedTextField();
+        qlField = UI.decimalField(3, 15);
+        qaField = UI.decimalField(3, 100);
+        qpField = UI.decimalField(0, 100);
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -313,7 +313,6 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         portPositionPanel.add(jLabel9, gridBagConstraints);
 
-        portPositionXField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         portPositionXField.setMinimumSize(new java.awt.Dimension(80, 19));
         portPositionXField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -321,7 +320,6 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         gridBagConstraints.gridy = 0;
         portPositionPanel.add(portPositionXField, gridBagConstraints);
 
-        portPositionYField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         portPositionYField.setMinimumSize(new java.awt.Dimension(80, 19));
         portPositionYField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -345,7 +343,6 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         portPositionPanel.add(jLabel15, gridBagConstraints);
 
-        portPositionZField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         portPositionZField.setMinimumSize(new java.awt.Dimension(80, 19));
         portPositionZField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -354,7 +351,6 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         portPositionPanel.add(portPositionZField, gridBagConstraints);
 
         portPositionDistanceField.setEditable(false);
-        portPositionDistanceField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         portPositionDistanceField.setToolTipText("Distance to listening position");
         portPositionDistanceField.setMinimumSize(new java.awt.Dimension(80, 19));
         portPositionDistanceField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -379,7 +375,6 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         bassReflexPanelLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
         bassReflexPanel.setLayout(bassReflexPanelLayout);
 
-        fbField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         fbField.setToolTipText("Enclousure resonance frequency");
         fbField.setMinimumSize(new java.awt.Dimension(80, 19));
         fbField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -388,7 +383,6 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         gridBagConstraints.gridy = 4;
         bassReflexPanel.add(fbField, gridBagConstraints);
 
-        vbField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         vbField.setToolTipText("Internal enclousure volume");
         vbField.setMinimumSize(new java.awt.Dimension(80, 19));
         vbField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -426,7 +420,6 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         bassReflexPanel.add(portCalcButton, gridBagConstraints);
 
-        qlField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         qlField.setToolTipText("Enclosure leakage losses [5 - 100]");
         qlField.setMinimumSize(new java.awt.Dimension(80, 19));
         qlField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -436,7 +429,6 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         bassReflexPanel.add(qlField, gridBagConstraints);
         qlField.getAccessibleContext().setAccessibleDescription("Enclosure leakage losses [3 - 15]");
 
-        qaField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         qaField.setToolTipText("Enclosure absorption losses (damping) [3 - 100]");
         qaField.setMinimumSize(new java.awt.Dimension(80, 19));
         qaField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -445,7 +437,6 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         gridBagConstraints.gridy = 8;
         bassReflexPanel.add(qaField, gridBagConstraints);
 
-        qpField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#.##"))));
         qpField.setToolTipText("Port absorption losses (port damping) [0 - 100]");
         qpField.setMinimumSize(new java.awt.Dimension(80, 19));
         qpField.setPreferredSize(new java.awt.Dimension(80, 19));

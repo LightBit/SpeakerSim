@@ -309,17 +309,13 @@ public class ResponsesWindow extends JDialog
         String[] measures = { "volts", "watts" };
         JComboBox<String> inputMeasure = new JComboBox<String>(measures);
        
-        JFormattedTextField input = new JFormattedTextField();
-        input.setFormatterFactory(UI.FORMATTER);
-       
-        JFormattedTextField distance = new JFormattedTextField();
-        distance.setFormatterFactory(UI.FORMATTER);
+        JFormattedTextField input = UI.decimalField(0.000001);
+        JFormattedTextField distance = UI.decimalField(0.000001);
        
         String[] directions = { "horizontal", "vertical" };
         JComboBox<String> angleDirection = new JComboBox<String>(directions);
        
-        JFormattedTextField angle = new JFormattedTextField();
-        angle.setFormatterFactory(UI.FORMATTER);
+        JFormattedTextField angle = UI.decimalField(-180, 180);
        
         JCheckBox minimumPhase = new JCheckBox("Has minimum phase", frd.isMinimumPhase); 
        

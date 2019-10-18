@@ -52,7 +52,7 @@ public class Delay implements IActiveFilter
     @Override
     public String toString()
     {
-        return "Delay (" + Fnc.decimalFormat(time * 1000) + "ms)";
+        return "Delay (" + Fnc.twoDecimalFormat(time * 1000) + "ms)";
     }
     
     @Override

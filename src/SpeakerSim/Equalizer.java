@@ -108,7 +108,7 @@ public class Equalizer implements IActiveFilter
     @Override
     public String toString()
     {
-        return "Equalizer (" + Fnc.decimalFormat(getDecibels()) + "dB at " + Fnc.decimalFormat(getF()) + "Hz)";
+        return "Equalizer (" + Fnc.twoDecimalFormat(getDecibels()) + "dB at " + Fnc.twoDecimalFormat(getF()) + "Hz)";
     }
     
     @Override

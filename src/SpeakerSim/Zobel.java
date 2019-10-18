@@ -90,6 +90,6 @@ public class Zobel extends Filter
     @Override
     public String toString()
     {
-        return "Zobel (" + Fnc.decimalFormat(C * 1000000) + "μF / " + Fnc.decimalFormat(R) + "Ω)";
+        return "Zobel (" + Fnc.twoDecimalFormat(C * 1000000) + "μF / " + Fnc.twoDecimalFormat(R) + "Ω)";
     }
 }

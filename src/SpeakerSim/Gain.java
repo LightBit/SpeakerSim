@@ -42,7 +42,7 @@ public class Gain implements IActiveFilter
     @Override
     public String toString()
     {
-        return "Gain (" + Fnc.decimalFormat(dB) + "dB)";
+        return "Gain (" + Fnc.twoDecimalFormat(dB) + "dB)";
     }
     
     @Override

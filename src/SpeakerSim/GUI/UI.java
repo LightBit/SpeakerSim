@@ -34,52 +34,64 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Enumeration;
 
 public final class UI
 {
+    private final static NumberFormat DECIMAL_FORMAT = NumberFormat.getNumberInstance();
+    private final static NumberFormat INTEGER_FORMAT = NumberFormat.getIntegerInstance();
+    
     private UI()
     {
         
     }
     
+    static
+    {
+        DECIMAL_FORMAT.setMaximumFractionDigits(10);
+        DECIMAL_FORMAT.setGroupingUsed(false);
+        
+        INTEGER_FORMAT.setGroupingUsed(false);
+    }
+    
     private static JFormattedTextField field(NumberFormat format, Comparable<?> min, Comparable<?> max)
     {
         NumberFormatter f = new NumberFormatter(format);
-        //f.setValueClass(Double.class);
         f.setMinimum(min);
         f.setMaximum(max);
         //f.setAllowsInvalid(false);
         //f.setCommitsOnValidEdit(true);
-        
         return new JFormattedTextField(f);
     }
     
     private static JFormattedTextField field(NumberFormat format, Comparable<?> min)
     {
         NumberFormatter f = new NumberFormatter(format);
-        //f.setValueClass(Double.class);
         f.setMinimum(min);
         //f.setAllowsInvalid(false);
         //f.setCommitsOnValidEdit(true);
-        
         return new JFormattedTextField(f);
     }
     
     public static JFormattedTextField decimalField(double min, double max)
     {
-        NumberFormat format = DecimalFormat.getInstance();
-        format.setMaximumFractionDigits(10);
-        return field(format, min, max);
+        return field(DECIMAL_FORMAT, min, max);
     }
     
     public static JFormattedTextField decimalField(double min)
     {
-        NumberFormat format = DecimalFormat.getInstance();
-        format.setMaximumFractionDigits(10);
-        return field(format, min);
+        return field(DECIMAL_FORMAT, min);
+    }
+    
+    public static JFormattedTextField integerField(int min, int max)
+    {
+        return field(INTEGER_FORMAT, min, max);
+    }
+    
+    public static JFormattedTextField integerField(int min)
+    {
+        return field(INTEGER_FORMAT, min);
     }
     
     public static double getDouble(JFormattedTextField field)
@@ -302,7 +314,7 @@ public final class UI
     {
         for (int i = 0; i < tabs.getTabCount(); i++)
         {
-            if (tabs.getTitleAt(i) == tab)
+            if (tabs.getTitleAt(i).equals(tab))
             {
                 tabs.setSelectedIndex(i);
             }

@@ -64,6 +64,6 @@ public class Resistor extends Filter
     @Override
     public String toString()
     {
-        return "Resistor (" + Fnc.decimalFormat(R) + "Ω)";
+        return "Resistor (" + Fnc.twoDecimalFormat(R) + "Ω)";
     }
 }

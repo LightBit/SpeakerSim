@@ -206,27 +206,27 @@ public abstract class PassFilter extends Filter
         {
             if (C2 != 0)
             {
-                s += Fnc.decimalFormat(C2 * 1000000) + "μF / ";
+                s += Fnc.twoDecimalFormat(C2 * 1000000) + "μF / ";
             }
             
             if (L2 != 0)
             {
-                s += Fnc.decimalFormat(L2 * 1000) + "mH / ";
+                s += Fnc.twoDecimalFormat(L2 * 1000) + "mH / ";
             }
             
             if (C1 != 0)
             {
-                s += Fnc.decimalFormat(C1 * 1000000) + "μF / ";
+                s += Fnc.twoDecimalFormat(C1 * 1000000) + "μF / ";
             }
             
             if (L1 != 0)
             {
-                s += Fnc.decimalFormat(L1 * 1000) + "mH";
+                s += Fnc.twoDecimalFormat(L1 * 1000) + "mH";
             }
         }
         else
         {
-            s += getTypeString() + " at " + Fnc.decimalFormat(getFrequency()) + "Hz";
+            s += getTypeString() + " at " + Fnc.twoDecimalFormat(getFrequency()) + "Hz";
         }
         
         return s + ")";

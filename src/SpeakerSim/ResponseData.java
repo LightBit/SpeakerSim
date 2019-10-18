@@ -294,12 +294,12 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
     {
         if (horizontalAngle != 0)
         {
-            return "Horizontal " + Fnc.decimalFormat(horizontalAngle) + "°";
+            return "Horizontal " + Fnc.twoDecimalFormat(horizontalAngle) + "°";
         }
         
         if (verticalAngle != 0)
         {
-            return "Vertical " + Fnc.decimalFormat(verticalAngle) + "°";
+            return "Vertical " + Fnc.twoDecimalFormat(verticalAngle) + "°";
         }
         
         return "On-axis";

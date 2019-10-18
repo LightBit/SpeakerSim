@@ -77,6 +77,6 @@ public class Inductor extends Filter
     @Override
     public String toString()
     {
-        return "Inductor (" + Fnc.decimalFormat(L * 1000) + "mH)";
+        return "Inductor (" + Fnc.twoDecimalFormat(L * 1000) + "mH)";
     }
 }

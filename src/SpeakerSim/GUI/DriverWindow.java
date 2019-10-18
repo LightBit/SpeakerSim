@@ -509,7 +509,7 @@ public class DriverWindow extends javax.swing.JDialog
         try
         {
             double value = UI.getDouble(field);
-            String calcText = Fnc.roundedDecimalFormat(calcValue);
+            String calcText = Fnc.twoDecimalFormat(calcValue);
             double diff = Math.abs(Math.min((calcValue - value) / value, (Fnc.parseNumber(calcText).doubleValue() - value) / value));
             
             if (!Double.isNaN(calcValue) && !Double.isInfinite(calcValue) && calcValue > 0 && diff > 0.01)

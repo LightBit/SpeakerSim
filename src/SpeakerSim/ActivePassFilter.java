@@ -188,8 +188,8 @@ public abstract class ActivePassFilter implements IActiveFilter
     {
         String s = name() + " (";
         
-        s += isCustom() ? Fnc.decimalFormat(getQ()) : getTypeString();
-        s += " at " + Fnc.decimalFormat(getFrequency()) + "Hz";
+        s += isCustom() ? Fnc.twoDecimalFormat(getQ()) : getTypeString();
+        s += " at " + Fnc.twoDecimalFormat(getFrequency()) + "Hz";
         
         return s + ")";
     }

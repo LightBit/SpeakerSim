@@ -153,6 +153,6 @@ public class Amplifier extends Filter
     @Override
     public String toString()
     {
-        return "Amplifier (" + Fnc.decimalFormat(Pe) + "W)";
+        return "Amplifier (" + Fnc.twoDecimalFormat(Pe) + "W)";
     }
 }

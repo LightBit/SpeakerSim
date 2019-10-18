@@ -88,17 +88,17 @@ public abstract class NotchFilter extends Filter
         
         if (L != 0)
         {
-            s += Fnc.decimalFormat(L * 1000) + "mH / ";
+            s += Fnc.twoDecimalFormat(L * 1000) + "mH / ";
         }
 
         if (C != 0)
         {
-            s += Fnc.decimalFormat(C * 1000000) + "μF / ";
+            s += Fnc.twoDecimalFormat(C * 1000000) + "μF / ";
         }
 
         if (R != 0)
         {
-            s += Fnc.decimalFormat(R) + "Ω / ";
+            s += Fnc.twoDecimalFormat(R) + "Ω / ";
         }
 
         if (L == 0 && C == 0 && R == 0)

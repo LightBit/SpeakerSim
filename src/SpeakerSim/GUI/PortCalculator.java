@@ -150,8 +150,7 @@ public class PortCalculator extends javax.swing.JDialog
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel7 = new javax.swing.JLabel();
@@ -169,7 +168,7 @@ public class PortCalculator extends javax.swing.JDialog
         cancelButton = new javax.swing.JButton();
         lengthField = UI.decimalField(0);
         endsComboBox = new javax.swing.JComboBox<>();
-        numberField = UI.decimalField(1);
+        numberField = UI.integerField(1);
         jLabel13 = new javax.swing.JLabel();
         graphPanel = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
@@ -256,20 +255,16 @@ public class PortCalculator extends javax.swing.JDialog
         getContentPane().add(jLabel11, gridBagConstraints);
 
         okButton.setText("Save");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
         controlPanel.add(okButton);
 
         cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });

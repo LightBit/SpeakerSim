@@ -66,26 +66,25 @@ public class SettingsWindow extends javax.swing.JDialog
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel7 = new javax.swing.JLabel();
-        endFrequencyField = UI.decimalField(2);
+        endFrequencyField = UI.integerField(2);
         controlPanel = new javax.swing.JPanel();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        pointsField = UI.decimalField(2);
+        pointsField = UI.integerField(2);
         jLabel9 = new javax.swing.JLabel();
-        startFrequencyField = UI.decimalField(1);
+        startFrequencyField = UI.integerField(1);
         jLabel10 = new javax.swing.JLabel();
-        dbRangeField = UI.decimalField(3);
+        dbRangeField = UI.integerField(3);
         jLabel11 = new javax.swing.JLabel();
         simulateRoomCheckBox = new javax.swing.JCheckBox();
         simulateBaffleCheckBox = new javax.swing.JCheckBox();
-        maxImpedanceField = UI.decimalField(3);
+        maxImpedanceField = UI.integerField(3);
         jLabel12 = new javax.swing.JLabel();
-        maxPowerField = UI.decimalField(3);
+        maxPowerField = UI.integerField(3);
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         smoothingComboBox = new javax.swing.JComboBox<>();
@@ -120,20 +119,16 @@ public class SettingsWindow extends javax.swing.JDialog
         getContentPane().add(endFrequencyField, gridBagConstraints);
 
         okButton.setText("Save");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
         controlPanel.add(okButton);
 
         cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });

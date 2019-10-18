@@ -19,7 +19,6 @@ package SpeakerSim;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import java.util.List;
 
 public class LPad extends Filter
 {
@@ -86,7 +85,7 @@ public class LPad extends Filter
     @Override
     public String toString()
     {
-        return "L pad (" + Fnc.decimalFormat(Rs) + "Ω / " + Fnc.decimalFormat(Rp) + "Ω)";
+        return "L pad (" + Fnc.twoDecimalFormat(Rs) + "Ω / " + Fnc.twoDecimalFormat(Rp) + "Ω)";
     }
     
     public double Zmin()

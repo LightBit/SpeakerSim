@@ -76,6 +76,6 @@ public class Capacitor extends Filter
     @Override
     public String toString()
     {
-        return "Capacitor (" + Fnc.decimalFormat(C * 1000000) + "μF)";
+        return "Capacitor (" + Fnc.twoDecimalFormat(C * 1000000) + "μF)";
     }
 }

@@ -16,34 +16,41 @@
 
 package SpeakerSim;
 
-import java.text.*;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 public final class Fnc
 {
-    private final static DecimalFormat DECIMAL_FORMAT2 = new DecimalFormat("#.##");
+    private final static NumberFormat DECIMAL_FORMAT = NumberFormat.getNumberInstance();
+    private final static NumberFormat DECIMAL_FORMAT2 = NumberFormat.getNumberInstance();
     
     private Fnc()
     {
         
     }
-
-    public static String decimalFormat(double x)
-    {
-        NumberFormat format = DecimalFormat.getInstance();
-        format.setMaximumFractionDigits(Integer.MAX_VALUE);
-        return format.format(x);
-    }
     
-    public static String roundedDecimalFormat(double x)
+    static
+    {
+        DECIMAL_FORMAT.setMaximumFractionDigits(Integer.MAX_VALUE);
+        DECIMAL_FORMAT.setGroupingUsed(false);
+        
+        DECIMAL_FORMAT2.setMaximumFractionDigits(2);
+        DECIMAL_FORMAT2.setGroupingUsed(false);
+    }
+
+    public static String twoDecimalFormat(double x)
     {
         return DECIMAL_FORMAT2.format(x);
     }
     
+    public static String decimalFormat(double x)
+    {
+        return DECIMAL_FORMAT.format(x);
+    }
+    
     public static Number parseNumber(String x) throws ParseException
     {
-        NumberFormat format = DecimalFormat.getInstance();
-        format.setMaximumFractionDigits(Integer.MAX_VALUE);
-        return format.parse(x);
+        return DECIMAL_FORMAT.parse(x);
     }
     
     public static double parseDouble(String value)

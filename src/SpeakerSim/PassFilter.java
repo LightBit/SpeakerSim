@@ -73,22 +73,22 @@ public abstract class PassFilter extends Filter
     
     public double calcC1(int type, double f)
     {
-        return 0;
+        throw new UnsupportedOperationException();
     }
     
     public double calcC2(int type, double f)
     {
-        return 0;
+        throw new UnsupportedOperationException();
     }
     
     public double calcL1(int type, double f)
     {
-        return 0;
+        throw new UnsupportedOperationException();
     }
     
     public double calcL2(int type, double f)
     {
-        return 0;
+        throw new UnsupportedOperationException();
     }
     
     protected Complex zC1(double f)
@@ -233,9 +233,9 @@ public abstract class PassFilter extends Filter
     }
     
     @Override
-    public JsonValue toJSON()
+    protected JsonObject itemToJSON()
     {
-        JsonObject json = Json.object();
+        JsonObject json = super.itemToJSON();
         
         json.add("Type", Json.value(getTypeString()));
         json.add("Frequency", Json.value(getFrequency()));
@@ -252,8 +252,6 @@ public abstract class PassFilter extends Filter
         JSON.add(json, "RC2", RC2);
         JSON.add(json, "RL1", RL1);
         JSON.add(json, "RL2", RL2);
-        
-        json.add("Children", Item.childrenToJSON(children));
         
         return json;
     }

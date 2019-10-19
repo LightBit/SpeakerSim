@@ -481,6 +481,11 @@ public final class MainWindow extends javax.swing.JFrame
                 });
                 popup.add(mi);
                 
+                /*if ((node.getUserObject() instanceof Speaker))
+                {
+                    //TODO: add enclosure menu
+                }*/
+                
                 popup.addSeparator();
                 
                 if (!(node.getUserObject() instanceof Amplifier))
@@ -1213,7 +1218,7 @@ public final class MainWindow extends javax.swing.JFrame
             {
                 stopWorker();
                 
-                IItem item = Item.constructItem(JSON.open(fs.getSelectedFile()));
+                IItem item = Item.createItem(JSON.open(fs.getSelectedFile()));
                 
                 DefaultMutableTreeNode parent = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
                 
@@ -1242,7 +1247,7 @@ public final class MainWindow extends javax.swing.JFrame
             
             if (fs.showSaveDialog(this) == FileSelector.APPROVE_OPTION)
             {
-                JSON.save(Item.itemToJSON(part), fs.getSelectedFile());
+                JSON.save(part.toJSON(), fs.getSelectedFile());
             }
         }
         catch (Exception ex)

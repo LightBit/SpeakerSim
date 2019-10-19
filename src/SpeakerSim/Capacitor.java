@@ -38,12 +38,11 @@ public class Capacitor extends Filter
     }
     
     @Override
-    public JsonValue toJSON()
+    protected JsonObject itemToJSON()
     {
-        JsonObject json = Json.object();
+        JsonObject json = super.itemToJSON();
         
         json.add("C", C);
-        json.add("Children", Item.childrenToJSON(children));
         
         return json;
     }
@@ -53,7 +52,7 @@ public class Capacitor extends Filter
     {
         if (C > 0)
         {
-            Complex z = super.impedance(f);
+            Complex z = super.itemImpedance(f);
             return z.divide(z.add(Fnc.zC(C, f)));
         }
 
@@ -61,9 +60,9 @@ public class Capacitor extends Filter
     }
 
     @Override
-    public Complex impedance(double f)
+    protected Complex itemImpedance(double f)
     {
-        Complex z = super.impedance(f);
+        Complex z = super.itemImpedance(f);
 
         if (C > 0)
         {

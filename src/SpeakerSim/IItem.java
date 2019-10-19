@@ -16,11 +16,15 @@
 
 package SpeakerSim;
 
+import com.eclipsesource.json.JsonValue;
 import java.util.List;
 
 public interface IItem extends ISimulation, JSONable
 {
     public List<IItem> getChildren();
-    public Complex filter(double f);
     public void refresh();
+    public void create(JsonValue json);
+    public Complex filter(double f);
+    public void setStatus(Item.Status status);
+    public Item.Status getStatus();
 }

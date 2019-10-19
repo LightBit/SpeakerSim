@@ -43,13 +43,12 @@ public class LPad extends Filter
     }
     
     @Override
-    public JsonValue toJSON()
+    protected JsonObject itemToJSON()
     {
-        JsonObject json = Json.object();
+        JsonObject json = super.itemToJSON();
         
         json.add("Rs", Rs);
         json.add("Rp", Rp);
-        json.add("Children", Item.childrenToJSON(children));
         
         return json;
     }
@@ -57,7 +56,7 @@ public class LPad extends Filter
     @Override
     public Complex thisFilter(double f)
     {
-        Complex z = super.impedance(f);
+        Complex z = super.itemImpedance(f);
 
         if (Rp > 0)
         {
@@ -69,9 +68,9 @@ public class LPad extends Filter
     }
 
     @Override
-    public Complex impedance(double f)
+    protected Complex itemImpedance(double f)
     {
-        Complex z = super.impedance(f);
+        Complex z = super.itemImpedance(f);
 
         if (Rp > 0)
         {

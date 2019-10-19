@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import java.io.File;
@@ -132,6 +131,7 @@ public class Project extends Item
             ListeningPosition = new Position(jsonObj.get("ListeningPosition"));
 
             modified = false;
+            
             super.fromJSON(json);
         }
         catch (Exception e)
@@ -162,13 +162,12 @@ public class Project extends Item
     @Override
     public JsonValue toJSON()
     {
-        JsonObject json = Json.object();
+        JsonObject json = super.itemToJSON();
         
         json.add("Version", currentVersionString());
         json.add("Settings", Settings.toJSON());
         json.add("Environment", Environment.toJSON());
         json.add("ListeningPosition", ListeningPosition.toJSON());
-        json.add("Children", Item.childrenToJSON(children));
         
         return json;
     }
@@ -186,8 +185,8 @@ public class Project extends Item
     }
     
     @Override
-    public Complex impedance(double f)
+    protected Complex itemImpedance(double f)
     {
-        return Complex.ZERO;
+        return new Complex();
     }
 }

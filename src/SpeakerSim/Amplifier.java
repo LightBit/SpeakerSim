@@ -88,9 +88,9 @@ public class Amplifier extends Filter
     }
     
     @Override
-    public JsonValue toJSON()
+    protected JsonObject itemToJSON()
     {
-        JsonObject json = Json.object();
+        JsonObject json = super.itemToJSON();
         
         json.add("Pe", Pe);
         json.add("Zo", Zo);
@@ -102,8 +102,6 @@ public class Amplifier extends Filter
             array.add(activeFilterToJSON(af));
         }
         json.add("Filters", array);
-        
-        json.add("Children", Item.childrenToJSON(children));
         
         return json;
     }
@@ -133,21 +131,21 @@ public class Amplifier extends Filter
     }
 
     @Override
-    public Complex impedance(double f)
+    protected Complex itemImpedance(double f)
     {
-        return super.impedance(f).add(Zo);
+        return super.itemImpedance(f).add(Zo);
     }
     
     @Override
-    public double maxPower(double f)
+    protected double itemMaxPower(double f)
     {
-        return Math.min(super.maxPower(f) * Math.pow(activeFilters(f).abs(), 2), Pe);
+        return Math.min(super.itemMaxPower(f) * Math.pow(activeFilters(f).abs(), 2), Pe);
     }
     
     @Override
-    public double excursion(double f, double Pe)
+    protected double itemExcursion(double f, double Pe)
     {
-        return super.excursion(f, this.Pe) * filter(f).abs();
+        return super.itemExcursion(f, this.Pe) * filter(f).abs();
     }
     
     @Override

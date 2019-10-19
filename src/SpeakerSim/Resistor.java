@@ -38,12 +38,11 @@ public class Resistor extends Filter
     }
     
     @Override
-    public JsonValue toJSON()
+    protected JsonObject itemToJSON()
     {
-        JsonObject json = Json.object();
+        JsonObject json = super.itemToJSON();
         
         json.add("R", R);
-        json.add("Children", Item.childrenToJSON(children));
         
         return json;
     }
@@ -51,14 +50,14 @@ public class Resistor extends Filter
     @Override
     public Complex thisFilter(double f)
     {
-        Complex z = super.impedance(f);
+        Complex z = super.itemImpedance(f);
         return z.divide(z.add(R));
     }
 
     @Override
-    public Complex impedance(double f)
+    protected Complex itemImpedance(double f)
     {
-        return super.impedance(f).add(R);
+        return super.itemImpedance(f).add(R);
     }
     
     @Override

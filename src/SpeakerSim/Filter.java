@@ -19,56 +19,56 @@ package SpeakerSim;
 public abstract class Filter extends Item implements IFilter
 {
     @Override
-    public Complex filter(double f)
+    protected Complex itemFilter(double f)
     {
-        return super.filter(f).multiply(thisFilter(f));
+        return super.itemFilter(f).multiply(thisFilter(f));
     }
     
     @Override
-    public Complex response(double f)
+    protected Complex itemResponse(double f)
     {
-        return super.response(f).multiply(thisFilter(f));
+        return super.itemResponse(f).multiply(thisFilter(f));
     }
     
     @Override
-    public Complex response1W(double f)
+    protected Complex itemResponse1W(double f)
     {
-        return super.response1W(f).multiply(thisFilter(f));
+        return super.itemResponse1W(f).multiply(thisFilter(f));
     }
     
     @Override
-    public Complex listeningWindowResponse(double f)
+    protected Complex itemListeningWindowResponse(double f)
     {
-        return super.listeningWindowResponse(f).multiply(thisFilter(f));
+        return super.itemListeningWindowResponse(f).multiply(thisFilter(f));
     }
     
     @Override
-    public Complex powerResponse(double f)
+    protected Complex itemPowerResponse(double f)
     {
-        return super.powerResponse(f).multiply(thisFilter(f));
+        return super.itemPowerResponse(f).multiply(thisFilter(f));
     }
     
     @Override
-    public double maxPower(double f)
+    protected Complex itemResponseWithBaffle(double f)
     {
-        return super.maxPower(f) / Math.pow(thisFilter(f).abs(), 2);
+        return super.itemResponseWithBaffle(f).multiply(thisFilter(f));
     }
     
     @Override
-    public double excursion(double f, double power)
+    protected Complex itemResponseWithRoom(double f)
     {
-        return super.excursion(f, power) * thisFilter(f).abs();
+        return super.itemResponseWithRoom(f).multiply(thisFilter(f));
     }
     
     @Override
-    public Complex responseWithBaffle(double f)
+    protected double itemMaxPower(double f)
     {
-        return super.responseWithBaffle(f).multiply(thisFilter(f));
+        return super.itemMaxPower(f) / Math.pow(thisFilter(f).abs(), 2);
     }
     
     @Override
-    public Complex responseWithRoom(double f)
+    protected double itemExcursion(double f, double power)
     {
-        return super.responseWithRoom(f).multiply(thisFilter(f));
+        return super.itemExcursion(f, power) * thisFilter(f).abs();
     }
 }

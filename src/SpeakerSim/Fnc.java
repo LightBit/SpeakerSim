@@ -123,7 +123,7 @@ public final class Fnc
             return new Complex(0, -1 / (2 * Math.PI * f * C));
         }
         
-        return Complex.ZERO;
+        return new Complex();
     }
     
     public static Complex zR(double R)

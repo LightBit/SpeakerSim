@@ -46,14 +46,13 @@ public abstract class NotchFilter extends Filter
     }
     
     @Override
-    public JsonValue toJSON()
+    protected JsonObject itemToJSON()
     {
-        JsonObject json = Json.object();
+        JsonObject json = super.itemToJSON();
         
         json.add("L", L);
         json.add("C", C);
         json.add("R", R);
-        json.add("Children", Item.childrenToJSON(children));
         
         return json;
     }
@@ -66,14 +65,14 @@ public abstract class NotchFilter extends Filter
     @Override
     public Complex thisFilter(double f)
     {
-        Complex z = super.impedance(f);
+        Complex z = super.itemImpedance(f);
         return z.divide(z.add(Z(f)));
     }
 
     @Override
-    public Complex impedance(double f)
+    protected Complex itemImpedance(double f)
     {
-        return super.impedance(f).add(Z(f));
+        return super.itemImpedance(f).add(Z(f));
     }
     
     public String name()

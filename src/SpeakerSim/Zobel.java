@@ -43,13 +43,12 @@ public class Zobel extends Filter
     }
     
     @Override
-    public JsonValue toJSON()
+    protected JsonObject itemToJSON()
     {
-        JsonObject json = Json.object();
+        JsonObject json = super.itemToJSON();
         
         json.add("C", C);
         json.add("R", R);
-        json.add("Children", Item.childrenToJSON(children));
         
         return json;
     }
@@ -67,7 +66,7 @@ public class Zobel extends Filter
     @Override
     public Complex thisFilter(double f)
     {
-        Complex z = super.impedance(f);
+        Complex z = super.itemImpedance(f);
         Complex z2 = Z(f);
 
         z = z.multiply(z2).divide(z.add(z2));
@@ -77,9 +76,9 @@ public class Zobel extends Filter
     }
 
     @Override
-    public Complex impedance(double f)
+    public Complex itemImpedance(double f)
     {
-        Complex z = super.impedance(f);
+        Complex z = super.itemImpedance(f);
         Complex z2 = Z(f);
 
         z = z.multiply(z2).divide(z.add(z2));

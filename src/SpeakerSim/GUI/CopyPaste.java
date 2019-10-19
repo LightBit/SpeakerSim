@@ -34,7 +34,7 @@ public class CopyPaste implements Transferable, ClipboardOwner
     
     public CopyPaste(IItem item)
     {
-        this.item = Item.itemToJSON(item).toString();
+        this.item = item.toJSON().toString();
     }
     
     public static void set(IItem item)
@@ -68,7 +68,7 @@ public class CopyPaste implements Transferable, ClipboardOwner
         String data = getString();
         if (data != null)
         {
-            return Item.constructItem(Json.parse(data));
+            return Item.createItem(Json.parse(data));
         }
         
         return null;

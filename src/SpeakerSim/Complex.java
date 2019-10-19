@@ -22,8 +22,6 @@ public class Complex
 {
     private final double real;
     private final double imag;
-    
-    public static final Complex ZERO = new Complex();
 
     public Complex(double real, double imag)
     {

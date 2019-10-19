@@ -26,20 +26,35 @@ import java.util.List;
 
 public abstract class Item implements IItem
 {
-    protected List<IItem> children;
+    public enum Status
+    {
+        CONNECTED,
+        DISCONNECTED,
+        BYPASSED
+    }
+    
+    private List<IItem> children;
+    private Status status;
     
     public Item()
     {
         children = new ArrayList<IItem>();
+        status = Status.CONNECTED;
     }
     
-    public Item(JsonValue json)
+    @Override
+    final public void setStatus(Status status)
     {
-        JsonObject jsonObj = json.asObject();
-        children = childrenFromJSON(jsonObj.get("Children"));
+        this.status = status;
     }
     
-    public static void childrenRefresh(List<IItem> children)
+    @Override
+    final public Status getStatus()
+    {
+        return status;
+    }
+    
+    private void childrenRefresh()
     {
         for (IItem item: children)
         {
@@ -47,7 +62,7 @@ public abstract class Item implements IItem
         }
     }
     
-    public static Complex childrenResponse(List<IItem> children, double f)
+    private Complex childrenResponse(double f)
     {
         if (children.isEmpty())
         {
@@ -64,7 +79,7 @@ public abstract class Item implements IItem
         return sum;
     }
     
-    public static Complex childrenResponse1W(List<IItem> children, double f)
+    private Complex childrenResponse1W(double f)
     {
         if (children.isEmpty())
         {
@@ -81,7 +96,7 @@ public abstract class Item implements IItem
         return sum;
     }
     
-    public static Complex childrenListeningWindowResponse(List<IItem> children, double f)
+    private Complex childrenListeningWindowResponse(double f)
     {
         if (children.isEmpty())
         {
@@ -98,7 +113,7 @@ public abstract class Item implements IItem
         return sum;
     }
     
-    public static Complex childrenPowerResponse(List<IItem> children, double f)
+    private Complex childrenPowerResponse(double f)
     {
         if (children.isEmpty())
         {
@@ -115,7 +130,7 @@ public abstract class Item implements IItem
         return sum;
     }
     
-    public static Complex childrenImpedance(List<IItem> children, double f)
+    private Complex childrenImpedance(double f)
     {
         Complex sum = new Complex();
         
@@ -132,7 +147,7 @@ public abstract class Item implements IItem
         return Complex.divide(1, sum);
     }
     
-    public static double childrenMaxPower(List<IItem> children, double f)
+    private double childrenMaxPower(double f)
     {
         double sum = Double.POSITIVE_INFINITY;
         
@@ -144,7 +159,7 @@ public abstract class Item implements IItem
         return sum;
     }
     
-    public static double childrenExcursion(List<IItem> children, double f, double power)
+    private double childrenExcursion(double f, double power)
     {
         double sum = 0;
         
@@ -156,7 +171,7 @@ public abstract class Item implements IItem
         return sum;
     }
     
-    public static Complex childrenFilter(List<IItem> children, double f)
+    private Complex childrenFilter(double f)
     {
         if (children.isEmpty())
         {
@@ -173,7 +188,7 @@ public abstract class Item implements IItem
         return sum;
     }
     
-    public static Complex childrenBaffle(List<IItem> children, double f)
+    private Complex childrenResponseWithBaffle(double f)
     {
         if (children.isEmpty())
         {
@@ -190,7 +205,7 @@ public abstract class Item implements IItem
         return sum;
     }
     
-    public static Complex childrenRoom(List<IItem> children, double f)
+    private Complex childrenResponseWithRoom(double f)
     {
         if (children.isEmpty())
         {
@@ -207,30 +222,22 @@ public abstract class Item implements IItem
         return sum;
     }
     
-    public static JsonValue itemToJSON(IItem item)
-    {
-        JsonObject json = Json.object();
-        json.add("Type", item.getClass().getSimpleName());
-        json.add("Value", item.toJSON());
-        return json;
-    }
-    
-    public static JsonValue childrenToJSON(List<IItem> children)
+    private JsonValue childrenToJSON()
     {
         JsonArray array = Json.array().asArray();
         
         for (IItem item: children)
         {
-            array.add(itemToJSON(item));
+            array.add(item.toJSON());
         }
         
         return array;
     }
     
-    public static IItem constructItem(JsonValue json)
+    public static IItem createItem(JsonValue json)
     {
         JsonObject jsonObj = json.asObject();
-        String type = jsonObj.getString("Type", "");
+        String type = jsonObj.getString("Type", null);
         json = jsonObj.get("Value");
         
         try
@@ -241,8 +248,10 @@ public abstract class Item implements IItem
                 throw new HandledException("Unsupported item: " + type);
             }
             
-            Constructor constructor = itemClass.getConstructor(JsonValue.class);
-            return (IItem) constructor.newInstance(json);
+            Constructor<?> constructor = itemClass.getConstructor(JsonValue.class);
+            IItem item = (IItem) constructor.newInstance(json);
+            item.create(jsonObj);
+            return item;
         }
         catch (ClassNotFoundException e)
         {
@@ -263,21 +272,48 @@ public abstract class Item implements IItem
             JsonArray array = json.asArray();
             for (JsonValue entry: array)
             {
-                c.add(constructItem(entry));
+                c.add(createItem(entry));
             }
         }
 
         return c;
     }
     
-    public void fromJSON(JsonValue json)
+    @Override
+    public void create(JsonValue json)
+    {
+        JsonObject jsonObj = json.asObject();
+        status = Status.valueOf(jsonObj.getString("Status", Status.CONNECTED.toString()));
+    }
+    
+    protected void fromJSON(JsonValue json)
     {
         JsonObject jsonObj = json.asObject();
         children = childrenFromJSON(jsonObj.get("Children"));
     }
     
+    protected JsonObject itemToJSON()
+    {
+        JsonObject json = Json.object();
+        if (!children.isEmpty())
+        {
+            json.add("Children", childrenToJSON());
+        }
+        return json;
+    }
+    
     @Override
-    public List<IItem> getChildren()
+    public JsonValue toJSON()
+    {
+        JsonObject json = Json.object();
+        json.add("Type", getClass().getSimpleName());
+        JSON.add(json, "Status", status.toString(), Status.CONNECTED.toString());
+        json.add("Value", itemToJSON());
+        return json;
+    }
+    
+    @Override
+    final public List<IItem> getChildren()
     {
         return children;
     }
@@ -285,72 +321,196 @@ public abstract class Item implements IItem
     @Override
     public void refresh()
     {
-        childrenRefresh(children);
+        childrenRefresh();
+    }
+    
+    protected Complex itemResponse(double f)
+    {
+        return childrenResponse(f);
+    }
+    
+    protected Complex itemResponse1W(double f)
+    {
+        return childrenResponse1W(f);
+    }
+    
+    protected Complex itemListeningWindowResponse(double f)
+    {
+        return childrenListeningWindowResponse(f);
+    }
+    
+    protected Complex itemPowerResponse(double f)
+    {
+        return childrenPowerResponse(f);
+    }
+    
+    protected Complex itemResponseWithBaffle(double f)
+    {
+        return childrenResponseWithBaffle(f);
+    }
+    
+    protected Complex itemResponseWithRoom(double f)
+    {
+        return childrenResponseWithRoom(f);
+    }
+    
+    protected Complex itemImpedance(double f)
+    {
+        return childrenImpedance(f);
+    }
+    
+    protected Complex itemFilter(double f)
+    {
+        return childrenFilter(f);
+    }
+    
+    protected double itemMaxPower(double f)
+    {
+        return childrenMaxPower(f);
+    }
+    
+    protected double itemExcursion(double f, double power)
+    {
+        return childrenExcursion(f, power);
     }
     
     @Override
-    public Complex response(double f)
+    final public Complex response(double f)
     {
-        return childrenResponse(children, f);
+        switch (status)
+        {
+            case DISCONNECTED:
+                return new Complex();
+            case BYPASSED:
+                return childrenResponse(f);
+            default:
+                return itemResponse(f);
+        }
     }
     
     @Override
-    public Complex response1W(double f)
+    final public Complex response1W(double f)
     {
-        return childrenResponse1W(children, f);
+        switch (status)
+        {
+            case DISCONNECTED:
+                return new Complex();
+            case BYPASSED:
+                return childrenResponse1W(f);
+            default:
+                return itemResponse1W(f);
+        }
     }
     
     @Override
-    public Complex listeningWindowResponse(double f)
+    final public Complex listeningWindowResponse(double f)
     {
-        return childrenListeningWindowResponse(children, f);
+        switch (status)
+        {
+            case DISCONNECTED:
+                return new Complex();
+            case BYPASSED:
+                return childrenListeningWindowResponse(f);
+            default:
+                return itemListeningWindowResponse(f);
+        }
     }
     
     @Override
-    public Complex powerResponse(double f)
+    final public Complex powerResponse(double f)
     {
-        return childrenPowerResponse(children, f);
+        switch (status)
+        {
+            case DISCONNECTED:
+                return new Complex();
+            case BYPASSED:
+                return childrenPowerResponse(f);
+            default:
+                return itemPowerResponse(f);
+        }
     }
     
     @Override
-    public Complex impedance(double f)
+    final public Complex responseWithBaffle(double f)
     {
-        return childrenImpedance(children, f);
+        switch (status)
+        {
+            case DISCONNECTED:
+                return new Complex();
+            case BYPASSED:
+                return childrenResponseWithBaffle(f);
+            default:
+                return itemResponseWithBaffle(f);
+        }
     }
     
     @Override
-    public double maxPower(double f)
+    final public Complex responseWithRoom(double f)
     {
-        return childrenMaxPower(children, f);
+        switch (status)
+        {
+            case DISCONNECTED:
+                return new Complex();
+            case BYPASSED:
+                return childrenResponseWithRoom(f);
+            default:
+                return itemResponseWithRoom(f);
+        }
     }
     
     @Override
-    public double excursion(double f, double power)
+    final public Complex impedance(double f)
     {
-        return childrenExcursion(children, f, power);
+        switch (status)
+        {
+            case DISCONNECTED:
+                return new Complex();
+            case BYPASSED:
+                return childrenImpedance(f);
+            default:
+                return itemImpedance(f);
+        }
     }
     
     @Override
-    public Complex filter(double f)
+    final public Complex filter(double f)
     {
-        return childrenFilter(children, f);
+        switch (status)
+        {
+            case DISCONNECTED:
+                return new Complex();
+            case BYPASSED:
+                return childrenFilter(f);
+            default:
+                return itemFilter(f);
+        }
     }
     
     @Override
-    public Complex responseWithBaffle(double f)
+    final public double maxPower(double f)
     {
-        return childrenBaffle(children, f);
+        switch (status)
+        {
+            case DISCONNECTED:
+                return Double.MAX_VALUE;
+            case BYPASSED:
+                return childrenMaxPower(f);
+            default:
+                return itemMaxPower(f);
+        }
     }
     
     @Override
-    public Complex responseWithRoom(double f)
+    final public double excursion(double f, double power)
     {
-        return childrenRoom(children, f);
-    }
-
-    @Override
-    public JsonValue toJSON()
-    {
-        return childrenToJSON(children);
+        switch (status)
+        {
+            case DISCONNECTED:
+                return 0;
+            case BYPASSED:
+                return childrenExcursion(f, power);
+            default:
+                return itemExcursion(f, power);
+        }
     }
 }

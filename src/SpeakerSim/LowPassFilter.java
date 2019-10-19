@@ -91,7 +91,7 @@ public class LowPassFilter extends PassFilter
     {
         Complex r = new Complex(1);
         
-        Complex z = super.impedance(f);
+        Complex z = super.itemImpedance(f);
         
         if (C2 > 0)
         {
@@ -118,9 +118,9 @@ public class LowPassFilter extends PassFilter
     }
     
     @Override
-    public Complex impedance(double f)
+    protected Complex itemImpedance(double f)
     {
-        Complex z = super.impedance(f);
+        Complex z = super.itemImpedance(f);
 
         if (C2 > 0)
         {

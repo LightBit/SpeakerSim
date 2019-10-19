@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import java.io.File;
@@ -129,7 +128,7 @@ public class Speaker extends Item
     
     public Speaker(JsonValue json)
     {
-        super();
+        super.fromJSON(json);
         JsonObject jsonObj = json.asObject();
         
         Driver = new Driver(jsonObj.get("Driver"));
@@ -139,7 +138,6 @@ public class Speaker extends Item
         BassReflex = new BassReflex(jsonObj.get("BassReflex"));
         Aperiodic = new Aperiodic(jsonObj.get("Aperiodic"));
         setSimulator(SimulatorType.valueOf(jsonObj.get("Simulator").asString()));
-        super.fromJSON(json);
     }
     
     public Speaker(File file) throws IOException
@@ -148,9 +146,9 @@ public class Speaker extends Item
     }
     
     @Override
-    public JsonValue toJSON()
+    protected JsonObject itemToJSON()
     {
-        JsonObject json = Json.object();
+        JsonObject json = super.itemToJSON();
         
         json.add("Driver", Driver.toJSON());
         json.add("Baffle", Baffle.toJSON());
@@ -159,85 +157,84 @@ public class Speaker extends Item
         json.add("ClosedBox", ClosedBox.toJSON());
         json.add("BassReflex", BassReflex.toJSON());
         json.add("Aperiodic", Aperiodic.toJSON());
-        json.add("Children", Item.childrenToJSON(children));
         
         return json;
     }
     
     @Override
-    public Complex response(double f)
+    protected Complex itemResponse(double f)
     {
-        Complex superZ = super.impedance(f);
+        Complex superZ = super.itemImpedance(f);
         Complex thisZ = simulation.impedance(f);
-        return super.response(f).multiply(superZ.divide(superZ.add(thisZ))).add(simulation.response(f).multiply(thisZ.divide(thisZ.add(superZ))));
+        return super.itemResponse(f).multiply(superZ.divide(superZ.add(thisZ))).add(simulation.response(f).multiply(thisZ.divide(thisZ.add(superZ))));
     }
     
     @Override
-    public Complex response1W(double f)
+    protected Complex itemResponse1W(double f)
     {
-        Complex superZ = super.impedance(f);
+        Complex superZ = super.itemImpedance(f);
         Complex thisZ = simulation.impedance(f);
-        return super.response1W(f).multiply(superZ.divide(superZ.add(thisZ))).add(simulation.response1W(f).multiply(thisZ.divide(thisZ.add(superZ))));
+        return super.itemResponse1W(f).multiply(superZ.divide(superZ.add(thisZ))).add(simulation.response1W(f).multiply(thisZ.divide(thisZ.add(superZ))));
     }
     
     @Override
-    public Complex listeningWindowResponse(double f)
+    protected Complex itemListeningWindowResponse(double f)
     {
-        Complex superZ = super.impedance(f);
+        Complex superZ = super.itemImpedance(f);
         Complex thisZ = simulation.impedance(f);
-        return super.response(f).multiply(superZ.divide(superZ.add(thisZ))).add(simulation.listeningWindowResponse(f).multiply(thisZ.divide(thisZ.add(superZ))));
+        return super.itemListeningWindowResponse(f).multiply(superZ.divide(superZ.add(thisZ))).add(simulation.listeningWindowResponse(f).multiply(thisZ.divide(thisZ.add(superZ))));
     }
     
     @Override
-    public Complex powerResponse(double f)
+    protected Complex itemPowerResponse(double f)
     {
-        Complex superZ = super.impedance(f);
+        Complex superZ = super.itemImpedance(f);
         Complex thisZ = simulation.impedance(f);
-        return super.response(f).multiply(superZ.divide(superZ.add(thisZ))).add(simulation.powerResponse(f).multiply(thisZ.divide(thisZ.add(superZ))));
+        return super.itemPowerResponse(f).multiply(superZ.divide(superZ.add(thisZ))).add(simulation.powerResponse(f).multiply(thisZ.divide(thisZ.add(superZ))));
     }
     
     @Override
-    public Complex impedance(double f)
+    protected Complex itemResponseWithBaffle(double f)
     {
-        return super.impedance(f).add(simulation.impedance(f));
-    }
-    
-    @Override
-    public double maxPower(double f)
-    {
-        Complex superZ = super.impedance(f);
+        Complex superZ = super.itemImpedance(f);
         Complex thisZ = simulation.impedance(f);
-        return Math.min(super.maxPower(f) / superZ.divide(superZ.add(thisZ)).abs(), Project.getInstance().Settings.PowerFilter.toFiltered(simulation.maxPower(f), f) / thisZ.divide(thisZ.add(superZ)).abs());
+        return super.itemResponseWithBaffle(f).multiply(superZ.divide(superZ.add(thisZ))).add(simulation.responseWithBaffle(f).multiply(thisZ.divide(thisZ.add(superZ))));
     }
     
     @Override
-    public double excursion(double f, double power)
+    protected Complex itemResponseWithRoom(double f)
     {
-        return simulation.excursion(f, power) * filter(f).abs();
-    }
-    
-    @Override
-    public Complex filter(double f)
-    {
-        Complex superZ = super.impedance(f);
+        Complex superZ = super.itemImpedance(f);
         Complex thisZ = simulation.impedance(f);
-        return super.filter(f).multiply(superZ.divide(superZ.add(thisZ))).add(thisZ.divide(thisZ.add(superZ)));
+        return super.itemResponseWithRoom(f).multiply(superZ.divide(superZ.add(thisZ))).add(simulation.responseWithRoom(f).multiply(thisZ.divide(thisZ.add(superZ))));
     }
     
     @Override
-    public Complex responseWithBaffle(double f)
+    protected Complex itemFilter(double f)
     {
-        Complex superZ = super.impedance(f);
+        Complex superZ = super.itemImpedance(f);
         Complex thisZ = simulation.impedance(f);
-        return super.response(f).multiply(superZ.divide(superZ.add(thisZ))).add(simulation.responseWithBaffle(f).multiply(thisZ.divide(thisZ.add(superZ))));
+        return super.itemFilter(f).multiply(superZ.divide(superZ.add(thisZ))).add(thisZ.divide(thisZ.add(superZ)));
     }
     
     @Override
-    public Complex responseWithRoom(double f)
+    protected Complex itemImpedance(double f)
     {
-        Complex superZ = super.impedance(f);
+        return super.itemImpedance(f).add(simulation.impedance(f));
+    }
+    
+    @Override
+    protected double itemMaxPower(double f)
+    {
+        Complex superZ = super.itemImpedance(f);
         Complex thisZ = simulation.impedance(f);
-        return super.response(f).multiply(superZ.divide(superZ.add(thisZ))).add(simulation.responseWithRoom(f).multiply(thisZ.divide(thisZ.add(superZ))));
+        return Math.min(super.itemMaxPower(f) / superZ.divide(superZ.add(thisZ)).abs(), Project.getInstance().Settings.PowerFilter.toFiltered(simulation.maxPower(f), f) / thisZ.divide(thisZ.add(superZ)).abs());
+    }
+    
+    @Override
+    protected double itemExcursion(double f, double power)
+    {
+        return simulation.excursion(f, power) * itemFilter(f).abs();
     }
     
     @Override

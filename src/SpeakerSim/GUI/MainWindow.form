@@ -80,17 +80,17 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JRadioButtonMenuItem" name="menuSimulatorClosedBox">
+            <MenuItem class="javax.swing.JRadioButtonMenuItem" name="menuSimulatorBassReflex">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Closed Box"/>
+                <Property name="text" type="java.lang.String" value="Bass Reflex"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuSimulatorActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JRadioButtonMenuItem" name="menuSimulatorBassReflex">
+            <MenuItem class="javax.swing.JRadioButtonMenuItem" name="menuSimulatorClosedBox">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Bass Reflex"/>
+                <Property name="text" type="java.lang.String" value="Closed Box"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuSimulatorActionPerformed"/>
@@ -803,6 +803,9 @@
           <SubComponents>
             <Component class="javax.swing.JTree" name="tree">
               <Properties>
+                <Property name="cellRenderer" type="javax.swing.tree.TreeCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new ItemTreeCellRenderer()" type="code"/>
+                </Property>
                 <Property name="toggleClickCount" type="int" value="0"/>
               </Properties>
             </Component>

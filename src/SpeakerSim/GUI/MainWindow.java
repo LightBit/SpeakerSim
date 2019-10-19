@@ -467,6 +467,7 @@ public final class MainWindow extends javax.swing.JFrame
         if (!tree.isSelectionEmpty())
         {
             final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+            final IItem item = (IItem) node.getUserObject();
             
             if (node != tree.getModel().getRoot())
             {
@@ -481,14 +482,149 @@ public final class MainWindow extends javax.swing.JFrame
                 });
                 popup.add(mi);
                 
-                /*if ((node.getUserObject() instanceof Speaker))
+                JMenu statusMenu = new JMenu("Status");
+                    
+                final JRadioButtonMenuItem connected = new JRadioButtonMenuItem("Connected");
+                final JRadioButtonMenuItem bypassed = new JRadioButtonMenuItem("Bypassed");
+                final JRadioButtonMenuItem disconnected = new JRadioButtonMenuItem("Disconnected");
+
+                ButtonGroup statusGroup = new ButtonGroup();
+                statusGroup.add(connected);
+                statusGroup.add(bypassed);
+                statusGroup.add(disconnected);
+
+                switch (item.getStatus())
                 {
-                    //TODO: add enclosure menu
-                }*/
+                    case CONNECTED:
+                        connected.setSelected(true);
+                        break;
+                    case BYPASSED:
+                        bypassed.setSelected(true);
+                        break;
+                    case DISCONNECTED:
+                        disconnected.setSelected(true);
+                        break;
+                    default:
+                        break;
+                }
+
+                ActionListener changeStatus = new ActionListener()
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+
+                        if (connected.isSelected())
+                        {
+                            item.setStatus(Item.Status.CONNECTED);
+                        }
+                        else if (bypassed.isSelected())
+                        {
+                            item.setStatus(Item.Status.BYPASSED);
+                        }
+                        else if (disconnected.isSelected())
+                        {
+                            item.setStatus(Item.Status.DISCONNECTED);
+                        }
+
+                        refresh();
+                    }
+                };
+
+                connected.addActionListener(changeStatus);
+                bypassed.addActionListener(changeStatus);
+                disconnected.addActionListener(changeStatus);
+
+                statusMenu.add(connected);
+                statusMenu.add(bypassed);
+                statusMenu.add(disconnected);
+
+                popup.add(statusMenu);
+                
+                if ((item instanceof Speaker))
+                {
+                    final Speaker speaker = (Speaker) item;
+                    JMenu enclosureMenu = new JMenu("Enclosure");
+                    
+                    if (speaker.Driver.Closed)
+                    {
+                        enclosureMenu.setEnabled(false);
+                    }
+                    else
+                    {
+                        final JRadioButtonMenuItem bassReflex = new JRadioButtonMenuItem("Bass Reflex");
+                        final JRadioButtonMenuItem closedBox = new JRadioButtonMenuItem("Closed Box");
+                        final JRadioButtonMenuItem aperiodic = new JRadioButtonMenuItem("Aperiodic");
+                        final JRadioButtonMenuItem openBaffle = new JRadioButtonMenuItem("Open Baffle");
+
+                        ButtonGroup enclosureGroup = new ButtonGroup();
+                        enclosureGroup.add(bassReflex);
+                        enclosureGroup.add(closedBox);
+                        enclosureGroup.add(aperiodic);
+                        enclosureGroup.add(openBaffle);
+
+                        switch (speaker.Simulator)
+                        {
+                            case BASS_REFLEX:
+                                bassReflex.setSelected(true);
+                                break;
+                            case CLOSED_BOX:
+                                closedBox.setSelected(true);
+                                break;
+                            case APERIODIC:
+                                aperiodic.setSelected(true);
+                                break;
+                            case OPEN_BAFFLE:
+                                openBaffle.setSelected(true);
+                                break;
+                            default:
+                                break;
+                        }
+
+                        ActionListener changeEnclosure = new ActionListener()
+                        {
+                            @Override
+                            public void actionPerformed(ActionEvent e)
+                            {
+                                
+                                if (bassReflex.isSelected())
+                                {
+                                    speaker.setSimulator(Speaker.SimulatorType.BASS_REFLEX);
+                                }
+                                else if (closedBox.isSelected())
+                                {
+                                    speaker.setSimulator(Speaker.SimulatorType.CLOSED_BOX);
+                                }
+                                else if (aperiodic.isSelected())
+                                {
+                                    speaker.setSimulator(Speaker.SimulatorType.APERIODIC);
+                                }
+                                else if (openBaffle.isSelected())
+                                {
+                                    speaker.setSimulator(Speaker.SimulatorType.OPEN_BAFFLE);
+                                }
+
+                                refresh();
+                            }
+                        };
+
+                        bassReflex.addActionListener(changeEnclosure);
+                        closedBox.addActionListener(changeEnclosure);
+                        aperiodic.addActionListener(changeEnclosure);
+                        openBaffle.addActionListener(changeEnclosure);
+
+                        enclosureMenu.add(bassReflex);
+                        enclosureMenu.add(closedBox);
+                        enclosureMenu.add(aperiodic);
+                        enclosureMenu.add(openBaffle);
+                    }
+                    
+                    popup.add(enclosureMenu);
+                }
                 
                 popup.addSeparator();
                 
-                if (!(node.getUserObject() instanceof Amplifier))
+                if (!(item instanceof Amplifier))
                 {
                     JMenu addAboveMenu = new JMenu("Add above");
                     submenuAdd(addAboveMenu, node, true);
@@ -1856,6 +1992,7 @@ public final class MainWindow extends javax.swing.JFrame
                         graphResponse.setYRange(Project.getInstance().Settings.dBRange);
                         graphFilters.setYRange(Project.getInstance().Settings.dBRange);
                         graphDirectivity.setYRange(0, graphDirectivity.getMaxY() + 1);
+                        graphMaxSPL.setYRange(0, graphMaxSPL.getMaxY() + 1);
                         graphMaxPower.setYRange(0, Math.min(Project.getInstance().Settings.MaxPower, graphMaxPower.getMaxY() + 1));
                         graphExcursion.setYRange(0, graphExcursion.getMaxY() + 1);
                         graphPhase.addYMark(0, "");
@@ -2027,8 +2164,8 @@ public final class MainWindow extends javax.swing.JFrame
         menuSettings = new javax.swing.JMenuItem();
         menuEnvironment = new javax.swing.JMenuItem();
         menuEnclosure = new javax.swing.JMenu();
-        menuSimulatorClosedBox = new javax.swing.JRadioButtonMenuItem();
         menuSimulatorBassReflex = new javax.swing.JRadioButtonMenuItem();
+        menuSimulatorClosedBox = new javax.swing.JRadioButtonMenuItem();
         menuSimulatorAperiodic = new javax.swing.JRadioButtonMenuItem();
         menuSimulatorOpenBaffle = new javax.swing.JRadioButtonMenuItem();
 
@@ -2114,6 +2251,7 @@ public final class MainWindow extends javax.swing.JFrame
 
         treeScrollPane.setMinimumSize(new java.awt.Dimension(0, 22));
 
+        tree.setCellRenderer(new ItemTreeCellRenderer());
         tree.setToggleClickCount(0);
         treeScrollPane.setViewportView(tree);
 
@@ -2202,16 +2340,6 @@ public final class MainWindow extends javax.swing.JFrame
         menuEnclosure.setText("Enclosure");
         menuEnclosure.setEnabled(false);
 
-        menuSimulatorClosedBox.setText("Closed Box");
-        menuSimulatorClosedBox.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                menuSimulatorActionPerformed(evt);
-            }
-        });
-        menuEnclosure.add(menuSimulatorClosedBox);
-
         menuSimulatorBassReflex.setText("Bass Reflex");
         menuSimulatorBassReflex.addActionListener(new java.awt.event.ActionListener()
         {
@@ -2221,6 +2349,16 @@ public final class MainWindow extends javax.swing.JFrame
             }
         });
         menuEnclosure.add(menuSimulatorBassReflex);
+
+        menuSimulatorClosedBox.setText("Closed Box");
+        menuSimulatorClosedBox.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                menuSimulatorActionPerformed(evt);
+            }
+        });
+        menuEnclosure.add(menuSimulatorClosedBox);
 
         menuSimulatorAperiodic.setText("Aperiodic");
         menuSimulatorAperiodic.addActionListener(new java.awt.event.ActionListener()

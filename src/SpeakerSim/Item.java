@@ -149,7 +149,7 @@ public abstract class Item implements IItem
     
     private double childrenMaxPower(double f)
     {
-        double sum = Double.POSITIVE_INFINITY;
+        double sum = Double.MAX_VALUE;
         
         for (IItem item: children)
         {
@@ -380,7 +380,7 @@ public abstract class Item implements IItem
         switch (status)
         {
             case DISCONNECTED:
-                return new Complex();
+                return new Complex(1);
             case BYPASSED:
                 return childrenResponse(f);
             default:
@@ -394,7 +394,7 @@ public abstract class Item implements IItem
         switch (status)
         {
             case DISCONNECTED:
-                return new Complex();
+                return new Complex(1);
             case BYPASSED:
                 return childrenResponse1W(f);
             default:
@@ -408,7 +408,7 @@ public abstract class Item implements IItem
         switch (status)
         {
             case DISCONNECTED:
-                return new Complex();
+                return new Complex(1);
             case BYPASSED:
                 return childrenListeningWindowResponse(f);
             default:
@@ -422,7 +422,7 @@ public abstract class Item implements IItem
         switch (status)
         {
             case DISCONNECTED:
-                return new Complex();
+                return new Complex(1);
             case BYPASSED:
                 return childrenPowerResponse(f);
             default:
@@ -436,7 +436,7 @@ public abstract class Item implements IItem
         switch (status)
         {
             case DISCONNECTED:
-                return new Complex();
+                return new Complex(1);
             case BYPASSED:
                 return childrenResponseWithBaffle(f);
             default:
@@ -450,7 +450,7 @@ public abstract class Item implements IItem
         switch (status)
         {
             case DISCONNECTED:
-                return new Complex();
+                return new Complex(1);
             case BYPASSED:
                 return childrenResponseWithRoom(f);
             default:
@@ -464,7 +464,7 @@ public abstract class Item implements IItem
         switch (status)
         {
             case DISCONNECTED:
-                return new Complex();
+                return new Complex(Double.MAX_VALUE);
             case BYPASSED:
                 return childrenImpedance(f);
             default:
@@ -478,7 +478,7 @@ public abstract class Item implements IItem
         switch (status)
         {
             case DISCONNECTED:
-                return new Complex();
+                return new Complex(0);
             case BYPASSED:
                 return childrenFilter(f);
             default:

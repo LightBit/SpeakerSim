@@ -1806,6 +1806,9 @@ public final class MainWindow extends javax.swing.JFrame
     
     private void showNode(final DefaultMutableTreeNode node)
     {
+        // stop worker, if running
+        stopWorker();
+        
         // calculate center of all speakers
         List<Speaker> speakers = getSpeakers(node);
         Project.getInstance().CenterPosition = new Position(0, 0, 0);
@@ -1840,9 +1843,6 @@ public final class MainWindow extends javax.swing.JFrame
         
         propertiesPanel.revalidate();
         propertiesPanel.repaint();
-
-        // stop worker, if running
-        stopWorker();
         
         final String selectedTab = UI.getSelectedTab(tabs);
         tabs.removeAll();
@@ -1854,6 +1854,8 @@ public final class MainWindow extends javax.swing.JFrame
             @Override
             public void run()
             {
+                final Thread thread = Thread.currentThread();
+                
                 try
                 {
                     final IItem item = (IItem) node.getUserObject();
@@ -1879,7 +1881,7 @@ public final class MainWindow extends javax.swing.JFrame
 
                         for (int i = 0; i < freq.length; i++)
                         {
-                            if (Thread.currentThread().isInterrupted()) return;
+                            if (thread.isInterrupted()) return;
 
                             double f = freq[i];
 
@@ -2016,6 +2018,8 @@ public final class MainWindow extends javax.swing.JFrame
                             @Override
                             public void run()
                             {
+                                if (thread.isInterrupted()) return;
+
                                 tabs.addTab("Response", graphResponse.getGraph());
                                 tabs.addTab("Directivity", graphDirectivity.getGraph());
                                 tabs.addTab("Phase", graphPhase.getGraph());
@@ -2024,17 +2028,17 @@ public final class MainWindow extends javax.swing.JFrame
                                 tabs.addTab("Maximal power", graphMaxPower.getGraph());
                                 tabs.addTab("Excursion", graphExcursion.getGraph());
                                 tabs.addTab("Group delay", graphGroupDelay.getGraph());
-                                
+
                                 if (Project.getInstance().Settings.BaffleSimulation)
                                 {
                                     tabs.addTab("Baffle", graphBaffle.getGraph());
                                 }
-                                
+
                                 if (Project.getInstance().Settings.RoomSimulation)
                                 {
                                     tabs.addTab("Room", graphRoom.getGraph());
                                 }
-                                
+
                                 if (!(item instanceof Project))
                                 {
                                     tabs.addTab("Impedance", graphImpedance.getGraph());
@@ -2055,7 +2059,7 @@ public final class MainWindow extends javax.swing.JFrame
                     {
                         for (int i = 0; i < freq.length; i++)
                         {
-                            if (Thread.currentThread().isInterrupted()) return;
+                            if (thread.isInterrupted()) return;
 
                             Complex z = item.impedance(freq[i]);
                             impedance[i] = z.abs();
@@ -2070,6 +2074,8 @@ public final class MainWindow extends javax.swing.JFrame
                             @Override
                             public void run()
                             {
+                                if (thread.isInterrupted()) return;
+
                                 if (!(item instanceof Project))
                                 {
                                     tabs.addTab("Impedance", graphImpedance.getGraph());
@@ -2084,7 +2090,7 @@ public final class MainWindow extends javax.swing.JFrame
                 }
                 catch (final Throwable e)
                 {
-                    if (!Thread.currentThread().isInterrupted())
+                    if (!thread.isInterrupted())
                     {
                         SwingUtilities.invokeLater(new Runnable()
                         {

@@ -36,7 +36,10 @@ public class Main
             @Override
             public void uncaughtException(Thread t, Throwable e)
             {
-                UI.throwable(null, e);
+                if (!t.isInterrupted())
+                {
+                    UI.throwable(null, e);
+                }
             }
         });
         

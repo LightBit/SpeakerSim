@@ -654,7 +654,7 @@ public class Driver implements JSONable, ISource
         return json;
     }
     
-    public void fromJSON(JsonValue json)
+    private void fromJSON(JsonValue json)
     {
         JsonObject jsonObj = json.asObject();
         

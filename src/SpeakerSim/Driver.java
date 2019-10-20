@@ -331,7 +331,7 @@ public class Driver implements JSONable, ISource
     
     private Complex offAxisSim(double f, double horizontalAngle, double verticalAngle, boolean dipole)
     {
-        return FRD.response(f, SPL_2_83V - SPL_1W).multiply(relativeOffAxisSim(f, horizontalAngle, verticalAngle, dipole));
+        return response(f).multiply(relativeOffAxisSim(f, horizontalAngle, verticalAngle, dipole));
     }
     
     private Complex horizontalAxis(double f, double horizontalAngle, boolean dipole)
@@ -361,17 +361,17 @@ public class Driver implements JSONable, ISource
                     Fnc.interpolate
                     (
                             hFRD[i - 1].horizontalAngle,
-                            hFRD[i - 1].response(f, SPLdiff).abs(),
+                            hFRD[i - 1].response(f, SPLdiff, Inverted).abs(),
                             hFRD[i].horizontalAngle,
-                            hFRD[i].response(f, SPLdiff).abs(),
+                            hFRD[i].response(f, SPLdiff, Inverted).abs(),
                             horizontalAngle
                     ),
                     Fnc.interpolate
                     (
                             hFRD[i - 1].horizontalAngle,
-                            hFRD[i - 1].response(f, SPLdiff).phase(),
+                            hFRD[i - 1].response(f, SPLdiff, Inverted).phase(),
                             hFRD[i].horizontalAngle,
-                            hFRD[i].response(f, SPLdiff).phase(),
+                            hFRD[i].response(f, SPLdiff, Inverted).phase(),
                             horizontalAngle
                     )
                 );
@@ -409,17 +409,17 @@ public class Driver implements JSONable, ISource
                     Fnc.interpolate
                     (
                             vFRD[i - 1].verticalAngle,
-                            vFRD[i - 1].response(f, SPLdiff).abs(),
+                            vFRD[i - 1].response(f, SPLdiff, Inverted).abs(),
                             vFRD[i].verticalAngle,
-                            vFRD[i].response(f, SPLdiff).abs(),
+                            vFRD[i].response(f, SPLdiff, Inverted).abs(),
                             verticalAngle
                     ),
                     Fnc.interpolate
                     (
                             vFRD[i - 1].verticalAngle,
-                            vFRD[i - 1].response(f, SPLdiff).phase(),
+                            vFRD[i - 1].response(f, SPLdiff, Inverted).phase(),
                             vFRD[i].verticalAngle,
-                            vFRD[i].response(f, SPLdiff).phase(),
+                            vFRD[i].response(f, SPLdiff, Inverted).phase(),
                             verticalAngle
                     )
                 );
@@ -480,7 +480,7 @@ public class Driver implements JSONable, ISource
     @Override
     public Complex relativeOffAxis(double f, double horizontalAngle, double verticalAngle, boolean dipole)
     {
-        return response(f, horizontalAngle, verticalAngle, dipole).divide(FRD.response(f, SPL_2_83V - SPL_1W));
+        return response(f, horizontalAngle, verticalAngle, dipole).divide(response(f));
     }
     
     public double excursion(double f, double Pe)

@@ -108,7 +108,7 @@ public class Amplifier extends Filter
     
     private Complex filterZo(double f)
     {
-        Complex z = super.impedance(f);
+        Complex z = super.itemImpedance(f);
         return z.divide(z.add(Zo));
     }
     

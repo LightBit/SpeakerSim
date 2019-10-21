@@ -55,25 +55,25 @@ public class LowPassFilter extends PassFilter
     @Override
     public double calcC1(int type, double f)
     {
-        return calcC(C[type][0], super.impedance(f).abs(), f);
+        return calcC(C[type][0], super.itemImpedance(f).abs(), f);
     }
     
     @Override
     public double calcC2(int type, double f)
     {
-        return calcC(C[type][1], super.impedance(f).abs(), f);
+        return calcC(C[type][1], super.itemImpedance(f).abs(), f);
     }
     
     @Override
     public double calcL1(int type, double f)
     {
-        return calcL(L[type][0], super.impedance(f).abs(), f);
+        return calcL(L[type][0], super.itemImpedance(f).abs(), f);
     }
     
     @Override
     public double calcL2(int type, double f)
     {
-        return calcL(L[type][1], super.impedance(f).abs(), f);
+        return calcL(L[type][1], super.itemImpedance(f).abs(), f);
     }
     
     public LowPassFilter()

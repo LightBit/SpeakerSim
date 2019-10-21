@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
@@ -100,7 +99,7 @@ public class LPad extends Filter
         
         for (int i = 0; i < z.length; i++)
         {
-            z[i] = super.impedance(f).abs();
+            z[i] = super.itemImpedance(f).abs();
             f *= m;
         }
         

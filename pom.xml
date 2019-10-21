@@ -109,6 +109,7 @@
                         </goals>
                         <configuration>
                             <headerType>gui</headerType>
+                            <chdir>.</chdir>
                             <jar>SpeakerSim.jar</jar>
                             <dontWrapJar>true</dontWrapJar>
                             <outfile>SpeakerSim.exe</outfile>

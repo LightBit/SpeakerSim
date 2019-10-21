@@ -74,6 +74,14 @@ public final class UI
         return new JFormattedTextField(f);
     }
     
+    private static JFormattedTextField field(NumberFormat format)
+    {
+        NumberFormatter f = new NumberFormatter(format);
+        //f.setAllowsInvalid(false);
+        //f.setCommitsOnValidEdit(true);
+        return new JFormattedTextField(f);
+    }
+    
     public static JFormattedTextField decimalField(double min, double max)
     {
         return field(DECIMAL_FORMAT, min, max);
@@ -82,6 +90,11 @@ public final class UI
     public static JFormattedTextField decimalField(double min)
     {
         return field(DECIMAL_FORMAT, min);
+    }
+    
+    public static JFormattedTextField decimalField()
+    {
+        return field(DECIMAL_FORMAT);
     }
     
     public static JFormattedTextField integerField(int min, int max)

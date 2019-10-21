@@ -330,7 +330,7 @@ public class AmplifierWindow extends javax.swing.JDialog
             JFormattedTextField qField = UI.decimalField(0.000001);
             qField.setValue(filter.getQ());
             
-            JFormattedTextField dbField = UI.decimalField(0);
+            JFormattedTextField dbField = UI.decimalField();
             dbField.setValue(filter.getDecibels());
             
             JCheckBox linearPhaseCheckBox = new JCheckBox();
@@ -405,7 +405,7 @@ public class AmplifierWindow extends javax.swing.JDialog
         {
             Gain filter = (Gain) item;
             
-            JFormattedTextField dbField = UI.decimalField(0);
+            JFormattedTextField dbField = UI.decimalField();
             dbField.setValue(filter.dB);
             
             final JComponent[] inputs = new JComponent[]

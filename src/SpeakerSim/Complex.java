@@ -43,6 +43,16 @@ public class Complex
     {
         return new Complex(amplitude * Math.cos(phase), amplitude * Math.sin(phase));
     }
+    
+    public double getReal()
+    {
+        return real;
+    }
+    
+    public double getImaginary()
+    {
+        return imag;
+    }
 
     public double abs()
     {

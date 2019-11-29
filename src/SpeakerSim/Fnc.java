@@ -131,15 +131,14 @@ public final class Fnc
         return new Complex(R);
     }
     
-    //public static Complex zParallel(Complex ... x)
-    public static Complex zParallel(Complex a, Complex b)
+    public static Complex zParallel(Complex ... x)
     {
-        return a.multiply(b).divide(a.add(b));
+        return Complex.multiplyAll(x).divide(Complex.addAll(x));
     }
     
-    public static Complex zSerial(Complex a, Complex b)
+    public static Complex zSerial(Complex ... x)
     {
-        return a.add(b);
+        return Complex.addAll(x);
     }
     
     public static double to360Degress(double x)
@@ -183,6 +182,50 @@ public final class Fnc
         double[] r = averageSmooth(values, points);
         r = averageSmooth(r, points);
         return averageSmooth(r, points);
+    }
+    
+    public static double besselJn(int n, double x)
+    {
+        if (n == 0)
+        {
+            if (x > 10)
+            {
+                return Math.sqrt(2 / (Math.PI * x))
+                        * (1 - 1 / (16 * x * x) + 53 / (512 * Math.pow(x, 4)))
+                        * Math.cos(x - 0.78539816339744828 - 1 / (8 * x) + 25
+                        / (384 * Math.pow(x, 3)));
+            }
+        }
+        else if (n == 1)
+        {
+            if (x > 10)
+            {
+                return Math.sqrt(2 / (Math.PI * x))
+                        * (1 + 3 / (16 * x * x) + 99 / (512 * Math.pow(x, 4)))
+                        * Math.cos(x - 2.3561944901923448 + 3 / (8 * x) - 21
+                        / (128 * Math.pow(x, 3)));
+            }
+        }
+        else if (x > 40)
+        {
+            return 0;
+        }
+        
+        double j = 0;
+        
+        x /= 2;
+        
+        for (int i = 0; i < 55; i++)
+        {
+            j += Math.pow(-1, i) * Math.pow(x, 2 * i + n) / (factorial(i) * factorial(i + n));
+        }
+        
+        return j;
+    }
+    
+    public static double besselH1(double x)
+    {
+        return 0.63661977236758138 - besselJn(0, x) + 0.092958178940651059 * (Math.sin(x) / x) + 0.54084409738353578 * ((1 - Math.cos(x)) / (x * x));
     }
     
     public static double besselJ1(double x)

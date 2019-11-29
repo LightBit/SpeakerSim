@@ -69,6 +69,18 @@ public class Complex
         return new Complex(real + x.real, imag + x.imag);
     }
     
+    public static Complex addAll(Complex ... x)
+    {
+        Complex s = new Complex();
+        
+        for (Complex a : x)
+        {
+            s = s.add(a);
+        }
+        
+        return s;
+    }
+    
     public Complex add(double x)
     {
         return new Complex(real + x, imag);
@@ -92,6 +104,18 @@ public class Complex
     public Complex multiply(Complex x)
     {
         return new Complex(real * x.real - imag * x.imag, real * x.imag + imag * x.real);
+    }
+    
+    public static Complex multiplyAll(Complex ... x)
+    {
+        Complex p = new Complex(1);
+        
+        for (Complex a : x)
+        {
+            p = p.multiply(a);
+        }
+        
+        return p;
     }
     
     public Complex multiply(double x)

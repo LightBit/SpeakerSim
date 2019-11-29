@@ -872,6 +872,12 @@ public class Driver implements JSONable, ISource
         return calcVas(Sd, Cms, AirDensity, SpeedOfSound);
     }
     
+    public double calcVas()
+    {
+        Environment env = Environment.getInstance();
+        return calcVas(env.AirDensity, env.SpeedOfSound);
+    }
+    
     public double calcQes()
     {
         return calcQes(Fs, Mms, Re, Bl);
@@ -926,6 +932,12 @@ public class Driver implements JSONable, ISource
         return calcCms(Vas, Sd, AirDensity, SpeedOfSound);
     }
     
+    public double calcCms()
+    {
+        Environment env = Environment.getInstance();
+        return calcCms(env.AirDensity, env.SpeedOfSound);
+    }
+    
     public double calcMms()
     {
         return calcMms(Fs, Cms);
@@ -941,6 +953,12 @@ public class Driver implements JSONable, ISource
         return calcN0(Bl, Sd, Mms, Re, AirDensity, SpeedOfSound);
     }
     
+    public double calcN0()
+    {
+        Environment env = Environment.getInstance();
+        return calcN0(env.AirDensity, env.SpeedOfSound);
+    }
+    
     public double calcSPL_1W()
     {
         return calcSPL_1W(n0);
@@ -954,6 +972,11 @@ public class Driver implements JSONable, ISource
     public double calcMmd(double AirDensity)
     {
         return Mms - 2 * (8.0 / 3.0) * Math.pow(Math.sqrt(Sd / Math.PI), 3) * AirDensity;
+    }
+    
+    public double calcMmd()
+    {
+        return calcMmd(Environment.getInstance().AirDensity);
     }
     
     public double calcMes()

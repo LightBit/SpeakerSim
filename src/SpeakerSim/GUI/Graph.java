@@ -16,11 +16,18 @@
 
 package SpeakerSim.GUI;
 
+import SpeakerSim.Fnc;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.text.NumberFormat;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.ChartMouseEvent;
+import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.axis.LogAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.Marker;
@@ -31,13 +38,19 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.chart.ui.RectangleAnchor;
 import org.jfree.chart.ui.TextAnchor;
+import org.jfree.chart.ui.RectangleEdge;
 
-public final class Graph
+public final class Graph implements ChartMouseListener
 {
     private final LogAxis xAxis;
     private final NumberAxis yAxis;
     private final XYSeriesCollection series;
     private final XYPlot plot;
+    private ChartPanel chartPanel;
+    private int mouseX;
+    private int mouseY;
+    private String xValue;
+    private String yValue;
     
     private class IdString implements Comparable<IdString>
     {
@@ -191,13 +204,43 @@ public final class Graph
     
     public Component getGraph()
     {
-        ChartPanel chartPanel = new ChartPanel(getChart(), false, true, true, false, true);
+        chartPanel = new ChartPanel(getChart(), false, true, true, false, true)
+        {
+            @Override
+            public void paintComponent(Graphics g)
+            {
+                super.paintComponent(g);
+
+                g.drawString(yValue + " at " + xValue, mouseX + 10, mouseY);
+            }
+        };
         chartPanel.setMinimumDrawWidth(0);
         chartPanel.setMinimumDrawHeight(0);
         chartPanel.setMaximumDrawWidth(Integer.MAX_VALUE);
         chartPanel.setMaximumDrawHeight(Integer.MAX_VALUE);
         chartPanel.setMouseZoomable(false);
+        chartPanel.addChartMouseListener(this);
         
         return chartPanel;
+    }
+    
+    @Override
+    public void chartMouseClicked(ChartMouseEvent event)
+    {
+        
+    }
+
+    @Override
+    public void chartMouseMoved(ChartMouseEvent event)
+    {
+        mouseX = event.getTrigger().getX();
+        mouseY = event.getTrigger().getY();
+        Point2D p = chartPanel.translateScreenToJava2D(new Point(mouseX, mouseY));
+        Rectangle2D dataArea = chartPanel.getChartRenderingInfo().getPlotInfo().getDataArea();
+        RectangleEdge xEdge = plot.getDomainAxisEdge();
+        RectangleEdge yEdge = plot.getRangeAxisEdge();
+        xValue = Fnc.twoDecimalFormat(xAxis.java2DToValue(p.getX(), dataArea, xEdge)) + xAxis.getLabel();
+        yValue = Fnc.twoDecimalFormat(yAxis.java2DToValue(p.getY(), dataArea, yEdge)) + yAxis.getLabel();
+        chartPanel.repaint();
     }
 }

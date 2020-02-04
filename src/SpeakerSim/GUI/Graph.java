@@ -222,26 +222,26 @@ public final class Graph
                     int rectWidth = (int) Math.ceil(rect.getWidth());
                     int rectHeight = (int) Math.ceil(rect.getHeight());
                     
-                    if (g.getClipBounds().width < x + rectWidth + 6)
+                    if (g.getClipBounds().width < x + rectWidth + 4)
                     {
                         x -= rectWidth + 20;
                     }
                     
-                    if (0 > y - rectHeight - 6)
+                    if (0 > y - rectHeight - 2)
                     {
                         y += rectHeight + 30;
                     }
                     
-                    g.setColor(Color.ORANGE);
-                    g.drawRect(x - 3,
-                               y - fm.getAscent() - 3,
-                               rectWidth + 6,
-                               rectHeight + 6);
-
                     g.setColor(Color.YELLOW);
-                    g.fillRect(x - 2,
+                    g.fillRect(x - 4,
                                y - fm.getAscent() - 2,
-                               rectWidth + 4,
+                               rectWidth + 8,
+                               rectHeight + 4);
+                    
+                    g.setColor(Color.ORANGE);
+                    g.drawRect(x - 4,
+                               y - fm.getAscent() - 2,
+                               rectWidth + 8,
                                rectHeight + 4);
 
                     g.setColor(Color.BLACK);

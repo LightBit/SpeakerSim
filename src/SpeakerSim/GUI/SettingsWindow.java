@@ -300,7 +300,7 @@ public class SettingsWindow extends javax.swing.JDialog
         }
         catch (ParseException ex)
         {
-            UI.exception(this, ex);
+            UI.throwable(this, ex);
         }
     }//GEN-LAST:event_okButtonActionPerformed
 

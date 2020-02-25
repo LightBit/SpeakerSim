@@ -1656,7 +1656,7 @@ public class DriverWindow extends javax.swing.JDialog
         }
         catch (ParseException ex)
         {
-            UI.exception(this, ex);
+            UI.throwable(this, ex);
         }
         
         button.setVisible(false);

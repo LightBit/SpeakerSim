@@ -185,7 +185,7 @@ public final class UI
         return sb.toString();
     }
     
-    public static void exception(Component parent, Throwable e)
+    private static void exception(Component parent, Throwable e)
     {
         Sentry.capture(e);
         

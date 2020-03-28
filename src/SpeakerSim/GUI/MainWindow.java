@@ -20,6 +20,7 @@ import SpeakerSim.*;
 import io.sentry.Sentry;
 import java.awt.Component;
 import java.awt.Rectangle;
+import java.awt.Window;
 import java.awt.event.*;
 import java.beans.*;
 import java.io.*;
@@ -455,6 +456,17 @@ public final class MainWindow extends javax.swing.JFrame
             public void actionPerformed(ActionEvent e)
             {
                 addingItem(new Inductor(), above, node);
+            }
+        });
+        menu.add(mi);
+        
+        mi = new JMenuItem("Custom impedance");
+        mi.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                addingItem(new CustomImpedance(), above, node);
             }
         });
         menu.add(mi);
@@ -1260,6 +1272,88 @@ public final class MainWindow extends javax.swing.JFrame
                 inductor.L = UI.getDouble(value) / 1000;
                 return true;
             }
+        }
+        else if (item instanceof CustomImpedance)
+        {
+            final CustomImpedance customZ = (CustomImpedance) item;
+            ResponseEntry[] cZMA = customZ.ZMA;
+            
+            if (customZ.ZMA == null)
+            {
+                try
+                {
+                    FileSelector fs = new FileSelector(".zma");
+                    fs.setFileFilter(new FileNameExtensionFilter("Impedance Data", "zma", "txt", "csv"));
+
+                    if (fs.showOpenDialog(this) == FileSelector.APPROVE_OPTION)
+                    {
+                        customZ.importZMA(fs.getSelectedFile());
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    UI.throwable(this, ex);
+                }
+                return false;
+            }
+            
+            JButton importButton = new JButton("Import ZMA");
+            importButton.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    Window w = SwingUtilities.getWindowAncestor((JButton) e.getSource());
+                    
+                    try
+                    {
+                        FileSelector fs = new FileSelector(".zma");
+                        fs.setFileFilter(new FileNameExtensionFilter("Impedance Data", "zma", "txt", "csv"));
+
+                        if (fs.showOpenDialog(w) == FileSelector.APPROVE_OPTION)
+                        {
+                            customZ.importZMA(fs.getSelectedFile());
+                            w.setVisible(false);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        UI.throwable(w, ex);
+                    }
+                }
+            });
+            
+            JButton exportButton = new JButton("Export ZMA");
+            exportButton.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    Window w = SwingUtilities.getWindowAncestor((JButton) e.getSource());
+                    try
+                    {
+                        FileSelector fs = new FileSelector(".zma");
+                        fs.setFileFilter(new FileNameExtensionFilter("Impedance Data", "zma"));
+
+                        if (fs.showSaveDialog(w) == FileSelector.APPROVE_OPTION)
+                        {
+                            customZ.exportZMA(fs.getSelectedFile());
+                            w.setVisible(false);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        UI.throwable(w, ex);
+                    }
+                }
+            });
+            
+            final JComponent[] inputs = new JComponent[] { importButton, exportButton };
+            String[] opts = {"Close"};
+            JOptionPane.showOptionDialog(this, inputs, "Custom impedance", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, opts, opts[0]);
+            
+            return cZMA != customZ.ZMA;
         }
         
         return false;

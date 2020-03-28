@@ -16,7 +16,7 @@
 
 package SpeakerSim;
 
-import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.*;
 
 public interface JSONable
 {

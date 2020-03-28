@@ -16,7 +16,6 @@
 
 package SpeakerSim;
 
-import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 

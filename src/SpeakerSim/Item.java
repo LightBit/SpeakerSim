@@ -16,10 +16,7 @@
 
 package SpeakerSim;
 
-import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
+import com.eclipsesource.json.*;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;

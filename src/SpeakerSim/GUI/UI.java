@@ -188,7 +188,6 @@ public final class UI
     private static void exception(Component parent, Throwable e)
     {
         Sentry.capture(e);
-        Sentry.getContext().clearExtra();
         
         String stackTrace = "SpeakerSim " + Project.currentVersionString()
                 + "\r\n" + System.getProperty("java.runtime.name")

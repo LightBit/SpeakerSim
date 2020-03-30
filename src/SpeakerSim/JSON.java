@@ -16,8 +16,8 @@
 
 package SpeakerSim;
 
-import com.eclipsesource.json.*;
 import java.io.*;
+import com.eclipsesource.json.*;
 
 public final class JSON
 {
@@ -160,21 +160,24 @@ public final class JSON
 
     public static JsonValue open(File file) throws IOException
     {
-        JsonValue json;
-        try (Reader f = new FileReader(file))
+        try (InputStream f = new FileInputStream(file))
         {
-            json = Json.parse(f);
+            return open(f);
         }
-        return json;
     }
     
     public static JsonValue open(InputStream stream) throws IOException
     {
-        JsonValue json;
-        try (Reader f = new InputStreamReader(stream))
+        try
         {
-            json = Json.parse(f);
+            try (Reader f = new InputStreamReader(stream))
+            {
+                return Json.parse(f);
+            }
         }
-        return json;
+        catch (ParseException e)
+        {
+            throw new HandledException("File is not in correct format or is damaged!");
+        }
     }
 }

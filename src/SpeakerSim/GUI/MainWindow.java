@@ -292,7 +292,7 @@ public final class MainWindow extends javax.swing.JFrame
                                     {
                                         if (UI.options(null, "New version is available. It is recommended to update.", new String[]{"Visit web page", "Continue"}) == 0)
                                         {
-                                            UI.openURL("https://gitlab.com/LightBit/SpeakerSim/releases");
+                                            UI.openURL("https://gitlab.com/LightBit/SpeakerSim/-/releases");
                                         }
                                     }
                                 });

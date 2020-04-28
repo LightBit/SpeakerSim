@@ -49,7 +49,7 @@ public class Driver implements JSONable, ISource
     public double Cms; // Compliance of the driver's suspension, in metres per newton (the reciprocal of its 'stiffness'). (m/N)
     public double Mms; // Mass of the diaphragm/coil, including acoustic load, in kilograms. (kg) Mass of the diaphragm and coil alone is known as Mmd
     public double Rms; // The mechanical resistance of a driver's suspension (i.e., 'lossiness') in Ns/m (= kg/s)
-    public double n0; // Reference efficiency
+    public double N0; // Reference efficiency
     public double SPL_1W; // Reference sound presure level at 1W/1m (dB)
     public double SPL_2_83V; // Reference sound presure level at 2.83V/1m (dB)
     public double Pe; // Maximum input power for driver (W)
@@ -57,6 +57,8 @@ public class Driver implements JSONable, ISource
     public PowerFilter PowerFilter;
     public boolean Closed; // closed back (tweeter)
     public boolean Inverted; // if polarity is inverted
+    public int Series;
+    public int Parallel;
     public double CrossStart;
     public double CrossEnd;
     public ResponseData FRD;
@@ -69,6 +71,8 @@ public class Driver implements JSONable, ISource
         Name = "";
         shape = Shape.Circular;
         PowerFilter = new PowerFilter();
+        Series = 1;
+        Parallel = 1;
         CrossStart = 100;
         CrossEnd = 500;
     }
@@ -109,20 +113,102 @@ public class Driver implements JSONable, ISource
         dst.Cms = src.Cms;
         dst.Mms = src.Mms;
         dst.Rms = src.Rms;
-        dst.n0 = src.n0;
+        dst.N0 = src.N0;
         dst.SPL_1W = src.SPL_1W;
         dst.SPL_2_83V = src.SPL_2_83V;
         dst.Pe = src.Pe;
         dst.PeF = src.PeF;
         dst.PowerFilter.setType(src.PowerFilter.getType());
-        dst.CrossStart = src.CrossStart;
-        dst.CrossEnd = src.CrossEnd;
         dst.Closed = src.Closed;
         dst.Inverted = src.Inverted;
+        dst.Series = src.Series;
+        dst.Parallel = src.Parallel;
+        dst.CrossStart = src.CrossStart;
+        dst.CrossEnd = src.CrossEnd;
         dst.FRD = src.FRD;
         dst.hFRD = src.hFRD;
         dst.vFRD = src.vFRD;
         dst.ZMA = src.ZMA;
+    }
+    
+    public double effectiveVas()
+    {
+        return Vas * Series * Parallel;
+    }
+    
+    public double effectiveRe()
+    {
+        return Re * Series / Parallel;
+    }
+    
+    public double effectiveBl()
+    {
+        return Bl * Series;
+    }
+    
+    public double effectiveLe()
+    {
+        return Le * Series / Parallel;
+    }
+    
+    public double effectiveDia()
+    {
+        return Dia * Series * Parallel;
+    }
+    
+    public double effectiveWidth()
+    {
+        return Width * Series * Parallel;
+    }
+    
+    public double effectiveHeight()
+    {
+        return Height * Series * Parallel;
+    }
+    
+    public double effectiveSd()
+    {
+        return Sd * Series * Parallel;
+    }
+    
+    public double effectiveVd()
+    {
+        return Vd * Series * Parallel;
+    }
+    
+    public double effectiveCms()
+    {
+        return Cms / Series / Parallel;
+    }
+    
+    public double effectiveMms()
+    {
+        return Mms * Series * Parallel;
+    }
+    
+    public double effectiveRms()
+    {
+        return Rms * Series * Parallel;
+    }
+    
+    public double effectiveN0()
+    {
+        return N0 * Series * Parallel;
+    }
+    
+    public double effectiveSPL_1W()
+    {
+        return SPL_1W + 3 * (Series * Parallel - 1);
+    }
+    
+    public double effectiveSPL_2_83V()
+    {
+        return SPL_2_83V + 6 * (Parallel - 1) - 3 * (Series - 1);
+    }
+    
+    public double effectivePe()
+    {
+        return Pe * Series * Parallel;
     }
     
     public Driver copy()
@@ -209,20 +295,25 @@ public class Driver implements JSONable, ISource
     
     public double PeRMS()
     {
-        return PowerFilter.toRMS(Pe, PeF);
+        return PowerFilter.toRMS(effectivePe(), PeF);
     }
     
     public double voltage(double Pe)
     {
-        return Math.sqrt(Pe * Re) * Math.sqrt(2);
+        return Math.sqrt(Pe * effectiveRe()) * Math.sqrt(2);
+    }
+    
+    public double SPLdiff()
+    {
+        return effectiveSPL_2_83V() - SPL_1W;
     }
     
     public Complex responseSimRelative(double f)
     {
-        double Cas = calcCas();
-        double Mas = calcMas();
-        double Ras = calcRas();
-        double Rae = calcRae();
+        double Cas = Cas();
+        double Mas = Mas();
+        double Ras = Ras();
+        double Rae = Rae();
         
         f *= 2 * Math.PI;
         Complex Zas = new Complex(Ras, f * Mas - 1 / (f * Cas));
@@ -249,14 +340,14 @@ public class Driver implements JSONable, ISource
     
     public Complex responseSim(double f)
     {
-        return responseSimRelative(f).multiply(Fnc.toAmplitude(SPL_2_83V));
+        return responseSimRelative(f).multiply(Fnc.toAmplitude(effectiveSPL_2_83V()));
     }
     
     public Complex response(double f)
     {
         if (hasFRD())
         {
-            return FRD.response(f, SPL_2_83V - SPL_1W, Inverted);
+            return FRD.response(f, SPLdiff(), Inverted);
         }
         else
         {
@@ -268,27 +359,27 @@ public class Driver implements JSONable, ISource
     {
         if (FRD != null)
         {
-            Complex x = Complex.toComplex(Fnc.toAmplitude(SPL_2_83V), response(CrossEnd).phase());
+            Complex x = Complex.toComplex(Fnc.toAmplitude(effectiveSPL_2_83V()), response(CrossEnd).phase());
             return normalize(f, response(f), x);
         }
         
-        return Complex.toComplex(Fnc.toAmplitude(SPL_2_83V), Inverted ? -Math.PI : 0);
+        return Complex.toComplex(Fnc.toAmplitude(effectiveSPL_2_83V()), Inverted ? -Math.PI : 0);
     }
     
     public Complex response1W(double f)
     {
-        return response(f).divide(Fnc.toAmplitude(SPL_2_83V - SPL_1W));
+        return response(f).divide(Fnc.toAmplitude(SPLdiff()));
     }
     
     public Complex normResponse1W(double f)
     {
         if (FRD != null)
         {
-            Complex x = Complex.toComplex(Fnc.toAmplitude(SPL_1W), response1W(CrossEnd).phase());
+            Complex x = Complex.toComplex(Fnc.toAmplitude(effectiveSPL_1W()), response1W(CrossEnd).phase());
             return normalize(f, response1W(f), x);
         }
         
-        return Complex.toComplex(Fnc.toAmplitude(SPL_1W), Inverted ? -Math.PI : 0);
+        return Complex.toComplex(Fnc.toAmplitude(effectiveSPL_1W()), Inverted ? -Math.PI : 0);
     }
     
     private double directivity(double angle, boolean dipole)
@@ -311,13 +402,13 @@ public class Driver implements JSONable, ISource
         
         if (shape == Shape.Circular)
         {
-            x *= Dia * directivity(Math.max(horizontalAngle, verticalAngle), dipole);
+            x *= effectiveDia() * directivity(Math.max(horizontalAngle, verticalAngle), dipole);
             return new Complex(x > 0 ? Math.abs(2 * Fnc.besselJ1(x) / x) : 1);
         }
         else
         {
-            double w = x * Width * directivity(horizontalAngle, dipole);
-            double h = x * Height * directivity(verticalAngle, dipole);
+            double w = x * effectiveWidth() * directivity(horizontalAngle, dipole);
+            double h = x * effectiveHeight() * directivity(verticalAngle, dipole);
             return new Complex(Math.abs(Fnc.sinc(w) * Fnc.sinc(h)));
         }
     }
@@ -329,7 +420,7 @@ public class Driver implements JSONable, ISource
     
     private Complex horizontalAxis(double f, double horizontalAngle, boolean dipole)
     {
-        double SPLdiff = SPL_2_83V - SPL_1W;
+        double SPLdiff = SPLdiff();
         
         if (hFRD != null)
         {
@@ -377,7 +468,7 @@ public class Driver implements JSONable, ISource
     
     private Complex verticalAxis(double f, double verticalAngle, boolean dipole)
     {
-        double SPLdiff = SPL_2_83V - SPL_1W;
+        double SPLdiff = SPLdiff();
         
         if (vFRD != null)
         {
@@ -463,11 +554,11 @@ public class Driver implements JSONable, ISource
     {
         if (FRD != null)
         {
-            Complex x = Complex.toComplex(Fnc.toAmplitude(SPL_2_83V), response(CrossEnd).phase());
+            Complex x = Complex.toComplex(Fnc.toAmplitude(effectiveSPL_2_83V()), response(CrossEnd).phase());
             return normalize(f, response(f, horizontalAngle, verticalAngle, dipole), x);
         }
         
-        return Complex.toComplex(Fnc.toAmplitude(SPL_2_83V), Inverted ? -Math.PI : 0);
+        return Complex.toComplex(Fnc.toAmplitude(effectiveSPL_2_83V()), Inverted ? -Math.PI : 0);
     }
     
     @Override
@@ -478,15 +569,15 @@ public class Driver implements JSONable, ISource
     
     public double excursion(double f, double Pe)
     {
-        double maxVad = voltage(Math.min(Pe, PeRMS())) * Bl / (Re * Sd);
-        double Cas = calcCas();
-        double Mas = calcMas();
-        double Ras = calcRas();
-        double Rae = calcRae();
+        double maxVad = voltage(Math.min(Pe, PeRMS())) * effectiveBl() / (effectiveRe() * effectiveSd());
+        double Cas = Cas();
+        double Mas = Mas();
+        double Ras = Ras();
+        double Rae = Rae();
         
         f *= 2 * Math.PI;
         Complex Zas = new Complex(Ras, f * Mas - 1 / (f * Cas));
-        return new Complex(0, maxVad).divide(Zas.add(Rae)).abs() / (f * Sd) * 1000;
+        return new Complex(0, maxVad).divide(Zas.add(Rae)).abs() / (f * effectiveSd()) * 1000;
     }
     
     private static double LeZ(double Le, double f)
@@ -496,14 +587,16 @@ public class Driver implements JSONable, ISource
     
     private Complex impedanceSim(double f)
     {
-        double Cas = calcCas();
-        double Mas = calcMas();
-        double Ras = calcRas();
+        double Cas = Cas();
+        double Mas = Mas();
+        double Ras = Ras();
+        double bl = effectiveBl();
+        double sd = effectiveSd();
         
         double x = 2 * Math.PI * f;
         Complex Zas = new Complex(Ras, x * Mas - 1 / (x * Cas));
-        Complex Zes = new Complex(Bl * Bl / (Sd * Sd)).divide(Zas);
-        return new Complex(0, LeZ(f)).add(Zes.add(Re));
+        Complex Zes = new Complex(bl * bl / (sd * sd)).divide(Zas);
+        return new Complex(0, LeZ(f)).add(Zes.add(effectiveRe()));
     }
     
     public Complex impedance(double f)
@@ -515,7 +608,7 @@ public class Driver implements JSONable, ISource
             // no lower value
             if (prev.frequency > f)
             {
-                return Complex.toComplex(prev.amplitude, Math.toRadians(prev.phase)); // TODO: use predicted slope
+                return Complex.toComplex(prev.amplitude * Series / Parallel, Math.toRadians(prev.phase)); // TODO: use predicted slope
             }
 
             for (ResponseEntry entry : ZMA)
@@ -524,14 +617,14 @@ public class Driver implements JSONable, ISource
                 {
                     double amplitude = Fnc.interpolate(prev.frequency, prev.amplitude, entry.frequency, entry.amplitude, f);
                     double phase = Fnc.interpolate(prev.frequency, prev.phase, entry.frequency, entry.phase, f);
-                    return Complex.toComplex(amplitude, Math.toRadians(phase));
+                    return Complex.toComplex(amplitude * Series / Parallel, Math.toRadians(phase));
                 }
                 
                 prev = entry;
             }
             
             // no higher value
-            return Complex.toComplex(prev.amplitude, Math.toRadians(prev.phase)); // TODO: use predicted slope
+            return Complex.toComplex(prev.amplitude * Series / Parallel, Math.toRadians(prev.phase)); // TODO: use predicted slope
         }
         else
         {
@@ -541,11 +634,11 @@ public class Driver implements JSONable, ISource
     
     public double LeZ(double f)
     {
-        double z = LeZ(Le, f);
+        double z = LeZ(effectiveLe(), f);
         
         if (ZMA != null)
         {
-            z = normalize(f, impedance(f).abs() - Re, z);
+            z = normalize(f, impedance(f).abs() - effectiveRe(), z);
         }
         
         return z;
@@ -553,7 +646,7 @@ public class Driver implements JSONable, ISource
     
     public Complex normImpedance(double f)
     {
-        Complex z = Complex.toComplex(Re, LeZ(Le, f));
+        Complex z = Complex.toComplex(effectiveRe(), LeZ(effectiveLe(), f));
         
         if (ZMA != null)
         {
@@ -587,7 +680,7 @@ public class Driver implements JSONable, ISource
         json.add("Cms", Json.value(Cms));
         json.add("Mms", Json.value(Mms));
         json.add("Rms", Json.value(Rms));
-        json.add("n0", Json.value(n0));
+        json.add("n0", Json.value(N0));
         json.add("SPL", Json.value(SPL_1W));
         json.add("SPL_2_83V", Json.value(SPL_2_83V));
         json.add("Pe", Json.value(Pe));
@@ -597,6 +690,8 @@ public class Driver implements JSONable, ISource
         json.add("NormEndF", Json.value(CrossEnd));
         json.add("Closed", Json.value(Closed));
         json.add("Inverted", Json.value(Inverted));
+        json.add("Series", Json.value(Series));
+        json.add("Parallel", Json.value(Parallel));
         
         if (FRD != null || hFRD != null || vFRD != null)
         {
@@ -673,7 +768,7 @@ public class Driver implements JSONable, ISource
         Cms = jsonObj.get("Cms").asDouble();
         Mms = jsonObj.get("Mms").asDouble();
         Rms = jsonObj.get("Rms").asDouble();
-        n0 = jsonObj.get("n0").asDouble();
+        N0 = jsonObj.get("n0").asDouble();
         SPL_1W = jsonObj.get("SPL").asDouble();
         SPL_2_83V = JSON.getDouble(jsonObj, "SPL_2_83V", calcSPL_2_83V(SPL_1W, Re));
         Pe = jsonObj.get("Pe").asDouble();
@@ -683,6 +778,8 @@ public class Driver implements JSONable, ISource
         CrossEnd = jsonObj.get("NormEndF").asDouble();
         Closed = jsonObj.get("Closed").asBoolean();
         Inverted = jsonObj.get("Inverted").asBoolean();
+        Series = JSON.getInt(jsonObj, "Series", 1);
+        Parallel = JSON.getInt(jsonObj, "Parallel", 1);
         
         FRD = null;
         hFRD = null;
@@ -954,7 +1051,7 @@ public class Driver implements JSONable, ISource
     
     public double calcSPL_1W()
     {
-        return calcSPL_1W(n0);
+        return calcSPL_1W(N0);
     }
     
     public double calcSPL_2_83V()
@@ -962,53 +1059,61 @@ public class Driver implements JSONable, ISource
         return calcSPL_2_83V(SPL_1W, Re);
     }
     
-    public double calcMmd(double AirDensity)
-    {
-        return Mms - 2 * (8.0 / 3.0) * Math.pow(Math.sqrt(Sd / Math.PI), 3) * AirDensity;
-    }
-    
-    public double calcMmd()
-    {
-        return calcMmd(Environment.getInstance().AirDensity);
-    }
-    
-    public double calcMes()
-    {
-        return Mms / (Bl * Bl);
-    }
-    
-    public double calcCes()
-    {
-	return Cms * (Bl * Bl);
-    }
-    
-    public double calcRes()
-    {
-        return Bl * Bl / Rms;
-    }
-    
-    public double calcCas()
-    {
-        return Cms * (Sd * Sd);
-    }
-    
-    public double calcMas()
-    {
-        return Mms / (Sd * Sd);
-    }
-    
-    public double calcRas()
-    {
-        return Rms / (Sd * Sd);
-    }
-    
-    public double calcRae()
-    {
-        return Bl * Bl / (Sd * Sd * Re);
-    }
-    
-    public double calcEBP()
+    public double EBP()
     {
         return Fs / Qes;
+    }
+    
+    public double Mmd(double AirDensity)
+    {
+        return effectiveMms() - 2 * (8.0 / 3.0) * Math.pow(Math.sqrt(effectiveSd() / Math.PI), 3) * AirDensity;
+    }
+    
+    public double Mmd()
+    {
+        return Mmd(Environment.getInstance().AirDensity);
+    }
+    
+    public double Mes()
+    {
+        double bl = effectiveBl();
+        return effectiveMms() / (bl * bl);
+    }
+    
+    public double Ces()
+    {
+        double bl = effectiveBl();
+	return effectiveCms() * (bl * bl);
+    }
+    
+    public double Res()
+    {
+        double bl = effectiveBl();
+        return bl * bl / effectiveRms();
+    }
+    
+    public double Cas()
+    {
+        double sd = effectiveSd();
+        return effectiveCms() * (sd * sd);
+    }
+    
+    public double Mas()
+    {
+        double sd = effectiveSd();
+        return effectiveMms() / (sd * sd);
+    }
+    
+    public double Ras()
+    {
+        double sd = effectiveSd();
+        return effectiveRms() / (sd * sd);
+    }
+    
+    public double Rae()
+    {
+        double bl = effectiveBl();
+        double sd = effectiveSd();
+        return bl * bl / (sd * sd * effectiveRe());
     }
 }

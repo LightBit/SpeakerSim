@@ -1187,8 +1187,8 @@ public final class MainWindow extends javax.swing.JFrame
             final Zobel filter = (Zobel) item;
             
             List<Speaker> speakers = getSpeakers((DefaultMutableTreeNode) tree.getLastSelectedPathComponent()); // TODO?
-            final double R = speakers.size() == 1 ? speakers.get(0).Driver.Re : 0;
-            final double Le = speakers.size() == 1 ? speakers.get(0).Driver.Le : 0;
+            final double R = speakers.size() == 1 ? speakers.get(0).Driver.effectiveRe() : 0;
+            final double Le = speakers.size() == 1 ? speakers.get(0).Driver.effectiveLe() : 0;
             
             final JButton calc = new JButton("Calculate");
             calc.setEnabled(R != 0 && Le != 0);

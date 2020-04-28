@@ -91,10 +91,10 @@ public class BassReflexSimulation implements ISimulation
         
         double Qp = box.Qp + 0.00000000000001;
         
-        Cas = driver.calcCas();
-        Mas = driver.calcMas();
-        Ras = driver.calcRas();
-        Rae = driver.calcRae();
+        Cas = driver.Cas();
+        Mas = driver.Mas();
+        Ras = driver.Ras();
+        Rae = driver.Rae();
         
         Cab = box.Vb / (env.AirDensity * env.SpeedOfSound * env.SpeedOfSound);
         Rab = 1 / (2 * Math.PI * box.Fb * box.Qa * Cab);
@@ -189,8 +189,9 @@ public class BassReflexSimulation implements ISimulation
     @Override
     public double excursion(double f, double Pe)
     {
-        double maxVad = driver.voltage(Math.min(Pe, driver.PeRMS())) * driver.Bl / (driver.Re * driver.Sd);
-        return new Complex(0, maxVad).divide(Zat(f).add(Rae)).abs() / (2 * Math.PI * f * driver.Sd) * 1000;
+        double Sd = driver.effectiveSd();
+        double maxVad = driver.voltage(Math.min(Pe, driver.PeRMS())) * driver.effectiveBl() / (driver.effectiveRe() * Sd);
+        return new Complex(0, maxVad).divide(Zat(f).add(Rae)).abs() / (2 * Math.PI * f * Sd) * 1000;
     }
     
     @Override
@@ -209,8 +210,10 @@ public class BassReflexSimulation implements ISimulation
     @Override
     public Complex impedance(double f)
     {
-        Complex Zeb = new Complex(driver.Bl * driver.Bl / (driver.Sd * driver.Sd)).divide(Zat(f));
-        return new Complex(0, driver.LeZ(f)).add(Zeb.add(driver.Re));
+        double Bl = driver.effectiveBl();
+        double Sd = driver.effectiveSd();
+        Complex Zeb = new Complex(Bl * Bl / (Sd * Sd)).divide(Zat(f));
+        return new Complex(0, driver.LeZ(f)).add(Zeb.add(driver.effectiveRe()));
     }
     
     private double Sdp(double Dv, double Np)
@@ -222,7 +225,7 @@ public class BassReflexSimulation implements ISimulation
     public double portVelocity(double f, double Dv, double Np)
     {
         double fn = f / driver.Fs;
-        return driver.Sd / Sdp(Dv, Np) * driver.voltage(maxPower(f)) * driver.Bl / (driver.Re * driver.Mms * Math.pow(2 * Math.PI * driver.Fs, 2) * fn * fn) * port(f).abs() * 2 * Math.PI * f;
+        return driver.effectiveSd() / Sdp(Dv, Np) * driver.voltage(maxPower(f)) * driver.effectiveBl() / (driver.effectiveRe() * driver.effectiveMms() * Math.pow(2 * Math.PI * driver.Fs, 2) * fn * fn) * port(f).abs() * 2 * Math.PI * f;
     }
     
     /*
@@ -269,7 +272,7 @@ public class BassReflexSimulation implements ISimulation
         box.Ql = 7;
         box.Qa = 100;
         box.Qp = 100;
-        box.Vb = driver.Vas / BB4_A[(int)Math.round(driver.Qts * 100) - 20];
+        box.Vb = driver.effectiveVas() / BB4_A[(int)Math.round(driver.Qts * 100) - 20];
         box.Fb = driver.Fs;
     }
     
@@ -304,7 +307,7 @@ public class BassReflexSimulation implements ISimulation
         box.Qa = 100;
         box.Qp = 100;
         int i = (int)Math.round(driver.Qts * 100) - 10;
-        box.Vb = driver.Vas / QB3_A[i];
+        box.Vb = driver.effectiveVas() / QB3_A[i];
         box.Fb = driver.Fs * QB3_H[i];
     }
     
@@ -339,7 +342,7 @@ public class BassReflexSimulation implements ISimulation
         box.Qa = 100;
         box.Qp = 100;
         int i = (int)Math.round(driver.Qts * 100) - 25;
-        box.Vb = driver.Vas / C4_A[i];
+        box.Vb = driver.effectiveVas() / C4_A[i];
         box.Fb = driver.Fs * C4_H[i];
     }
     
@@ -350,8 +353,8 @@ public class BassReflexSimulation implements ISimulation
             box.Ql = 7;
             box.Qa = 100;
             box.Qp = 100;
-            box.Vb = 20 * Math.pow(driver.Qts, 3.3) * driver.Vas;
-            box.Fb = Math.pow(driver.Vas / box.Vb, 0.31) * driver.Fs;
+            box.Vb = 20 * Math.pow(driver.Qts, 3.3) * driver.effectiveVas();
+            box.Fb = Math.pow(driver.effectiveVas() / box.Vb, 0.31) * driver.Fs;
         }
         else if (driver.Qts < 0.2)
         {

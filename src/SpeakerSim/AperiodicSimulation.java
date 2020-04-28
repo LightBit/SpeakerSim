@@ -34,7 +34,7 @@ public class AperiodicSimulation extends BassReflexSimulation
         x.Ends = box.Ends;
         x.PortPosition = box.VentPosition;
         
-        x.Fb = ClosedBoxSimulation.calcFb(ClosedBoxSimulation.calcQtc(x.Vb, driver.Vas, driver.Qts, x.Qa), driver.Qts, driver.Fs);
+        x.Fb = ClosedBoxSimulation.calcFb(ClosedBoxSimulation.calcQtc(x.Vb, driver.effectiveVas(), driver.Qts, x.Qa), driver.Qts, driver.Fs);
         x.Qp = 0.5;
         
         return x;
@@ -44,7 +44,7 @@ public class AperiodicSimulation extends BassReflexSimulation
     {
         box.Qa = 10;
         box.Ql = 7;
-        box.Vb = ClosedBoxSimulation.calcVb(0.707 + 1 / box.Qa, driver.Qts, driver.Vas);
+        box.Vb = ClosedBoxSimulation.calcVb(0.707 + 1 / box.Qa, driver.Qts, driver.effectiveVas());
     }
     
     public AperiodicSimulation(Environment env, Aperiodic box, Driver driver, Baffle baffle, Position driverPos, Position centerPos, Position listeningPos)

@@ -55,7 +55,7 @@ public class ClosedBoxSimulation implements ISimulation
     {
         box.Qa = 10;
         box.Ql = 7;
-        box.Vb = calcVb(0.707 + 1 / box.Qa, driver.Qts, driver.Vas);
+        box.Vb = calcVb(0.707 + 1 / box.Qa, driver.Qts, driver.effectiveVas());
     }
     
     public ClosedBoxSimulation(Environment env, ClosedBox box, Driver driver, Baffle baffle, Position driverPos, Position centerPos, Position listeningPos)
@@ -69,10 +69,10 @@ public class ClosedBoxSimulation implements ISimulation
         horizontalAngle = driverPos.horizontalAngle(listeningPos);
         verticalAngle = driverPos.verticalAngle(listeningPos);
         
-        Cas = driver.calcCas();
-        Mas = driver.calcMas();
-        Ras = driver.calcRas();
-        Rae = driver.calcRae();
+        Cas = driver.Cas();
+        Mas = driver.Mas();
+        Ras = driver.Ras();
+        Rae = driver.Rae();
         
         Cab = box.Vb / (env.AirDensity * env.SpeedOfSound * env.SpeedOfSound);
         double Cat = Cas * Cab / (Cas + Cab);
@@ -133,8 +133,8 @@ public class ClosedBoxSimulation implements ISimulation
     @Override
     public double excursion(double f, double Pe)
     {
-        double maxVad = driver.voltage(Math.min(Pe, driver.PeRMS())) * driver.Bl / (driver.Re * driver.Sd);
-        return new Complex(0, maxVad).divide(Zat(f).add(Rae)).abs() / (2 * Math.PI * f * driver.Sd) * 1000;
+        double maxVad = driver.voltage(Math.min(Pe, driver.PeRMS())) * driver.effectiveBl() / (driver.effectiveRe() * driver.effectiveSd());
+        return new Complex(0, maxVad).divide(Zat(f).add(Rae)).abs() / (2 * Math.PI * f * driver.effectiveSd()) * 1000;
     }
     
     @Override
@@ -153,8 +153,10 @@ public class ClosedBoxSimulation implements ISimulation
     @Override
     public Complex impedance(double f)
     {
-        Complex Zeb = new Complex(driver.Bl * driver.Bl / (driver.Sd * driver.Sd)).divide(Zat(f));
-        return new Complex(0, driver.LeZ(f)).add(Zeb.add(driver.Re));
+        double Bl = driver.effectiveBl();
+        double Sd = driver.effectiveSd();
+        Complex Zeb = new Complex(Bl * Bl / (Sd * Sd)).divide(Zat(f));
+        return new Complex(0, driver.LeZ(f)).add(Zeb.add(driver.effectiveRe()));
     }
     
     public double dBmag(double f)

@@ -22,10 +22,7 @@ import SpeakerSim.Fnc;
 import SpeakerSim.PowerFilter;
 import SpeakerSim.Project;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
@@ -35,8 +32,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.event.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class DriverWindow extends javax.swing.JDialog
@@ -67,7 +63,7 @@ public class DriverWindow extends javax.swing.JDialog
         CmsField.setValue(driver.Cms * 1000);
         MmsField.setValue(driver.Mms * 1000);
         RmsField.setValue(driver.Rms);
-        n0Field.setValue(driver.n0 * 100);
+        n0Field.setValue(driver.N0 * 100);
         SPL_1WField.setValue(driver.SPL_1W);
         SPL_2_83VField.setValue(driver.SPL_2_83V);
         PeField.setValue(driver.Pe);
@@ -77,6 +73,8 @@ public class DriverWindow extends javax.swing.JDialog
         CrossEndField.setValue(driver.CrossEnd);
         closedCheckBox.setSelected(driver.Closed);
         invertedCheckBox.setSelected(driver.Inverted);
+        seriesSpin.setValue(driver.Series);
+        parallelSpin.setValue(driver.Parallel);
         
         DiaField.setEnabled(drv.shape == Driver.Shape.Circular);
         WidthField.setEnabled(drv.shape == Driver.Shape.Rectangular);
@@ -346,7 +344,7 @@ public class DriverWindow extends javax.swing.JDialog
             @Override
             public void propertyChange(PropertyChangeEvent e)
             {
-                drv.n0 = UI.getDouble(n0Field) / 100;
+                drv.N0 = UI.getDouble(n0Field) / 100;
                 refresh();
             }
         });
@@ -432,6 +430,50 @@ public class DriverWindow extends javax.swing.JDialog
             public void itemStateChanged(ItemEvent e)
             {
                 drv.Inverted = invertedCheckBox.isSelected();
+            }
+        });
+        
+        seriesSpin.addChangeListener(new ChangeListener()
+        {
+            @Override
+            public void stateChanged(ChangeEvent e)
+            {
+                int x = (Integer) seriesSpin.getValue();
+                if (x > 0)
+                {
+                    if (drv.Series != x)
+                    {
+                        drv.Series = x;
+                        renderGraphs();
+                        lblGroups.setText(" = " + drv.Series * drv.Parallel + " drivers");
+                    }
+                }
+                else
+                {
+                    seriesSpin.setValue(drv.Series);
+                }
+            }
+        });
+        
+        parallelSpin.addChangeListener(new ChangeListener()
+        {
+            @Override
+            public void stateChanged(ChangeEvent e)
+            {
+                int x = (Integer) parallelSpin.getValue();
+                if (x > 0)
+                {
+                    if (drv.Parallel != x)
+                    {
+                        drv.Parallel = x;
+                        renderGraphs();
+                        lblGroups.setText(" = " + drv.Series * drv.Parallel + " drivers");
+                    }
+                }
+                else
+                {
+                    parallelSpin.setValue(drv.Parallel);
+                }
             }
         });
     }
@@ -620,11 +662,16 @@ public class DriverWindow extends javax.swing.JDialog
         WidthField = UI.decimalField(0);
         lblWidth = new javax.swing.JLabel();
         SPL_2_83VButton = new javax.swing.JButton();
+        seriesSpin = new javax.swing.JSpinner();
+        parallelSpin = new javax.swing.JSpinner();
+        lblSeries = new javax.swing.JLabel();
+        lblParallel = new javax.swing.JLabel();
+        lblGroups = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Driver");
         setMinimumSize(new java.awt.Dimension(800, 600));
-        setPreferredSize(new java.awt.Dimension(1000, 800));
+        setPreferredSize(new java.awt.Dimension(1200, 800));
         getContentPane().setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -688,7 +735,7 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.setPreferredSize(new java.awt.Dimension(300, 700));
         java.awt.GridBagLayout propertiesPanelLayout = new java.awt.GridBagLayout();
         propertiesPanelLayout.columnWidths = new int[] {0, 5, 0, 5, 0, 5, 0};
-        propertiesPanelLayout.rowHeights = new int[] {0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0};
+        propertiesPanelLayout.rowHeights = new int[] {0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0};
         propertiesPanel.setLayout(propertiesPanelLayout);
 
         lblName.setText("Name:");
@@ -1235,6 +1282,7 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(lblPowerFilter, gridBagConstraints);
 
         FRDButton.setText("Manage");
+        FRDButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
         FRDButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -1272,6 +1320,7 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(lblFRD, gridBagConstraints);
 
         ZMAButton.setText("Import");
+        ZMAButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
         ZMAButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -1294,6 +1343,7 @@ public class DriverWindow extends javax.swing.JDialog
 
         invertedCheckBox.setText("Invert polarity");
         invertedCheckBox.setToolTipText("Switch + and - terminals");
+        invertedCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
@@ -1303,6 +1353,7 @@ public class DriverWindow extends javax.swing.JDialog
 
         closedCheckBox.setText("Enclosed");
         closedCheckBox.setToolTipText("Enclosed in it's own enclousure (tweeter)");
+        closedCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
         closedCheckBox.addChangeListener(new javax.swing.event.ChangeListener()
         {
             public void stateChanged(javax.swing.event.ChangeEvent evt)
@@ -1356,7 +1407,7 @@ public class DriverWindow extends javax.swing.JDialog
         propertiesPanel.add(lblFs, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 62;
+        gridBagConstraints.gridy = 66;
         gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
@@ -1365,6 +1416,7 @@ public class DriverWindow extends javax.swing.JDialog
 
         ZMAExportButton.setText("Export");
         ZMAExportButton.setEnabled(false);
+        ZMAExportButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
         ZMAExportButton.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -1467,6 +1519,36 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.gridy = 46;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         propertiesPanel.add(SPL_2_83VButton, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 62;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        propertiesPanel.add(seriesSpin, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 64;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        propertiesPanel.add(parallelSpin, gridBagConstraints);
+
+        lblSeries.setText("Series groups:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 62;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        propertiesPanel.add(lblSeries, gridBagConstraints);
+
+        lblParallel.setText("Parallel groups:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 64;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        propertiesPanel.add(lblParallel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 62;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        propertiesPanel.add(lblGroups, gridBagConstraints);
 
         scrollPane.setViewportView(propertiesPanel);
 
@@ -1600,7 +1682,7 @@ public class DriverWindow extends javax.swing.JDialog
                 invalid += "Rms, ";
             }
             
-            if (drv.n0 <= 0)
+            if (drv.N0 <= 0)
             {
                 invalid += "n0, ";
             }
@@ -1929,11 +2011,13 @@ public class DriverWindow extends javax.swing.JDialog
     private javax.swing.JLabel lblDia;
     private javax.swing.JLabel lblFRD;
     private javax.swing.JLabel lblFs;
+    private javax.swing.JLabel lblGroups;
     private javax.swing.JLabel lblHeight;
     private javax.swing.JLabel lblLe;
     private javax.swing.JLabel lblMms;
     private javax.swing.JLabel lblN0;
     private javax.swing.JLabel lblName;
+    private javax.swing.JLabel lblParallel;
     private javax.swing.JLabel lblPe;
     private javax.swing.JLabel lblPeF;
     private javax.swing.JLabel lblPowerFilter;
@@ -1945,6 +2029,7 @@ public class DriverWindow extends javax.swing.JDialog
     private javax.swing.JLabel lblSPL_1W;
     private javax.swing.JLabel lblSPL_2_83V;
     private javax.swing.JLabel lblSd;
+    private javax.swing.JLabel lblSeries;
     private javax.swing.JLabel lblShape;
     private javax.swing.JLabel lblVas;
     private javax.swing.JLabel lblVd;
@@ -1953,9 +2038,11 @@ public class DriverWindow extends javax.swing.JDialog
     private javax.swing.JLabel lblZMA;
     private javax.swing.JButton n0Button;
     private javax.swing.JFormattedTextField n0Field;
+    private javax.swing.JSpinner parallelSpin;
     private javax.swing.JComboBox<String> powerFilterComboBox;
     private javax.swing.JPanel propertiesPanel;
     private javax.swing.JScrollPane scrollPane;
+    private javax.swing.JSpinner seriesSpin;
     private javax.swing.JComboBox<String> shapeComboBox;
     private javax.swing.JTabbedPane tabs;
     // End of variables declaration//GEN-END:variables

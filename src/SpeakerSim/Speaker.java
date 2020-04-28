@@ -87,7 +87,7 @@ public class Speaker extends Item
             {
                 setSimulator(Speaker.SimulatorType.OPEN_BAFFLE);
             }
-            else if (Driver.Qts > 0.7 || Driver.calcEBP() < 50)
+            else if (Driver.Qts > 0.7 || Driver.EBP() < 50)
             {
                 setSimulator(Speaker.SimulatorType.CLOSED_BOX);
             }

@@ -85,7 +85,7 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         vbField.setValue(speaker.ClosedBox.Vb * 1000);
         qlField.setValue(speaker.ClosedBox.Ql);
         qaField.setValue(speaker.ClosedBox.Qa);
-        qtcField.setValue(ClosedBoxSimulation.calcQtc(speaker.ClosedBox.Vb, speaker.Driver.Vas, speaker.Driver.Qts, speaker.ClosedBox.Qa));
+        qtcField.setValue(ClosedBoxSimulation.calcQtc(speaker.ClosedBox.Vb, speaker.Driver.effectiveVas(), speaker.Driver.Qts, speaker.ClosedBox.Qa));
         
         listen = true;
     }

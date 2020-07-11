@@ -253,9 +253,10 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
         dist = new DistanceSimulation(distance);
     }
     
-    public ResponseData()
+    public ResponseData(File file, boolean dB) throws IOException
     {
         this(null);
+        data = ImportData(file, dB);
     }
     
     @Override

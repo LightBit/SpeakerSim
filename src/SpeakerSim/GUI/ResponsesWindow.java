@@ -123,13 +123,13 @@ public class ResponsesWindow extends JDialog
             {
                 List<ResponseData> hfrd = new ArrayList<ResponseData>();
                 List<ResponseData> vfrd = new ArrayList<ResponseData>();
-                Iterator iter = model.iterator();
+                Iterator<ResponseData> iter = model.iterator();
                 
                 drv.FRD = null;
 
                 while (iter.hasNext())
                 {
-                    ResponseData rd = (ResponseData) iter.next();
+                    ResponseData rd = iter.next();
                     if (rd.horizontalAngle == 0 && rd.verticalAngle == 0)
                     {
                         drv.FRD = rd;
@@ -291,8 +291,7 @@ public class ResponsesWindow extends JDialog
         {
             try
             {
-                ResponseData rd = new ResponseData();
-                rd.importData(fc.getSelectedFile(), true);
+                ResponseData rd = new ResponseData(fc.getSelectedFile(), true);
                 return rd;
             }
             catch (IOException ex)

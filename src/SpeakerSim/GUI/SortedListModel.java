@@ -35,7 +35,6 @@ class SortedListModel<E> extends AbstractListModel<E>
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public E getElementAt(int index)
     {
         if (getSize() <= index)
@@ -43,13 +42,13 @@ class SortedListModel<E> extends AbstractListModel<E>
             return null;
         }
         
-        Iterator iter = items.iterator();
+        Iterator<E> iter = items.iterator();
         
         for (int i = 0; i < index; i++)
         {
             iter.next();
         }
-        return (E) iter.next();
+        return iter.next();
     }
 
     public void addElement(E element)
@@ -83,7 +82,7 @@ class SortedListModel<E> extends AbstractListModel<E>
         return items.contains(element);
     }
     
-    public Iterator iterator()
+    public Iterator<E> iterator()
     {
         return items.iterator();
     }

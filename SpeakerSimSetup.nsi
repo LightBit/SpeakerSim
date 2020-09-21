@@ -9,6 +9,7 @@
 ; You should have received a copy of the CC0 Public Domain Dedication.
 ; If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
+Unicode True
 SetCompressor /SOLID lzma
 
 !define PRODUCT_NAME "SpeakerSim"

@@ -2107,7 +2107,7 @@ public final class MainWindow extends javax.swing.JFrame
                             ((ISpeakerPanel) enclosurePanel).simulate();
                         }
 
-                        SwingUtilities.invokeLater(new Runnable()
+                        SwingUtilities.invokeAndWait(new Runnable()
                         {
                             @Override
                             public void run()
@@ -2163,7 +2163,7 @@ public final class MainWindow extends javax.swing.JFrame
                         final Graph graphImpedance = new Graph("Impedance", "Hz", freq, "Ω", impedance);
                         graphImpedance.setYRange(0, Math.min(graphImpedance.getMaxY() + 1, Project.getInstance().Settings.MaxImpedance));
 
-                        SwingUtilities.invokeLater(new Runnable()
+                        SwingUtilities.invokeAndWait(new Runnable()
                         {
                             @Override
                             public void run()

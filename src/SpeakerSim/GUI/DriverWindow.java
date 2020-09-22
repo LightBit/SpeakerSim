@@ -41,6 +41,7 @@ public class DriverWindow extends javax.swing.JDialog
     private final Driver origDriver;
     private final Driver drv;
     private boolean result;
+    private boolean valid;
     
     private void load(Driver driver)
     {
@@ -527,6 +528,8 @@ public class DriverWindow extends javax.swing.JDialog
     
     private void refresh()
     {
+        valid = true;
+        
         setButton(VasButton, VasField, drv.calcVas(project.Environment.AirDensity, project.Environment.SpeedOfSound) * 1000);
         setButton(FsButton, FsField, drv.calcFs());
         setButton(QesButton, QesField, drv.calcQes());
@@ -559,6 +562,8 @@ public class DriverWindow extends javax.swing.JDialog
                 button.setText(calcText);
                 button.setForeground(diff > 0.1 ? Color.RED : Color.BLACK);
                 button.setVisible(true);
+                
+                valid &= diff <= 0.1;
             }
             else
             {
@@ -1709,6 +1714,14 @@ public class DriverWindow extends javax.swing.JDialog
         }
         else
         {
+            if (!valid)
+            {
+                if (UI.options(this, "Parameters are more than 10% off. Inconsistent parameters will result in invalid simulation.", new String[]{"Save anyway", "Cancel"}) != 0)
+                {
+                    return;
+                }
+            }
+            
             if (!drv.hasFRD() || !drv.hasZMA())
             {
                 if (UI.options(this, "There is no frequency or impedance response data. This data is required for good results.", new String[]{"Save anyway", "Cancel"}) != 0)

@@ -2182,6 +2182,10 @@ public final class MainWindow extends javax.swing.JFrame
                         });
                     }
                 }
+                catch (final InterruptedException e)
+                {
+                    // ignore
+                }
                 catch (final Throwable e)
                 {
                     if (!thread.isInterrupted())

@@ -34,4 +34,5 @@ rm ./SpeakerSim.jar
 cd ./jar
 7za a -tzip -mx=9 ../SpeakerSim.jar
 cd ../
+rm -rf ./jar
 

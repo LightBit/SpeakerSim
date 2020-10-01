@@ -7,7 +7,7 @@
 mvn package
 #mvn package -Dmaven.test.skip=true
 
-# Move final jar
+# Move jar
 mv ./target/SpeakerSim-jar-with-dependencies.jar ./SpeakerSim.jar
 
 # Zip jar
@@ -27,19 +27,11 @@ fi
 # Windows setup
 makensis ./SpeakerSimSetup.nsi
 
-# Windows portable (.zip)
-#mkdir -p ./build/SpeakerSim
-#cd ./build/SpeakerSim
-#cp -r ../../jre ./
-#cp ../../SpeakerSim.jar ./
-#cp ../../SpeakerSim.exe ./
-#cd ../
-#7za a -tzip -mx=9 ../SpeakerSimWindows.zip SpeakerSim
-#cd ../
-
 # Recompress jar
-#rm -rf ./target/jar
-#unzip ./target/SpeakerSim-jar-with-dependencies.jar -d ./target/jar
-#cd ./target/jar
-#7za a -tzip -mx=9 ../../SpeakerSim.jar
-#cd ../../
+rm -rf ./jar
+unzip ./SpeakerSim.jar -d ./jar
+rm ./SpeakerSim.jar
+cd ./jar
+7za a -tzip -mx=9 ../SpeakerSim.jar
+cd ../
+

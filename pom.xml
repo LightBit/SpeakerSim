@@ -17,6 +17,11 @@
             <version>0.9.5</version>
         </dependency>
         <dependency>
+            <groupId>org.ini4j</groupId>
+            <artifactId>ini4j</artifactId>
+            <version>0.5.4</version>
+        </dependency>
+        <dependency>
             <groupId>io.sentry</groupId>
             <artifactId>sentry</artifactId>
             <version>1.7.30</version>

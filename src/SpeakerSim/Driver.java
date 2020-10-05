@@ -17,6 +17,8 @@
 package SpeakerSim;
 
 import com.eclipsesource.json.*;
+import org.ini4j.Ini;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -866,9 +868,49 @@ public class Driver implements JSONable, ISource
         JSON.save(toJSON(), file);
     }
     
+    public static Driver importFromFile(File file) throws IOException
+    {
+        String name = file.getName();
+        
+        if (name.endsWith(".wdr")) // WinISD
+        {
+            Ini ini = new Ini(file);
+            Ini.Section driver = ini.get("Driver");
+            Driver drv = new Driver();
+            
+            drv.Name = driver.get("Brand") + " " + driver.get("Model");
+            drv.Fs = Fnc.parseDouble(driver.get("Fs"));
+            drv.Vas = Fnc.parseDouble(driver.get("Vas"));
+            drv.Qes = Fnc.parseDouble(driver.get("Qes"));
+            drv.Qms = Fnc.parseDouble(driver.get("Qms"));
+            drv.Qts = Fnc.parseDouble(driver.get("Qts"));
+            drv.Re = Fnc.parseDouble(driver.get("Re"));
+            drv.Bl = Fnc.parseDouble(driver.get("BL"));
+            drv.Le = Fnc.parseDouble(driver.get("Le"));
+            drv.Xmax = Fnc.parseDouble(driver.get("Xmax"));
+            drv.Dia = Fnc.parseDouble(driver.get("Dd"));
+            drv.Sd = Fnc.parseDouble(driver.get("Sd"));
+            drv.Vd = drv.calcVd();
+            drv.Cms = Fnc.parseDouble(driver.get("Cms"));
+            drv.Mms = Fnc.parseDouble(driver.get("Mms"));
+            drv.Rms = Fnc.parseDouble(driver.get("Rms"));
+            drv.N0 = Fnc.parseDouble(driver.get("no"));
+            drv.SPL_1W = Fnc.parseDouble(driver.get("SPL"));
+            drv.SPL_2_83V = Fnc.parseDouble(driver.get("USPL"));
+            drv.Pe = Fnc.parseDouble(driver.get("Pe"));
+            
+            return drv;
+        }
+        else // native
+        {
+            return new Driver(file);
+        }
+    }
+    
     public void open(File file) throws IOException
     {
-        fromJSON(JSON.open(file));
+        Driver drv = importFromFile(file);
+        copy(drv, this);
     }
     
     public static double calcFs(double Cms, double Mms)

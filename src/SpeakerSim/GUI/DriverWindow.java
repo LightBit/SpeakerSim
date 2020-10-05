@@ -578,8 +578,7 @@ public class DriverWindow extends javax.swing.JDialog
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         tabs = new javax.swing.JTabbedPane();
@@ -687,40 +686,32 @@ public class DriverWindow extends javax.swing.JDialog
         getContentPane().add(tabs, gridBagConstraints);
 
         OKButton.setText("Save");
-        OKButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        OKButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 OKButtonActionPerformed(evt);
             }
         });
         controlPanel.add(OKButton);
 
         CancelButton.setText("Cancel");
-        CancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        CancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CancelButtonActionPerformed(evt);
             }
         });
         controlPanel.add(CancelButton);
 
         ImportButton.setText("Import");
-        ImportButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        ImportButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ImportButtonActionPerformed(evt);
             }
         });
         controlPanel.add(ImportButton);
 
         ExportButton.setText("Export");
-        ExportButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        ExportButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ExportButtonActionPerformed(evt);
             }
         });
@@ -771,10 +762,8 @@ public class DriverWindow extends javax.swing.JDialog
         FsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         FsButton.setMinimumSize(new java.awt.Dimension(120, 19));
         FsButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        FsButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        FsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 FsButtonActionPerformed(evt);
             }
         });
@@ -805,10 +794,8 @@ public class DriverWindow extends javax.swing.JDialog
         QmsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         QmsButton.setMinimumSize(new java.awt.Dimension(120, 19));
         QmsButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        QmsButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        QmsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 QmsButtonActionPerformed(evt);
             }
         });
@@ -869,10 +856,8 @@ public class DriverWindow extends javax.swing.JDialog
         DiaButton.setMaximumSize(new java.awt.Dimension(120, 19));
         DiaButton.setMinimumSize(new java.awt.Dimension(120, 19));
         DiaButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        DiaButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        DiaButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 DiaButtonActionPerformed(evt);
             }
         });
@@ -1034,10 +1019,8 @@ public class DriverWindow extends javax.swing.JDialog
         VasButton.setMaximumSize(new java.awt.Dimension(120, 19));
         VasButton.setMinimumSize(new java.awt.Dimension(120, 19));
         VasButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        VasButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        VasButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 VasButtonActionPerformed(evt);
             }
         });
@@ -1053,10 +1036,8 @@ public class DriverWindow extends javax.swing.JDialog
         VdButton.setMaximumSize(new java.awt.Dimension(120, 19));
         VdButton.setMinimumSize(new java.awt.Dimension(120, 19));
         VdButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        VdButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        VdButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 VdButtonActionPerformed(evt);
             }
         });
@@ -1072,10 +1053,8 @@ public class DriverWindow extends javax.swing.JDialog
         MmsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         MmsButton.setMinimumSize(new java.awt.Dimension(120, 19));
         MmsButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        MmsButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        MmsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MmsButtonActionPerformed(evt);
             }
         });
@@ -1091,10 +1070,8 @@ public class DriverWindow extends javax.swing.JDialog
         n0Button.setMaximumSize(new java.awt.Dimension(120, 19));
         n0Button.setMinimumSize(new java.awt.Dimension(120, 19));
         n0Button.setPreferredSize(new java.awt.Dimension(120, 19));
-        n0Button.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        n0Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 n0ButtonActionPerformed(evt);
             }
         });
@@ -1110,10 +1087,8 @@ public class DriverWindow extends javax.swing.JDialog
         QesButton.setMaximumSize(new java.awt.Dimension(120, 19));
         QesButton.setMinimumSize(new java.awt.Dimension(120, 19));
         QesButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        QesButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        QesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 QesButtonActionPerformed(evt);
             }
         });
@@ -1129,10 +1104,8 @@ public class DriverWindow extends javax.swing.JDialog
         QtsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         QtsButton.setMinimumSize(new java.awt.Dimension(120, 19));
         QtsButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        QtsButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        QtsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 QtsButtonActionPerformed(evt);
             }
         });
@@ -1148,10 +1121,8 @@ public class DriverWindow extends javax.swing.JDialog
         BLButton.setMaximumSize(new java.awt.Dimension(120, 19));
         BLButton.setMinimumSize(new java.awt.Dimension(120, 19));
         BLButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        BLButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        BLButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BLButtonActionPerformed(evt);
             }
         });
@@ -1167,10 +1138,8 @@ public class DriverWindow extends javax.swing.JDialog
         SdButton.setMaximumSize(new java.awt.Dimension(120, 19));
         SdButton.setMinimumSize(new java.awt.Dimension(120, 19));
         SdButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        SdButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        SdButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SdButtonActionPerformed(evt);
             }
         });
@@ -1186,10 +1155,8 @@ public class DriverWindow extends javax.swing.JDialog
         CmsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         CmsButton.setMinimumSize(new java.awt.Dimension(120, 19));
         CmsButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        CmsButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        CmsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CmsButtonActionPerformed(evt);
             }
         });
@@ -1205,10 +1172,8 @@ public class DriverWindow extends javax.swing.JDialog
         RmsButton.setMaximumSize(new java.awt.Dimension(120, 19));
         RmsButton.setMinimumSize(new java.awt.Dimension(120, 19));
         RmsButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        RmsButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        RmsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 RmsButtonActionPerformed(evt);
             }
         });
@@ -1224,10 +1189,8 @@ public class DriverWindow extends javax.swing.JDialog
         SPL_1WButton.setMaximumSize(new java.awt.Dimension(120, 19));
         SPL_1WButton.setMinimumSize(new java.awt.Dimension(120, 19));
         SPL_1WButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        SPL_1WButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        SPL_1WButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SPL_1WButtonActionPerformed(evt);
             }
         });
@@ -1244,7 +1207,7 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblVd, gridBagConstraints);
 
-        lblCms.setText("Cms (cm/N):");
+        lblCms.setText("Cms (mm/N):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 36;
@@ -1258,7 +1221,7 @@ public class DriverWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         propertiesPanel.add(lblMms, gridBagConstraints);
 
-        lblRms.setText("Rms (Nm/s):");
+        lblRms.setText("Rms (Ns/m):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 40;
@@ -1288,10 +1251,8 @@ public class DriverWindow extends javax.swing.JDialog
 
         FRDButton.setText("Manage");
         FRDButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        FRDButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        FRDButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 FRDButtonActionPerformed(evt);
             }
         });
@@ -1326,10 +1287,8 @@ public class DriverWindow extends javax.swing.JDialog
 
         ZMAButton.setText("Import");
         ZMAButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        ZMAButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        ZMAButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ZMAButtonActionPerformed(evt);
             }
         });
@@ -1359,10 +1318,8 @@ public class DriverWindow extends javax.swing.JDialog
         closedCheckBox.setText("Enclosed");
         closedCheckBox.setToolTipText("Enclosed in it's own enclousure (tweeter)");
         closedCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        closedCheckBox.addChangeListener(new javax.swing.event.ChangeListener()
-        {
-            public void stateChanged(javax.swing.event.ChangeEvent evt)
-            {
+        closedCheckBox.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 closedCheckBoxStateChanged(evt);
             }
         });
@@ -1422,10 +1379,8 @@ public class DriverWindow extends javax.swing.JDialog
         ZMAExportButton.setText("Export");
         ZMAExportButton.setEnabled(false);
         ZMAExportButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        ZMAExportButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        ZMAExportButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ZMAExportButtonActionPerformed(evt);
             }
         });
@@ -1512,10 +1467,8 @@ public class DriverWindow extends javax.swing.JDialog
         SPL_2_83VButton.setMaximumSize(new java.awt.Dimension(120, 19));
         SPL_2_83VButton.setMinimumSize(new java.awt.Dimension(120, 19));
         SPL_2_83VButton.setPreferredSize(new java.awt.Dimension(120, 19));
-        SPL_2_83VButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        SPL_2_83VButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SPL_2_83VButtonActionPerformed(evt);
             }
         });
@@ -1870,7 +1823,7 @@ public class DriverWindow extends javax.swing.JDialog
         try
         {
             FileSelector fc = new FileSelector(".sdrv");
-            fc.setFileFilter(new FileNameExtensionFilter("SpeakerSim driver file", "sdrv"));
+            fc.setFileFilter(new FileNameExtensionFilter("SpeakerSim or WinISD driver file", "sdrv", "wdr"));
 
             if (fc.showOpenDialog(this) == FileSelector.APPROVE_OPTION)
             {

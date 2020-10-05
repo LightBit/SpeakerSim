@@ -948,7 +948,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lblCms">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Cms (cm/N):"/>
+                <Property name="text" type="java.lang.String" value="Cms (mm/N):"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -968,7 +968,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lblRms">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Rms (Nm/s):"/>
+                <Property name="text" type="java.lang.String" value="Rms (Ns/m):"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

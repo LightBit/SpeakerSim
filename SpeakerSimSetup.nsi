@@ -69,6 +69,7 @@ Section
   
   ; Register file association
   WriteRegStr HKCU "Software\Classes\.ssim" "" "${PRODUCT_NAME}"
+  WriteRegStr HKCU "Software\Classes\.sdrv" "" "${PRODUCT_NAME}"
   WriteRegStr HKCU "Software\Classes\${PRODUCT_NAME}" "" "${PRODUCT_NAME}"
   WriteRegStr HKCU "Software\Classes\${PRODUCT_NAME}\shell" "" "open"
   WriteRegStr HKCU "Software\Classes\${PRODUCT_NAME}\DefaultIcon" "" "$INSTDIR\SpeakerSim.exe"
@@ -99,6 +100,7 @@ Section "Uninstall"
   ; Unregister file association
   DeleteRegKey HKCU "Software\Classes\${PRODUCT_NAME}"
   DeleteRegKey HKCU "Software\Classes\.ssim"
+  DeleteRegKey HKCU "Software\Classes\.sdrv"
   
   ; Remove uninstaller information from the registry
   DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"

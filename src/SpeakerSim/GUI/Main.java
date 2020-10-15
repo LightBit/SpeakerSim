@@ -16,6 +16,8 @@
 
 package SpeakerSim.GUI;
 
+import SpeakerSim.Driver;
+import SpeakerSim.HandledException;
 import SpeakerSim.Project;
 import java.awt.*;
 import java.beans.*;
@@ -26,6 +28,7 @@ import io.sentry.DefaultSentryClientFactory;
 import io.sentry.context.ContextManager;
 import io.sentry.context.SingletonContextManager;
 import io.sentry.dsn.Dsn;
+import java.io.File;
 
 public class Main
 {
@@ -118,7 +121,26 @@ public class Main
         {
             if (args.length >= 1)
             {
-                new MainWindow(args[0]).setVisible(true);
+                String file = args[0];
+                
+                if (file.endsWith(".ssim"))
+                {
+                    new MainWindow(file).setVisible(true);
+                }
+                else if (file.endsWith(".sdrv"))
+                {
+                    File f = new File(file);
+                    Driver drv = Driver.importFromFile(f);
+                    
+                    if (new DriverWindow(null, new Project(), drv).showDialog())
+                    {
+                        drv.save(f);
+                    }
+                }
+                else
+                {
+                    throw new HandledException("Unsupported file format!");
+                }
             }
             else
             {

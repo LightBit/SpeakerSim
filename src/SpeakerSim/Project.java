@@ -40,6 +40,10 @@ public class Project extends Item
     
     public static Project getInstance()
     {
+        if (instance == null)
+        {
+            instance = new Project();
+        }
         return instance;
     }
     

@@ -129,10 +129,11 @@ public class Main
                 }
                 else if (file.endsWith(".sdrv"))
                 {
+                    Project p = new Project();
                     File f = new File(file);
                     Driver drv = Driver.importFromFile(f);
                     
-                    if (new DriverWindow(null, new Project(), drv).showDialog())
+                    if (new DriverWindow(null, p, drv).showDialog())
                     {
                         drv.save(f);
                     }

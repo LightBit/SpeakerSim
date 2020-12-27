@@ -113,7 +113,11 @@ public final class MainWindow extends javax.swing.JFrame
                 }
                 else
                 {
-                    showNode((DefaultMutableTreeNode) newPath.getLastPathComponent());
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode)newPath.getLastPathComponent();
+                    if (node != null)
+                    {
+                        showNode(node);
+                    }
                 }
             }
         });
@@ -2209,7 +2213,12 @@ public final class MainWindow extends javax.swing.JFrame
     public void refresh()
     {
         Project.getInstance().setModified();
-        showNode((DefaultMutableTreeNode) tree.getLastSelectedPathComponent());
+        
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+        if (node != null)
+        {
+            showNode(node);
+        }
     }
     
     private void addChildren(DefaultMutableTreeNode node, List<IItem> children)

@@ -116,7 +116,7 @@ public class ResponseData implements JSONable, Comparable<ResponseData>
         
         if (frd.isEmpty())
         {
-            throw new HandledException("File is empty!");
+            throw new HandledException("File does not contain any entry!");
         }
         
         // sort by frequency

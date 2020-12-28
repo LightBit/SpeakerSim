@@ -125,6 +125,7 @@ public class PortCalculator extends javax.swing.JDialog
         double Lv = sim.Lv(Dv, Np, BassReflex.K[endsComboBox.getSelectedIndex()]);
         lengthField.setValue(Lv * 100);
         volumeField.setValue(BassReflexSimulation.calcPortVolume(Lv, Dv + UI.getDouble(thicknessField) / 1000 * 2, Np) * 1000);
+        resonanceField.setValue(project.Environment.SpeedOfSound / (2 * Lv));
         
         Graph airSpeed = new Graph("Air speed", "Hz", "m/s");
         
@@ -175,6 +176,8 @@ public class PortCalculator extends javax.swing.JDialog
         jLabel15 = new javax.swing.JLabel();
         thicknessField = UI.decimalField(0);
         volumeField = UI.decimalField(0);
+        jLabel16 = new javax.swing.JLabel();
+        resonanceField = UI.decimalField(0);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Port calculator");
@@ -182,7 +185,7 @@ public class PortCalculator extends javax.swing.JDialog
         setMinimumSize(new java.awt.Dimension(800, 400));
         java.awt.GridBagLayout layout = new java.awt.GridBagLayout();
         layout.columnWidths = new int[] {0, 5, 0, 5, 0};
-        layout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
+        layout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
         getContentPane().setLayout(layout);
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -272,7 +275,7 @@ public class PortCalculator extends javax.swing.JDialog
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 20;
+        gridBagConstraints.gridy = 22;
         gridBagConstraints.gridwidth = 5;
         getContentPane().add(controlPanel, gridBagConstraints);
 
@@ -306,7 +309,7 @@ public class PortCalculator extends javax.swing.JDialog
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 19;
+        gridBagConstraints.gridheight = 21;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -339,6 +342,21 @@ public class PortCalculator extends javax.swing.JDialog
         gridBagConstraints.gridy = 16;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         getContentPane().add(volumeField, gridBagConstraints);
+
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel16.setText("First resonance (Hz):");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 18;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        getContentPane().add(jLabel16, gridBagConstraints);
+
+        resonanceField.setEditable(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 18;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        getContentPane().add(resonanceField, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -381,12 +399,14 @@ public class PortCalculator extends javax.swing.JDialog
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JFormattedTextField lengthField;
     private javax.swing.JFormattedTextField numberField;
     private javax.swing.JButton okButton;
+    private javax.swing.JFormattedTextField resonanceField;
     private javax.swing.JComboBox<String> shapeComboBox;
     private javax.swing.JFormattedTextField thicknessField;
     private javax.swing.JFormattedTextField volumeField;

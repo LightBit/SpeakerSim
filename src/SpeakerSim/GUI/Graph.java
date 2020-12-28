@@ -120,7 +120,10 @@ public final class Graph
         
         for (int i = 0; i < x.length; i++)
         {
-            s.add(x[i], y[i]);
+            if (Double.isFinite(x[i]) && Double.isFinite(y[i]))
+            {
+                s.add(x[i], y[i]);
+            }
         }
         
         series.addSeries(s);
@@ -128,12 +131,15 @@ public final class Graph
     
     public void add(double y, double x)
     {
-        if (series.getSeriesCount() < 1)
+        if (Double.isFinite(y) && Double.isFinite(x))
         {
-            series.addSeries(new XYSeries(new IdString("", 0)));
+            if (series.getSeriesCount() < 1)
+            {
+                series.addSeries(new XYSeries(new IdString("", 0)));
+            }
+
+            series.getSeries(0).add(x, y);
         }
-        
-        series.getSeries(0).add(x, y);
     }
     
     public void addXMark(double x, String label)

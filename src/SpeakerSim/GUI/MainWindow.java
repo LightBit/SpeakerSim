@@ -2637,23 +2637,17 @@ public final class MainWindow extends javax.swing.JFrame
         {
             Project p = new Project();
             
-            if (new SettingsWindow(this, p.Settings).showDialog())
+            setTitle("SpeakerSim (" + Project.currentVersionString() + ")");
+
+            file = null;
+            Project.setInstance(p);
+            load();
+            refresh();
+
+            Amplifier amp = new Amplifier();
+            if (editItem(amp))
             {
-                if (new EnvironmentWindow(this, p.Environment, p.Settings.RoomSimulation).showDialog())
-                {
-                    setTitle("SpeakerSim (" + Project.currentVersionString() + ")");
-                    
-                    file = null;
-                    Project.setInstance(p);
-                    load();
-                    refresh();
-                    
-                    Amplifier amp = new Amplifier();
-                    if (editItem(amp))
-                    {
-                        addItem(amp, (DefaultMutableTreeNode) tree.getModel().getRoot());
-                    }
-                }
+                addItem(amp, (DefaultMutableTreeNode) tree.getModel().getRoot());
             }
         }
     }//GEN-LAST:event_menuFileNewActionPerformed

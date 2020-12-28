@@ -52,7 +52,7 @@ public class Settings implements JSONable
         dBRange = 30;
         MaxImpedance = 80;
         MaxPower = 1000;
-        RoomSimulation = true;
+        RoomSimulation = false;
         BaffleSimulation = true;
         PowerFilter = new PowerFilter();
     }

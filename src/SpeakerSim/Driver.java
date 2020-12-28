@@ -205,7 +205,7 @@ public class Driver implements JSONable, ISource
     
     public double effectiveSPL_2_83V()
     {
-        return SPL_2_83V + 6 * (Parallel - 1) - 3 * (Series - 1);
+        return SPL_2_83V + 6 * (Parallel - 1);
     }
     
     public double effectivePe()

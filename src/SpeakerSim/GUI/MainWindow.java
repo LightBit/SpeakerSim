@@ -2082,7 +2082,7 @@ public final class MainWindow extends javax.swing.JFrame
                         graphDirectivity.add("Power response", freq, power);
                         graphDirectivity.add("Directivity", freq, directivity);
                         
-                        final Graph graphMaxSPL = new Graph("Maximal response", "Hz", freq, "dB", maxSPL);
+                        final Graph graphMaxSPL = new Graph("Maximal SPL", "Hz", freq, "dB", maxSPL);
                         final Graph graphMaxPower = new Graph("Maximal power", "Hz", freq, "W", maxPower);
                         final Graph graphGroupDelay = new Graph("Group delay", "Hz", freq, "ms", groupDelay);
                         final Graph graphBaffle = new Graph("Baffle", "Hz", freq, "dB", baffle);
@@ -2118,11 +2118,11 @@ public final class MainWindow extends javax.swing.JFrame
                             {
                                 if (thread.isInterrupted()) return;
 
-                                tabs.addTab("Response", graphResponse.getGraph());
+                                tabs.addTab("SPL at 2.83V", graphResponse.getGraph());
                                 tabs.addTab("Directivity", graphDirectivity.getGraph());
                                 tabs.addTab("Phase", graphPhase.getGraph());
                                 tabs.addTab("Filters", graphFilters.getGraph());
-                                tabs.addTab("Maximal response", graphMaxSPL.getGraph());
+                                tabs.addTab("Maximal SPL", graphMaxSPL.getGraph());
                                 tabs.addTab("Maximal power", graphMaxPower.getGraph());
                                 tabs.addTab("Excursion", graphExcursion.getGraph());
                                 tabs.addTab("Group delay", graphGroupDelay.getGraph());

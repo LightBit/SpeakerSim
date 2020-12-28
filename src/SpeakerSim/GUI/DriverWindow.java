@@ -366,6 +366,7 @@ public class DriverWindow extends javax.swing.JDialog
             public void propertyChange(PropertyChangeEvent e)
             {
                 drv.SPL_2_83V = UI.getDouble(SPL_2_83VField);
+                refresh();
             }
         });
         
@@ -491,7 +492,7 @@ public class DriverWindow extends javax.swing.JDialog
         boolean cross = !closedCheckBox.isSelected();
         tabs.removeAll();
         
-        Graph spl = new Graph("Frequency response", "Hz", "dB");
+        Graph spl = new Graph("SPL at 2.83V", "Hz", "dB");
         Graph phase = new Graph("Phase", "Hz", "");
         Graph impedance = new Graph("Impedance", "Hz", "Ω");
         Graph impedancePhase = new Graph("Impedance phase", "Hz", "");
@@ -518,7 +519,7 @@ public class DriverWindow extends javax.swing.JDialog
             phase.addXMark(UI.getDouble(CrossEndField), "Cross end");
         }
         
-        tabs.addTab("Frequency response", spl.getGraph());
+        tabs.addTab("SPL at 2.83V", spl.getGraph());
         tabs.addTab("Phase", phase.getGraph());
         tabs.addTab("Impedance", impedance.getGraph());
         tabs.addTab("Impedance phase", impedancePhase.getGraph());

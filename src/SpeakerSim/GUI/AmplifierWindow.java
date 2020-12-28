@@ -39,7 +39,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public class AmplifierWindow extends javax.swing.JDialog
+public final class AmplifierWindow extends javax.swing.JDialog
 {
     private final Amplifier amp;
     private boolean result;
@@ -53,6 +53,7 @@ public class AmplifierWindow extends javax.swing.JDialog
         ((JPanel)this.getContentPane()).setBorder(new EmptyBorder(5, 5, 5, 5));
         initComponents();
         setLocationRelativeTo(parent);
+        getRootPane().setDefaultButton(okButton);
         
         this.amp = amp;
         result = false;
@@ -148,8 +149,7 @@ public class AmplifierWindow extends javax.swing.JDialog
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         mainPanel = new javax.swing.JPanel();
@@ -225,10 +225,8 @@ public class AmplifierWindow extends javax.swing.JDialog
         filtersPanel.add(scrollPane, gridBagConstraints);
 
         addButton.setText("Add");
-        addButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addButtonActionPerformed(evt);
             }
         });
@@ -240,10 +238,8 @@ public class AmplifierWindow extends javax.swing.JDialog
 
         removeButton.setText("Remove");
         removeButton.setEnabled(false);
-        removeButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeButtonActionPerformed(evt);
             }
         });
@@ -256,10 +252,8 @@ public class AmplifierWindow extends javax.swing.JDialog
 
         editButton.setText("Edit");
         editButton.setEnabled(false);
-        editButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editButtonActionPerformed(evt);
             }
         });
@@ -273,20 +267,16 @@ public class AmplifierWindow extends javax.swing.JDialog
         getContentPane().add(filtersPanel, java.awt.BorderLayout.CENTER);
 
         okButton.setText("Save");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
         controlPanel.add(okButton);
 
         cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });

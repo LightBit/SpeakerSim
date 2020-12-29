@@ -21,6 +21,7 @@ public class BassReflexSimulation implements ISimulation
     private final BassReflex box;
     private final Driver driver;
     private final BaffleSimulation baffle;
+    private final int bafflePort;
     private final DistanceSimulation distanceCone;
     private final DistanceSimulation distancePort;
     private final RoomSimulation roomCone;
@@ -78,6 +79,7 @@ public class BassReflexSimulation implements ISimulation
         this.driver = driver;
         Port port = new Port(box.Dv);
         this.baffle = new BaffleSimulation(baffle, driver, driverPos, listeningPos, env, false);
+        this.bafflePort = baffle.Enabled ? 2 : 0;
         this.distanceCone = new DistanceSimulation(driverPos, listeningPos, env);
         this.distancePort = new DistanceSimulation(box.PortPosition.distance(listeningPos), env);
         this.roomCone = new RoomSimulation(baffle, driver, driverPos, listeningPos, env, false);
@@ -172,7 +174,7 @@ public class BassReflexSimulation implements ISimulation
     public Complex responseWithBaffle(double f)
     {
         Complex c = cone(f).multiply(baffle.response(f).multiply(distanceCone.response(f)));
-        Complex p = port(f).divide(2).multiply(distancePort.response(f));
+        Complex p = port(f).divide(this.bafflePort).multiply(distancePort.response(f));
         
         return driver.normResponse(f, horizontalAngle, verticalAngle, false).multiply(c.subtract(p));
     }

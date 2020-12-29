@@ -31,7 +31,7 @@ public class Baffle implements JSONable
     
     public Baffle()
     {
-        Enabled = true;
+        Enabled = false;
         Width = 0.3;
         Height = 0.7;
         X = 0.15;
@@ -40,7 +40,7 @@ public class Baffle implements JSONable
     
     public Baffle(double width, double height, double x, double y, double edgeRadius)
     {
-        Enabled = true;
+        Enabled = false;
         Width = width;
         Height = height;
         X = x;

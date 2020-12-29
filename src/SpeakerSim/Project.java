@@ -111,8 +111,8 @@ public class Project extends Item
         Settings = new Settings();
         Environment = new Environment();
         ListeningPosition = new Position();
-        ListeningPosition.X = 1.1;
-        ListeningPosition.Y = 1.866;
+        ListeningPosition.X = 2;
+        ListeningPosition.Y = 1;
         
         modified = false;
     }

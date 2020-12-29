@@ -81,7 +81,6 @@ public final class BassReflex implements JSONable
             Dv = 0.08;
             Thickness = 0.002;
             PortPosition = new Position();
-            PortPosition.Z = 0.5;
         }
     }
     

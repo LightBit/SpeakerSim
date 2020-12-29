@@ -118,7 +118,6 @@ public class Speaker extends Item
         super();
         Driver = new Driver();
         Position = new Position();
-        Position.HorizontalAngle = 30;
         Baffle = new Baffle();
         ClosedBox = new ClosedBox();
         BassReflex = new BassReflex();

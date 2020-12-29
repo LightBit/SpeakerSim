@@ -50,7 +50,7 @@ public class Position implements JSONable
         }
         else
         {
-            X = 0.6;
+            X = 1;
             Y = 1;
             Z = 1.1;
         }

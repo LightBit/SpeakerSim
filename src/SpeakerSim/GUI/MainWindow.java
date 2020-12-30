@@ -2245,13 +2245,13 @@ public final class MainWindow extends javax.swing.JFrame
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         split = new javax.swing.JSplitPane();
-        rightPanel = new javax.swing.JPanel();
-        tabs = new javax.swing.JTabbedPane();
+        treeScrollPane = new javax.swing.JScrollPane();
+        tree = new javax.swing.JTree();
+        rightSplit = new javax.swing.JSplitPane();
         propertiesScrollPane = new javax.swing.JScrollPane();
         propertiesPanel = new javax.swing.JPanel();
         listeningPanel = new javax.swing.JPanel();
@@ -2261,8 +2261,7 @@ public final class MainWindow extends javax.swing.JFrame
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         listeningPosZField = UI.decimalField(0);
-        treeScrollPane = new javax.swing.JScrollPane();
-        tree = new javax.swing.JTree();
+        tabs = new javax.swing.JTabbedPane();
         menuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuFileNew = new javax.swing.JMenuItem();
@@ -2281,21 +2280,29 @@ public final class MainWindow extends javax.swing.JFrame
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-        addWindowListener(new java.awt.event.WindowAdapter()
-        {
-            public void windowClosing(java.awt.event.WindowEvent evt)
-            {
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
         });
 
-        split.setDividerLocation(250);
+        split.setDividerLocation(300);
 
-        rightPanel.setLayout(new java.awt.BorderLayout());
-        rightPanel.add(tabs, java.awt.BorderLayout.CENTER);
+        treeScrollPane.setMinimumSize(new java.awt.Dimension(0, 22));
+
+        tree.setCellRenderer(new ItemTreeCellRenderer());
+        tree.setToggleClickCount(0);
+        treeScrollPane.setViewportView(tree);
+
+        split.setLeftComponent(treeScrollPane);
+
+        rightSplit.setDividerLocation(220);
+        rightSplit.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         propertiesScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
+        propertiesPanel.setMinimumSize(new java.awt.Dimension(400, 300));
+        propertiesPanel.setPreferredSize(new java.awt.Dimension(400, 300));
         java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT);
         flowLayout1.setAlignOnBaseline(true);
         propertiesPanel.setLayout(flowLayout1);
@@ -2355,67 +2362,50 @@ public final class MainWindow extends javax.swing.JFrame
 
         propertiesScrollPane.setViewportView(propertiesPanel);
 
-        rightPanel.add(propertiesScrollPane, java.awt.BorderLayout.NORTH);
+        rightSplit.setLeftComponent(propertiesScrollPane);
+        rightSplit.setRightComponent(tabs);
 
-        split.setRightComponent(rightPanel);
-
-        treeScrollPane.setMinimumSize(new java.awt.Dimension(0, 22));
-
-        tree.setCellRenderer(new ItemTreeCellRenderer());
-        tree.setToggleClickCount(0);
-        treeScrollPane.setViewportView(tree);
-
-        split.setLeftComponent(treeScrollPane);
+        split.setRightComponent(rightSplit);
 
         getContentPane().add(split, java.awt.BorderLayout.CENTER);
 
         menuFile.setText("File");
 
         menuFileNew.setText("New");
-        menuFileNew.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        menuFileNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuFileNewActionPerformed(evt);
             }
         });
         menuFile.add(menuFileNew);
 
         menuFileOpen.setText("Open");
-        menuFileOpen.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        menuFileOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuFileOpenActionPerformed(evt);
             }
         });
         menuFile.add(menuFileOpen);
 
         menuFileSave.setText("Save");
-        menuFileSave.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        menuFileSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuFileSaveActionPerformed(evt);
             }
         });
         menuFile.add(menuFileSave);
 
         menuFileSaveAs.setText("Save As");
-        menuFileSaveAs.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        menuFileSaveAs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuFileSaveAsActionPerformed(evt);
             }
         });
         menuFile.add(menuFileSaveAs);
 
         menuFileQuit.setText("Quit");
-        menuFileQuit.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        menuFileQuit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuFileQuitActionPerformed(evt);
             }
         });
@@ -2426,20 +2416,16 @@ public final class MainWindow extends javax.swing.JFrame
         menuProject.setText("Project");
 
         menuSettings.setText("Settings");
-        menuSettings.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        menuSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuSettingsActionPerformed(evt);
             }
         });
         menuProject.add(menuSettings);
 
         menuEnvironment.setText("Environment");
-        menuEnvironment.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        menuEnvironment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuEnvironmentActionPerformed(evt);
             }
         });
@@ -2451,40 +2437,32 @@ public final class MainWindow extends javax.swing.JFrame
         menuEnclosure.setEnabled(false);
 
         menuSimulatorBassReflex.setText("Bass Reflex");
-        menuSimulatorBassReflex.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        menuSimulatorBassReflex.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuSimulatorActionPerformed(evt);
             }
         });
         menuEnclosure.add(menuSimulatorBassReflex);
 
         menuSimulatorClosedBox.setText("Closed Box");
-        menuSimulatorClosedBox.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        menuSimulatorClosedBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuSimulatorActionPerformed(evt);
             }
         });
         menuEnclosure.add(menuSimulatorClosedBox);
 
         menuSimulatorAperiodic.setText("Aperiodic");
-        menuSimulatorAperiodic.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        menuSimulatorAperiodic.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuSimulatorActionPerformed(evt);
             }
         });
         menuEnclosure.add(menuSimulatorAperiodic);
 
         menuSimulatorOpenBaffle.setText("Open Baffle");
-        menuSimulatorOpenBaffle.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        menuSimulatorOpenBaffle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuSimulatorActionPerformed(evt);
             }
         });
@@ -2688,7 +2666,7 @@ public final class MainWindow extends javax.swing.JFrame
     private javax.swing.JRadioButtonMenuItem menuSimulatorOpenBaffle;
     private javax.swing.JPanel propertiesPanel;
     private javax.swing.JScrollPane propertiesScrollPane;
-    private javax.swing.JPanel rightPanel;
+    private javax.swing.JSplitPane rightSplit;
     private javax.swing.JSplitPane split;
     private javax.swing.JTabbedPane tabs;
     private javax.swing.JTree tree;

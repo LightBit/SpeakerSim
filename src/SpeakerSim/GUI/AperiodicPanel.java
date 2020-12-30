@@ -174,8 +174,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         portPositionPanel = new javax.swing.JPanel();
@@ -201,7 +200,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         flowLayout1.setAlignOnBaseline(true);
         setLayout(flowLayout1);
 
-        portPositionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Vent position in room"));
+        portPositionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Vent position"));
         java.awt.GridBagLayout portPositionPanelLayout = new java.awt.GridBagLayout();
         portPositionPanelLayout.columnWidths = new int[] {0, 5, 0};
         portPositionPanelLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0};
@@ -293,10 +292,8 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         bassReflexPanel.add(jLabel4, gridBagConstraints);
 
         portCalcButton.setText("Vent calculator");
-        portCalcButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        portCalcButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 portCalcButtonActionPerformed(evt);
             }
         });
@@ -338,10 +335,8 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         bassReflexPanel.add(jLabel3, gridBagConstraints);
 
         calculateButton.setText("Calculate");
-        calculateButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        calculateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 calculateButtonActionPerformed(evt);
             }
         });

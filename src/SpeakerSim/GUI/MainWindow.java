@@ -2307,7 +2307,7 @@ public final class MainWindow extends javax.swing.JFrame
         flowLayout1.setAlignOnBaseline(true);
         propertiesPanel.setLayout(flowLayout1);
 
-        listeningPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Listening position in room"));
+        listeningPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Listening position"));
         java.awt.GridBagLayout listeningPanelLayout = new java.awt.GridBagLayout();
         listeningPanelLayout.columnWidths = new int[] {0, 5, 0};
         listeningPanelLayout.rowHeights = new int[] {0, 5, 0, 5, 0};
@@ -2359,6 +2359,7 @@ public final class MainWindow extends javax.swing.JFrame
         listeningPanel.add(listeningPosZField, gridBagConstraints);
 
         propertiesPanel.add(listeningPanel);
+        listeningPanel.getAccessibleContext().setAccessibleName("Listening position");
 
         propertiesScrollPane.setViewportView(propertiesPanel);
 

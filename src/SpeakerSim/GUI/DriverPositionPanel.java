@@ -16,7 +16,6 @@
 
 package SpeakerSim.GUI;
 
-import SpeakerSim.Environment;
 import SpeakerSim.Position;
 import SpeakerSim.Project;
 import java.beans.PropertyChangeEvent;
@@ -132,8 +131,7 @@ public class DriverPositionPanel extends javax.swing.JPanel
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel9 = new javax.swing.JLabel();
@@ -151,7 +149,7 @@ public class DriverPositionPanel extends javax.swing.JPanel
         jLabel16 = new javax.swing.JLabel();
         distanceField = UI.decimalField(0);
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder("Driver position in room"));
+        setBorder(javax.swing.BorderFactory.createTitledBorder("Driver position"));
         java.awt.GridBagLayout layout = new java.awt.GridBagLayout();
         layout.columnWidths = new int[] {0, 5, 0, 5, 0};
         layout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};

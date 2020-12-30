@@ -2082,8 +2082,8 @@ public final class MainWindow extends javax.swing.JFrame
                         graphDirectivity.add("Power response", freq, power);
                         graphDirectivity.add("Directivity", freq, directivity);
                         
-                        final Graph graphMaxSPL = new Graph("Maximal SPL", "Hz", freq, "dB", maxSPL);
-                        final Graph graphMaxPower = new Graph("Maximal power", "Hz", freq, "W", maxPower);
+                        final Graph graphMaxSPL = new Graph("Max SPL", "Hz", freq, "dB", maxSPL);
+                        final Graph graphMaxPower = new Graph("Max power", "Hz", freq, "W", maxPower);
                         final Graph graphGroupDelay = new Graph("Group delay", "Hz", freq, "ms", groupDelay);
                         final Graph graphBaffle = new Graph("Baffle", "Hz", freq, "dB", baffle);
                         final Graph graphRoom = new Graph("Room", "Hz", freq, "dB", room);
@@ -2122,8 +2122,8 @@ public final class MainWindow extends javax.swing.JFrame
                                 tabs.addTab("Directivity", graphDirectivity.getGraph());
                                 tabs.addTab("Phase", graphPhase.getGraph());
                                 tabs.addTab("Filters", graphFilters.getGraph());
-                                tabs.addTab("Maximal SPL", graphMaxSPL.getGraph());
-                                tabs.addTab("Maximal power", graphMaxPower.getGraph());
+                                tabs.addTab("Max SPL", graphMaxSPL.getGraph());
+                                tabs.addTab("Max power", graphMaxPower.getGraph());
                                 tabs.addTab("Excursion", graphExcursion.getGraph());
                                 tabs.addTab("Group delay", graphGroupDelay.getGraph());
 

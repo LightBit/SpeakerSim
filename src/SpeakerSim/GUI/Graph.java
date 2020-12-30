@@ -16,6 +16,8 @@
 
 package SpeakerSim.GUI;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.awt.*;
 import java.awt.geom.*;
 import java.text.NumberFormat;
@@ -25,6 +27,7 @@ import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.axis.LogAxis;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.labels.CrosshairLabelGenerator;
 import org.jfree.chart.panel.CrosshairOverlay;
 import org.jfree.chart.plot.Crosshair;
 import org.jfree.chart.plot.Marker;
@@ -37,6 +40,7 @@ import org.jfree.chart.ui.RectangleAnchor;
 import org.jfree.chart.ui.RectangleEdge;
 import org.jfree.chart.ui.TextAnchor;
 import org.jfree.data.general.DatasetUtils;
+import org.jfree.data.xy.XYDataset;
 
 public final class Graph
 {
@@ -45,10 +49,8 @@ public final class Graph
     private final XYSeriesCollection series;
     private final XYPlot plot;
     private ChartPanel chartPanel;
-    private int mouseX;
-    private int mouseY;
     private Crosshair xCrosshair;
-    private Crosshair yCrosshair;
+    private List<Crosshair> yCrosshair;
     
     private class IdString implements Comparable<IdString>
     {
@@ -74,6 +76,24 @@ public final class Graph
         }
     }
     
+    private class GraphCrosshair extends Crosshair
+    {
+        public GraphCrosshair()
+        {
+            super(Double.NaN, Color.BLACK, new BasicStroke(1));
+            setLabelVisible(true);
+            setLabelBackgroundPaint(Color.YELLOW);
+            this.setLabelGenerator(new CrosshairLabelGenerator()
+            {
+                @Override
+                public String generateLabel(Crosshair crosshair)
+                {
+                    return String.format(" %.2f ", crosshair.getValue());
+                }
+            });
+        }
+    }
+    
     public Graph(String xAxis, String yAxis)
     {
         this.xAxis = new LogAxis(xAxis);
@@ -86,6 +106,8 @@ public final class Graph
         this.yAxis = new NumberAxis(yAxis);
         
         series = new XYSeriesCollection();
+        xCrosshair = new GraphCrosshair();
+        yCrosshair = new ArrayList<Crosshair>();
         
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
         renderer.setDefaultShapesVisible(false);
@@ -108,6 +130,7 @@ public final class Graph
         this(xAxis, yAxis);
         
         series.addSeries(new XYSeries(new IdString(title, 0)));
+        yCrosshair.add(new GraphCrosshair());
     }
     
     public Graph(String title, String xAxis, double[] x, String yAxis, double[] y)
@@ -130,6 +153,7 @@ public final class Graph
         }
         
         series.addSeries(s);
+        yCrosshair.add(new GraphCrosshair());
     }
     
     public void add(double y, double x)
@@ -216,9 +240,16 @@ public final class Graph
                 JFreeChart chart = event.getChart();
                 XYPlot plot = (XYPlot) chart.getPlot();
                 double x = plot.getDomainAxis().java2DToValue(event.getTrigger().getX(), dataArea, RectangleEdge.BOTTOM);
-                double y = DatasetUtils.findYValue(plot.getDataset(), 0, x);
                 xCrosshair.setValue(x);
-                yCrosshair.setValue(y);
+                
+                XYDataset d = plot.getDataset();
+                int i = 0;
+                for (Crosshair crosshair : yCrosshair)
+                {
+                    double y = DatasetUtils.findYValue(d, i, x);
+                    crosshair.setValue(y);
+                    i++;
+                }
             }
             
             @Override
@@ -228,12 +259,11 @@ public final class Graph
         });
         
         CrosshairOverlay crosshairOverlay = new CrosshairOverlay();
-        xCrosshair = new Crosshair(Double.NaN, Color.GRAY, new BasicStroke(0f));
-        xCrosshair.setLabelVisible(true);
-        yCrosshair = new Crosshair(Double.NaN, Color.GRAY, new BasicStroke(0f));
-        yCrosshair.setLabelVisible(true);
         crosshairOverlay.addDomainCrosshair(xCrosshair);
-        crosshairOverlay.addRangeCrosshair(yCrosshair);
+        for (Crosshair crosshair : yCrosshair)
+        {
+            crosshairOverlay.addRangeCrosshair(crosshair);
+        }
         chartPanel.addOverlay(crosshairOverlay);
         
         return chartPanel;

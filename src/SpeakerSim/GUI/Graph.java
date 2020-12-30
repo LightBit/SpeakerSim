@@ -16,9 +16,7 @@
 
 package SpeakerSim.GUI;
 
-import SpeakerSim.Fnc;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.geom.*;
 import java.text.NumberFormat;
 import org.jfree.chart.ChartPanel;
@@ -27,6 +25,8 @@ import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.axis.LogAxis;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.panel.CrosshairOverlay;
+import org.jfree.chart.plot.Crosshair;
 import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
@@ -34,7 +34,9 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.chart.ui.RectangleAnchor;
+import org.jfree.chart.ui.RectangleEdge;
 import org.jfree.chart.ui.TextAnchor;
+import org.jfree.data.general.DatasetUtils;
 
 public final class Graph
 {
@@ -45,7 +47,8 @@ public final class Graph
     private ChartPanel chartPanel;
     private int mouseX;
     private int mouseY;
-    private String value;
+    private Crosshair xCrosshair;
+    private Crosshair yCrosshair;
     
     private class IdString implements Comparable<IdString>
     {
@@ -193,68 +196,12 @@ public final class Graph
         plot.setRangeAxis(yAxis);
         plot.setDataset(series);
         
-        JFreeChart chart = new JFreeChart(null, plot);
-        
-        if (series.getSeriesCount() < 2)
-        {
-            chart.removeLegend();
-        }
-        
-        return chart;
+        return new JFreeChart(null, plot);
     }
     
     public Component getGraph()
     {
-        chartPanel = new ChartPanel(getChart(), false, true, true, false, true)
-        {
-            @Override
-            public void paintComponent(Graphics g)
-            {
-                super.paintComponent(g);
-
-                if (value != null)
-                {
-                    ((Graphics2D) g).setRenderingHints(new RenderingHints
-                    (
-                        RenderingHints.KEY_TEXT_ANTIALIASING,
-                        RenderingHints.VALUE_TEXT_ANTIALIAS_ON
-                    ));
-                    
-                    int x = mouseX + 10;
-                    int y = mouseY - 10;
-                    
-                    FontMetrics fm = g.getFontMetrics();
-                    Rectangle2D rect = fm.getStringBounds(value, g);
-                    int rectWidth = (int) Math.ceil(rect.getWidth());
-                    int rectHeight = (int) Math.ceil(rect.getHeight());
-                    
-                    if (g.getClipBounds().width < x + rectWidth + 4)
-                    {
-                        x -= rectWidth + 20;
-                    }
-                    
-                    if (0 > y - rectHeight - 2)
-                    {
-                        y += rectHeight + 30;
-                    }
-                    
-                    g.setColor(Color.YELLOW);
-                    g.fillRect(x - 4,
-                               y - fm.getAscent() - 2,
-                               rectWidth + 8,
-                               rectHeight + 4);
-                    
-                    g.setColor(Color.ORANGE);
-                    g.drawRect(x - 4,
-                               y - fm.getAscent() - 2,
-                               rectWidth + 8,
-                               rectHeight + 4);
-
-                    g.setColor(Color.BLACK);
-                    g.drawString(value, x, y);
-                }
-            }
-        };
+        chartPanel = new ChartPanel(getChart(), false, true, true, false, true);
         chartPanel.setMinimumDrawWidth(0);
         chartPanel.setMinimumDrawHeight(0);
         chartPanel.setMaximumDrawWidth(Integer.MAX_VALUE);
@@ -265,59 +212,29 @@ public final class Graph
             @Override
             public void chartMouseMoved(ChartMouseEvent event)
             {
-                mouseX = event.getTrigger().getX();
-                mouseY = event.getTrigger().getY();
-                Point2D p = chartPanel.translateScreenToJava2D(new Point(mouseX, mouseY));
-                Rectangle2D dataArea = chartPanel.getChartRenderingInfo().getPlotInfo().getDataArea();
-                double xValue = xAxis.java2DToValue(p.getX(), dataArea, plot.getDomainAxisEdge());
-                double yValue = yAxis.java2DToValue(p.getY(), dataArea, plot.getRangeAxisEdge());
-                String v = null;
-                
-                if
-                (
-                    xValue < xAxis.getRange().getUpperBound() &&
-                    xValue > xAxis.getRange().getLowerBound() &&
-                    yValue < yAxis.getRange().getUpperBound() &&
-                    yValue > yAxis.getRange().getLowerBound()
-                )
-                {
-                    v = Fnc.twoDecimalFormat(yValue) + yAxis.getLabel() + " at " + Math.round(xValue) + xAxis.getLabel();
-                }
-                
-                if (value != v)
-                {
-                    value = v;
-                    chartPanel.repaint();
-                }
+                Rectangle2D dataArea = chartPanel.getScreenDataArea();
+                JFreeChart chart = event.getChart();
+                XYPlot plot = (XYPlot) chart.getPlot();
+                double x = plot.getDomainAxis().java2DToValue(event.getTrigger().getX(), dataArea, RectangleEdge.BOTTOM);
+                double y = DatasetUtils.findYValue(plot.getDataset(), 0, x);
+                xCrosshair.setValue(x);
+                yCrosshair.setValue(y);
             }
             
             @Override
-            public void chartMouseClicked(ChartMouseEvent event) {}
-        });
-        chartPanel.addMouseListener(new MouseListener()
-        {
-            @Override
-            public void mouseExited(MouseEvent e)
+            public void chartMouseClicked(ChartMouseEvent event)
             {
-                if (value != null)
-                {
-                    value = null;
-                    chartPanel.repaint();
-                }
             }
-            
-            @Override
-            public void mouseReleased(MouseEvent e) {}
-
-            @Override
-            public void mousePressed(MouseEvent e) {}
-
-            @Override
-            public void mouseEntered(MouseEvent e) {}
-
-            @Override
-            public void mouseClicked(MouseEvent e) {}
         });
+        
+        CrosshairOverlay crosshairOverlay = new CrosshairOverlay();
+        xCrosshair = new Crosshair(Double.NaN, Color.GRAY, new BasicStroke(0f));
+        xCrosshair.setLabelVisible(true);
+        yCrosshair = new Crosshair(Double.NaN, Color.GRAY, new BasicStroke(0f));
+        yCrosshair.setLabelVisible(true);
+        crosshairOverlay.addDomainCrosshair(xCrosshair);
+        crosshairOverlay.addRangeCrosshair(yCrosshair);
+        chartPanel.addOverlay(crosshairOverlay);
         
         return chartPanel;
     }

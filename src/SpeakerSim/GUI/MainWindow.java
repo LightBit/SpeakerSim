@@ -1768,10 +1768,7 @@ public final class MainWindow extends javax.swing.JFrame
                 bafflePanel = new BafflePanel(this);
                 propertiesPanel.add(bafflePanel);
             }
-            else
-            {
-                UI.setPanelEnabled((JPanel) bafflePanel, Project.getInstance().Settings.BaffleSimulation);
-            }
+            bafflePanel.setVisible(Project.getInstance().Settings.BaffleSimulation);
             
             if (driverPositionPanel == null)
             {

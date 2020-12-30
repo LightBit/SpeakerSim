@@ -17,7 +17,6 @@
 package SpeakerSim.GUI;
 
 import SpeakerSim.Baffle;
-import SpeakerSim.Project;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
@@ -45,11 +44,7 @@ public class BafflePanel extends javax.swing.JPanel
                     main.refresh();
                 }
                 
-                /*widthField.setEnabled(baffle.Enabled);
-                heightField.setEnabled(baffle.Enabled);
-                leftField.setEnabled(baffle.Enabled);
-                bottomField.setEnabled(baffle.Enabled);
-                edgeField.setEnabled(baffle.Enabled);*/
+                setEnabled();
             }
         });
         
@@ -117,8 +112,6 @@ public class BafflePanel extends javax.swing.JPanel
                 }
             }
         });
-        
-        UI.setPanelEnabled(this, Project.getInstance().Settings.BaffleSimulation);
     }
     
     public void show(Baffle baffle)
@@ -134,24 +127,39 @@ public class BafflePanel extends javax.swing.JPanel
         bottomField.setValue(baffle.Y * 100);
         edgeField.setValue(baffle.EdgeRadius * 1000);
         
+        setEnabled();
+        
         listen = true;
+    }
+    
+    public void setEnabled()
+    {
+        widthLabel.setEnabled(baffle.Enabled);
+        widthField.setEnabled(baffle.Enabled);
+        heightLabel.setEnabled(baffle.Enabled);
+        heightField.setEnabled(baffle.Enabled);
+        leftLabel.setEnabled(baffle.Enabled);
+        leftField.setEnabled(baffle.Enabled);
+        bottomLabel.setEnabled(baffle.Enabled);
+        bottomField.setEnabled(baffle.Enabled);
+        edgeLabel.setEnabled(baffle.Enabled);
+        edgeField.setEnabled(baffle.Enabled);
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jLabel1 = new javax.swing.JLabel();
+        widthLabel = new javax.swing.JLabel();
         widthField = UI.decimalField(0.01);
-        jLabel2 = new javax.swing.JLabel();
+        heightLabel = new javax.swing.JLabel();
         heightField = UI.decimalField(0.01);
-        jLabel5 = new javax.swing.JLabel();
+        leftLabel = new javax.swing.JLabel();
         leftField = UI.decimalField(0);
-        jLabel6 = new javax.swing.JLabel();
+        bottomLabel = new javax.swing.JLabel();
         bottomField = UI.decimalField(0);
-        jLabel3 = new javax.swing.JLabel();
+        edgeLabel = new javax.swing.JLabel();
         edgeField = UI.decimalField(0);
         enabledCheckBox = new javax.swing.JCheckBox();
 
@@ -161,13 +169,13 @@ public class BafflePanel extends javax.swing.JPanel
         layout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
         setLayout(layout);
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText("Baffle width (cm):");
+        widthLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        widthLabel.setText("Baffle width (cm):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(jLabel1, gridBagConstraints);
+        add(widthLabel, gridBagConstraints);
 
         widthField.setMinimumSize(new java.awt.Dimension(80, 19));
         widthField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -176,13 +184,13 @@ public class BafflePanel extends javax.swing.JPanel
         gridBagConstraints.gridy = 2;
         add(widthField, gridBagConstraints);
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Baffle height (cm):");
+        heightLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        heightLabel.setText("Baffle height (cm):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(jLabel2, gridBagConstraints);
+        add(heightLabel, gridBagConstraints);
 
         heightField.setMinimumSize(new java.awt.Dimension(80, 19));
         heightField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -191,13 +199,13 @@ public class BafflePanel extends javax.swing.JPanel
         gridBagConstraints.gridy = 4;
         add(heightField, gridBagConstraints);
 
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel5.setText("Driver position from left (cm):");
+        leftLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        leftLabel.setText("Driver position from left (cm):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(jLabel5, gridBagConstraints);
+        add(leftLabel, gridBagConstraints);
 
         leftField.setMinimumSize(new java.awt.Dimension(80, 19));
         leftField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -206,13 +214,13 @@ public class BafflePanel extends javax.swing.JPanel
         gridBagConstraints.gridy = 6;
         add(leftField, gridBagConstraints);
 
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel6.setText("Driver position from bottom (cm):");
+        bottomLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        bottomLabel.setText("Driver position from bottom (cm):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(jLabel6, gridBagConstraints);
+        add(bottomLabel, gridBagConstraints);
 
         bottomField.setMinimumSize(new java.awt.Dimension(80, 19));
         bottomField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -221,13 +229,13 @@ public class BafflePanel extends javax.swing.JPanel
         gridBagConstraints.gridy = 8;
         add(bottomField, gridBagConstraints);
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("Edge radius (mm):");
+        edgeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        edgeLabel.setText("Edge radius (mm):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(jLabel3, gridBagConstraints);
+        add(edgeLabel, gridBagConstraints);
 
         edgeField.setMinimumSize(new java.awt.Dimension(80, 19));
         edgeField.setPreferredSize(new java.awt.Dimension(80, 19));
@@ -248,15 +256,15 @@ public class BafflePanel extends javax.swing.JPanel
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFormattedTextField bottomField;
+    private javax.swing.JLabel bottomLabel;
     private javax.swing.JFormattedTextField edgeField;
+    private javax.swing.JLabel edgeLabel;
     private javax.swing.JCheckBox enabledCheckBox;
     private javax.swing.JFormattedTextField heightField;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel heightLabel;
     private javax.swing.JFormattedTextField leftField;
+    private javax.swing.JLabel leftLabel;
     private javax.swing.JFormattedTextField widthField;
+    private javax.swing.JLabel widthLabel;
     // End of variables declaration//GEN-END:variables
 }

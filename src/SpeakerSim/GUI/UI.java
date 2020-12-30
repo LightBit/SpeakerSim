@@ -155,25 +155,6 @@ public final class UI
         return 0;
     }
     
-    public static void setPanelEnabled(JPanel panel, Boolean isEnabled)
-    {
-        panel.setEnabled(isEnabled);
-
-        Component[] components = panel.getComponents();
-
-        for (Component component : components)
-        {
-            if (component instanceof JPanel)
-            {
-                setPanelEnabled((JPanel) component, isEnabled);
-            }
-            if (component != null)
-            {
-                component.setEnabled(isEnabled);
-            }
-        }
-    }
-    
     private static String stackTraceToString(Throwable e)
     {
         StringBuilder sb = new StringBuilder();

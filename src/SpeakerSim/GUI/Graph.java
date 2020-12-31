@@ -99,6 +99,8 @@ public final class Graph
         }
     }
     
+    private final static Stroke dashedStroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{10}, 0);
+    
     public Graph(String xAxis, String yAxis)
     {
         this.xAxis = new LogAxis(xAxis);
@@ -112,10 +114,9 @@ public final class Graph
         
         series = new XYSeriesCollection();
         xCrosshair = new GraphCrosshair();
+        xCrosshair.setStroke(dashedStroke);
         yCrosshair = new GraphCrosshair();
-        yCrosshair.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{10}, 0));
-        yCrosshair.setPaint(Color.GRAY);
-        yCrosshair.setLabelBackgroundPaint(Color.GRAY);
+        yCrosshair.setStroke(dashedStroke);
         yCrosshairs = new ArrayList<Crosshair>();
         
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();

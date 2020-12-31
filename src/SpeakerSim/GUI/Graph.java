@@ -19,6 +19,8 @@ package SpeakerSim.GUI;
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.*;
 import java.text.NumberFormat;
 import org.jfree.chart.ChartPanel;
@@ -82,7 +84,8 @@ public final class Graph
         {
             super(Double.NaN, Color.BLACK, new BasicStroke(1));
             setLabelVisible(true);
-            setLabelBackgroundPaint(Color.YELLOW);
+            setLabelBackgroundPaint(Color.BLACK);
+            setLabelPaint(Color.WHITE);
             setLabelGenerator(new CrosshairLabelGenerator()
             {
                 @Override
@@ -231,6 +234,7 @@ public final class Graph
         chartPanel.setMaximumDrawWidth(Integer.MAX_VALUE);
         chartPanel.setMaximumDrawHeight(Integer.MAX_VALUE);
         chartPanel.setMouseZoomable(false);
+        
         chartPanel.addChartMouseListener(new ChartMouseListener()
         {
             @Override
@@ -258,6 +262,41 @@ public final class Graph
             }
         });
         
+        chartPanel.addMouseListener(new MouseListener()
+        {
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                xCrosshair.setValue(Double.NaN);
+                
+                for (Crosshair crosshair : yCrosshair)
+                {
+                    crosshair.setValue(Double.NaN);
+                }
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+            }
+        });
+
+        
         CrosshairOverlay crosshairOverlay = new CrosshairOverlay();
         crosshairOverlay.addDomainCrosshair(xCrosshair);
         for (Crosshair crosshair : yCrosshair)
@@ -265,6 +304,7 @@ public final class Graph
             crosshairOverlay.addRangeCrosshair(crosshair);
         }
         chartPanel.addOverlay(crosshairOverlay);
+        chartPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         
         return chartPanel;
     }

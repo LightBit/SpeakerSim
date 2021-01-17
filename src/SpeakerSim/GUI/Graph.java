@@ -201,27 +201,9 @@ public final class Graph
         plot.addRangeMarker(mark);
     }
     
-    public double getMaxY()
-    {
-        double max = 0;
-        
-        for (int i = 0; i < series.getSeriesCount(); i++)
-        {
-            max = Math.max(max, series.getSeries(i).getMaxY());
-        }
-        
-        return max;
-    }
-    
     public void setYRange(double min, double max)
     {
         yAxis.setRange(min, max);
-    }
-    
-    public void setYRange(double range)
-    {
-        double maxY = getMaxY();
-        setYRange(maxY - range, maxY + 1);
     }
     
     public Component getGraph()

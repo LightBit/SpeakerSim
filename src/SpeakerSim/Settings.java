@@ -26,9 +26,11 @@ public class Settings implements JSONable
     public int EndFrequency;
     public int Points;
     public int Smoothing;
-    public int dBRange;
+    public int MinSPL;
+    public int MaxSPL;
     public int MaxImpedance;
     public int MaxPower;
+    public int MaxExcursion;
     //public boolean PositionSimulation;
     public boolean BaffleSimulation;
     public boolean RoomSimulation;
@@ -46,13 +48,15 @@ public class Settings implements JSONable
     
     public Settings()
     {
-        StartFrequency = 20;
+        StartFrequency = 10;
         EndFrequency = 20000;
         Points = 1000;
         Smoothing = 12;
-        dBRange = 30;
+        MinSPL = 40;
+        MaxSPL = 110;
         MaxImpedance = 80;
-        MaxPower = 1000;
+        MaxPower = 500;
+        MaxExcursion = 30;
         //PositionSimulation = true;
         BaffleSimulation = true;
         RoomSimulation = false;
@@ -67,9 +71,11 @@ public class Settings implements JSONable
         EndFrequency = JSON.getInt(jsonObj, "EndFrequency", 20000);
         Points = JSON.getInt(jsonObj, "Points", 1000);
         Smoothing = JSON.getInt(jsonObj, "Smoothing");
-        dBRange = JSON.getInt(jsonObj, "dBRange", 30);
+        MinSPL = JSON.getInt(jsonObj, "MinSPL", 40);
+        MaxSPL = JSON.getInt(jsonObj, "MaxSPL", 110);
         MaxImpedance = JSON.getInt(jsonObj, "MaxImpedance", 80);
-        MaxPower = JSON.getInt(jsonObj, "MaxPower", 1000);
+        MaxPower = JSON.getInt(jsonObj, "MaxPower", 500);
+        MaxExcursion = JSON.getInt(jsonObj, "MaxExcursion", 30);
         //PositionSimulation = JSON.getBoolean(jsonObj, "PositionSimulationEnabled", true);
         BaffleSimulation = JSON.getBoolean(jsonObj, "BaffleSimulationEnabled", false);
         RoomSimulation = JSON.getBoolean(jsonObj, "RoomSimulationEnabled", false);
@@ -85,9 +91,11 @@ public class Settings implements JSONable
         json.add("EndFrequency", EndFrequency);
         json.add("Points", Points);
         json.add("Smoothing", Smoothing);
-        json.add("dBRange", dBRange);
+        json.add("MinSPL", MinSPL);
+        json.add("MaxSPL", MaxSPL);
         json.add("MaxImpedance", MaxImpedance);
         json.add("MaxPower", MaxPower);
+        json.add("MaxExcursion", MaxExcursion);
         //json.add("PositionSimulationEnabled", PositionSimulation);
         json.add("BaffleSimulationEnabled", BaffleSimulation);
         json.add("RoomSimulationEnabled", RoomSimulation);

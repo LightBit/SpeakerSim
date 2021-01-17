@@ -273,7 +273,9 @@ public class ResponsesWindow extends JDialog
                 phase.add(Math.toDegrees(r.phase()), f);
             }
 
-            spl.setYRange(spl.getMaxY() - Project.getInstance().Settings.dBRange, spl.getMaxY() + 1);
+            spl.setYRange(Project.getInstance().Settings.MinSPL, Project.getInstance().Settings.MaxSPL);
+            phase.setYRange(-180, 180);
+            phase.addYMark(0, "");
 
             tabs.addTab("Frequency response", spl.getGraph());
             tabs.addTab("Phase", phase.getGraph());

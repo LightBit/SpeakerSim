@@ -257,7 +257,8 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         box.add("Cone", main.freq, cone);
         box.add("Port", main.freq, port);
         
-        box.setYRange(box.getMaxY() - Project.getInstance().Settings.dBRange, box.getMaxY() + 1);
+        box.setYRange(-30, 10);
+        box.addYMark(0, "");
     }
     
     @Override

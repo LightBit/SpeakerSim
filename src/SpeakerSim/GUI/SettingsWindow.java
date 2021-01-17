@@ -50,9 +50,11 @@ public class SettingsWindow extends javax.swing.JDialog
         startFrequencyField.setValue(settings.StartFrequency);
         endFrequencyField.setValue(settings.EndFrequency);
         pointsField.setValue(settings.Points);
-        dbRangeField.setValue(settings.dBRange);
+        minSPLField.setValue(settings.MinSPL);
+        maxSPLField.setValue(settings.MaxSPL);
         maxImpedanceField.setValue(settings.MaxImpedance);
         maxPowerField.setValue(settings.MaxPower);
+        maxExcursionField.setValue(settings.MaxExcursion);
         simulateRoomCheckBox.setSelected(this.settings.RoomSimulation);
         simulateBaffleCheckBox.setSelected(this.settings.BaffleSimulation);
         powerFilterComboBox.setSelectedItem(this.settings.PowerFilter.toString());
@@ -78,7 +80,7 @@ public class SettingsWindow extends javax.swing.JDialog
         jLabel9 = new javax.swing.JLabel();
         startFrequencyField = UI.integerField(1);
         jLabel10 = new javax.swing.JLabel();
-        dbRangeField = UI.integerField(3);
+        minSPLField = UI.integerField(3);
         jLabel11 = new javax.swing.JLabel();
         simulateRoomCheckBox = new javax.swing.JCheckBox();
         simulateBaffleCheckBox = new javax.swing.JCheckBox();
@@ -90,6 +92,10 @@ public class SettingsWindow extends javax.swing.JDialog
         smoothingComboBox = new javax.swing.JComboBox<>();
         jLabel15 = new javax.swing.JLabel();
         powerFilterComboBox = new javax.swing.JComboBox(PowerFilter.FILTERS);
+        jLabel16 = new javax.swing.JLabel();
+        maxExcursionField = UI.integerField(3);
+        jLabel17 = new javax.swing.JLabel();
+        maxSPLField = UI.integerField(3);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Simulation settings");
@@ -98,7 +104,7 @@ public class SettingsWindow extends javax.swing.JDialog
         setResizable(false);
         java.awt.GridBagLayout layout = new java.awt.GridBagLayout();
         layout.columnWidths = new int[] {0, 5, 0};
-        layout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
+        layout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
         getContentPane().setLayout(layout);
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -136,7 +142,7 @@ public class SettingsWindow extends javax.swing.JDialog
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 20;
+        gridBagConstraints.gridy = 24;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         getContentPane().add(controlPanel, gridBagConstraints);
@@ -151,7 +157,7 @@ public class SettingsWindow extends javax.swing.JDialog
         getContentPane().add(pointsField, gridBagConstraints);
 
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel9.setText("dB range (dB):");
+        jLabel9.setText("Minimum SPL (dB):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
@@ -175,14 +181,14 @@ public class SettingsWindow extends javax.swing.JDialog
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel10, gridBagConstraints);
 
-        dbRangeField.setMinimumSize(new java.awt.Dimension(80, 19));
-        dbRangeField.setPreferredSize(new java.awt.Dimension(80, 19));
+        minSPLField.setMinimumSize(new java.awt.Dimension(80, 19));
+        minSPLField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        getContentPane().add(dbRangeField, gridBagConstraints);
+        getContentPane().add(minSPLField, gridBagConstraints);
 
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel11.setText("Points:");
@@ -195,14 +201,14 @@ public class SettingsWindow extends javax.swing.JDialog
         simulateRoomCheckBox.setText("Simulate room");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 16;
+        gridBagConstraints.gridy = 20;
         gridBagConstraints.gridwidth = 3;
         getContentPane().add(simulateRoomCheckBox, gridBagConstraints);
 
         simulateBaffleCheckBox.setText("Simulate baffle");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 18;
+        gridBagConstraints.gridy = 22;
         gridBagConstraints.gridwidth = 3;
         getContentPane().add(simulateBaffleCheckBox, gridBagConstraints);
 
@@ -210,16 +216,16 @@ public class SettingsWindow extends javax.swing.JDialog
         maxImpedanceField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         getContentPane().add(maxImpedanceField, gridBagConstraints);
 
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel12.setText("Maximal impedance (Ω):");
+        jLabel12.setText("Maximum impedance (Ω):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel12, gridBagConstraints);
 
@@ -227,7 +233,7 @@ public class SettingsWindow extends javax.swing.JDialog
         maxPowerField.setPreferredSize(new java.awt.Dimension(80, 19));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 14;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         getContentPane().add(maxPowerField, gridBagConstraints);
@@ -236,7 +242,7 @@ public class SettingsWindow extends javax.swing.JDialog
         jLabel13.setText("Power filter:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 14;
+        gridBagConstraints.gridy = 18;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel13, gridBagConstraints);
 
@@ -257,18 +263,52 @@ public class SettingsWindow extends javax.swing.JDialog
         getContentPane().add(smoothingComboBox, gridBagConstraints);
 
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel15.setText("Maximal power (W):");
+        jLabel15.setText("Maximum power (W):");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 14;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         getContentPane().add(jLabel15, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 14;
+        gridBagConstraints.gridy = 18;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         getContentPane().add(powerFilterComboBox, gridBagConstraints);
+
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel16.setText("Maximum excursion (mm):");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 16;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        getContentPane().add(jLabel16, gridBagConstraints);
+
+        maxExcursionField.setMinimumSize(new java.awt.Dimension(80, 19));
+        maxExcursionField.setPreferredSize(new java.awt.Dimension(80, 19));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 16;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        getContentPane().add(maxExcursionField, gridBagConstraints);
+
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel17.setText("Maximum SPL (dB):");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        getContentPane().add(jLabel17, gridBagConstraints);
+
+        maxSPLField.setMinimumSize(new java.awt.Dimension(80, 19));
+        maxSPLField.setPreferredSize(new java.awt.Dimension(80, 19));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        getContentPane().add(maxSPLField, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -289,9 +329,11 @@ public class SettingsWindow extends javax.swing.JDialog
             settings.StartFrequency = UI.getInt(startFrequencyField);
             settings.EndFrequency = UI.getInt(endFrequencyField);
             settings.Points = UI.getInt(pointsField);
-            settings.dBRange = UI.getInt(dbRangeField);
+            settings.MinSPL = UI.getInt(minSPLField);
+            settings.MaxSPL = UI.getInt(maxSPLField);
             settings.MaxImpedance = UI.getInt(maxImpedanceField);
             settings.MaxPower = UI.getInt(maxPowerField);
+            settings.MaxExcursion = UI.getInt(maxExcursionField);
             settings.RoomSimulation = simulateRoomCheckBox.isSelected();
             settings.BaffleSimulation = simulateBaffleCheckBox.isSelected();
             settings.PowerFilter.setType(PowerFilter.valueOf(powerFilterComboBox.getSelectedItem().toString()));
@@ -307,7 +349,6 @@ public class SettingsWindow extends javax.swing.JDialog
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JPanel controlPanel;
-    private javax.swing.JFormattedTextField dbRangeField;
     private javax.swing.JFormattedTextField endFrequencyField;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -315,10 +356,15 @@ public class SettingsWindow extends javax.swing.JDialog
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JFormattedTextField maxExcursionField;
     private javax.swing.JFormattedTextField maxImpedanceField;
     private javax.swing.JFormattedTextField maxPowerField;
+    private javax.swing.JFormattedTextField maxSPLField;
+    private javax.swing.JFormattedTextField minSPLField;
     private javax.swing.JButton okButton;
     private javax.swing.JFormattedTextField pointsField;
     private javax.swing.JComboBox<String> powerFilterComboBox;

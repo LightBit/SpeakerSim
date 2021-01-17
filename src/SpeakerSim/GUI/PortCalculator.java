@@ -134,6 +134,7 @@ public class PortCalculator extends javax.swing.JDialog
             airSpeed.add(sim.portVelocity(f, Dv, Np), f);
         }
         
+        airSpeed.setYRange(0, 40);
         airSpeed.addYMark(project.Environment.SpeedOfSound * 0.05, "5% speed of sound");
         airSpeed.addYMark(project.Environment.SpeedOfSound * 0.1, "10% speed of sound");
         

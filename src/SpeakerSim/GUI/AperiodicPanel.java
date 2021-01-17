@@ -163,7 +163,8 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         box.add("Cone", main.freq, cone);
         box.add("Vent", main.freq, port);
         
-        box.setYRange(box.getMaxY() - Project.getInstance().Settings.dBRange, box.getMaxY() + 1);
+        box.setYRange(-30, 10);
+        box.addYMark(0, "");
     }
     
     @Override

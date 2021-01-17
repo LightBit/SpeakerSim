@@ -2086,12 +2086,14 @@ public final class MainWindow extends javax.swing.JFrame
                         final Graph graphRoom = new Graph("Room", "Hz", freq, "dB", room);
                         final Graph graphImpedance = new Graph("Impedance", "Hz", freq, "Ω", impedance);
 
-                        graphResponse.setYRange(Project.getInstance().Settings.dBRange);
-                        graphFilters.setYRange(Project.getInstance().Settings.dBRange);
-                        graphDirectivity.setYRange(0, graphDirectivity.getMaxY() + 1);
-                        graphMaxSPL.setYRange(0, graphMaxSPL.getMaxY() + 1);
-                        graphMaxPower.setYRange(0, Math.min(Project.getInstance().Settings.MaxPower, graphMaxPower.getMaxY() + 1));
-                        graphExcursion.setYRange(0, graphExcursion.getMaxY() + 1);
+                        graphResponse.setYRange(Project.getInstance().Settings.MinSPL, Project.getInstance().Settings.MaxSPL);
+                        graphFilters.setYRange(-30, 10);
+                        graphFilters.addYMark(0, "");
+                        graphDirectivity.setYRange(0, Project.getInstance().Settings.MaxSPL);
+                        graphMaxSPL.setYRange(0, Project.getInstance().Settings.MaxSPL + 30);
+                        graphMaxPower.setYRange(0, Project.getInstance().Settings.MaxPower);
+                        graphExcursion.setYRange(0, Project.getInstance().Settings.MaxExcursion);
+                        graphPhase.setYRange(-180, 180);
                         graphPhase.addYMark(0, "");
                         
                         for (Speaker s : speakers)
@@ -2099,9 +2101,11 @@ public final class MainWindow extends javax.swing.JFrame
                             graphExcursion.addYMark(s.Driver.Xmax * 1000, s.Driver.Name);
                         }
                         
-                        graphBaffle.setYRange(Project.getInstance().Settings.dBRange);
-                        graphRoom.setYRange(Project.getInstance().Settings.dBRange);
-                        graphImpedance.setYRange(0, Math.min(graphImpedance.getMaxY() + 1, Project.getInstance().Settings.MaxImpedance));
+                        graphBaffle.setYRange(-10, 10);
+                        graphBaffle.addYMark(0, "");
+                        graphRoom.setYRange(-10, 20);
+                        graphRoom.addYMark(0, "");
+                        graphImpedance.setYRange(0, Project.getInstance().Settings.MaxImpedance);
                         
                         if (enclosurePanel != null)
                         {
@@ -2162,7 +2166,7 @@ public final class MainWindow extends javax.swing.JFrame
                         }
                         
                         final Graph graphImpedance = new Graph("Impedance", "Hz", freq, "Ω", impedance);
-                        graphImpedance.setYRange(0, Math.min(graphImpedance.getMaxY() + 1, Project.getInstance().Settings.MaxImpedance));
+                        graphImpedance.setYRange(0, Project.getInstance().Settings.MaxImpedance);
 
                         SwingUtilities.invokeAndWait(new Runnable()
                         {

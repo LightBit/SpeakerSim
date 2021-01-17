@@ -508,7 +508,12 @@ public class DriverWindow extends javax.swing.JDialog
             impedancePhase.add(Math.toDegrees(z.phase()), f);
         }
         
-        spl.setYRange(spl.getMaxY() - project.Settings.dBRange, spl.getMaxY() + 1);
+        spl.setYRange(project.Settings.MinSPL, project.Settings.MaxSPL);
+        phase.setYRange(-180, 180);
+        phase.addYMark(0, "");
+        impedance.setYRange(0, project.Settings.MaxImpedance);
+        impedancePhase.setYRange(-180, 180);
+        impedancePhase.addYMark(0, "");
         
         if (cross)
         {

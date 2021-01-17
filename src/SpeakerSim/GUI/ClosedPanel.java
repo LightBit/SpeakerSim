@@ -106,7 +106,8 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         box = new Graph("Hz", "dB");
         box.add("Enclosure", main.freq, enclosure);
         
-        box.setYRange(box.getMaxY() - Project.getInstance().Settings.dBRange, box.getMaxY() + 1);
+        box.setYRange(-30, 10);
+        box.addYMark(0, "");
     }
     
     @Override

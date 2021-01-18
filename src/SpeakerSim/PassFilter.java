@@ -63,12 +63,14 @@ public abstract class PassFilter extends Filter
     
     public static double calcL(double L, double z, double f)
     {
-        return z != 0 ? L * z / f : 0;
+        L = L * z / f;
+        return Double.isFinite(L) ? L : 0;
     }
     
     public static double calcC(double C, double z, double f)
     {
-        return z != 0 ? C / (z * f) : 0;
+        C = C / (z * f);
+        return Double.isFinite(C) ? C : 0;
     }
     
     public double calcC1(int type, double f)

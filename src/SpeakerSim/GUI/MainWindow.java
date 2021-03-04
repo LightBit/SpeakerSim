@@ -2255,7 +2255,7 @@ public final class MainWindow extends javax.swing.JFrame
         split = new javax.swing.JSplitPane();
         treeScrollPane = new javax.swing.JScrollPane();
         tree = new javax.swing.JTree();
-        rightSplit = new javax.swing.JSplitPane();
+        rightPanel = new javax.swing.JPanel();
         propertiesScrollPane = new javax.swing.JScrollPane();
         propertiesPanel = new javax.swing.JPanel();
         listeningPanel = new javax.swing.JPanel();
@@ -2300,13 +2300,12 @@ public final class MainWindow extends javax.swing.JFrame
 
         split.setLeftComponent(treeScrollPane);
 
-        rightSplit.setDividerLocation(220);
-        rightSplit.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        rightPanel.setLayout(new java.awt.BorderLayout());
 
         propertiesScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        propertiesScrollPane.setPreferredSize(new java.awt.Dimension(220, 220));
 
-        propertiesPanel.setMinimumSize(new java.awt.Dimension(400, 300));
-        propertiesPanel.setPreferredSize(new java.awt.Dimension(400, 300));
+        propertiesPanel.setMinimumSize(new java.awt.Dimension(400, 220));
         java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT);
         flowLayout1.setAlignOnBaseline(true);
         propertiesPanel.setLayout(flowLayout1);
@@ -2363,14 +2362,13 @@ public final class MainWindow extends javax.swing.JFrame
         listeningPanel.add(listeningPosZField, gridBagConstraints);
 
         propertiesPanel.add(listeningPanel);
-        listeningPanel.getAccessibleContext().setAccessibleName("Listening position");
 
         propertiesScrollPane.setViewportView(propertiesPanel);
 
-        rightSplit.setLeftComponent(propertiesScrollPane);
-        rightSplit.setRightComponent(tabs);
+        rightPanel.add(propertiesScrollPane, java.awt.BorderLayout.PAGE_START);
+        rightPanel.add(tabs, java.awt.BorderLayout.CENTER);
 
-        split.setRightComponent(rightSplit);
+        split.setRightComponent(rightPanel);
 
         getContentPane().add(split, java.awt.BorderLayout.CENTER);
 
@@ -2671,7 +2669,7 @@ public final class MainWindow extends javax.swing.JFrame
     private javax.swing.JRadioButtonMenuItem menuSimulatorOpenBaffle;
     private javax.swing.JPanel propertiesPanel;
     private javax.swing.JScrollPane propertiesScrollPane;
-    private javax.swing.JSplitPane rightSplit;
+    private javax.swing.JPanel rightPanel;
     private javax.swing.JSplitPane split;
     private javax.swing.JTabbedPane tabs;
     private javax.swing.JTree tree;

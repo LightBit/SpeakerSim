@@ -292,29 +292,6 @@ public final class UI
         return JOptionPane.showOptionDialog(parent, content, title, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, opts, opts[0]) == 0;
     }
     
-    public static String getSelectedTab(JTabbedPane tabs)
-    {
-        int index = tabs.getSelectedIndex();
-        
-        if (index != -1)
-        {
-            return tabs.getTitleAt(index);
-        }
-        
-        return null;
-    }
-    
-    public static void setSelectedTab(JTabbedPane tabs, String tab)
-    {
-        for (int i = 0; i < tabs.getTabCount(); i++)
-        {
-            if (tabs.getTitleAt(i).equals(tab))
-            {
-                tabs.setSelectedIndex(i);
-            }
-        }
-    }
-    
     public static void openURL(String url)
     {
         try

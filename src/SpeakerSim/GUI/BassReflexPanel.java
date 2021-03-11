@@ -17,6 +17,7 @@
 package SpeakerSim.GUI;
 
 import SpeakerSim.*;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -28,13 +29,18 @@ import javax.swing.JTabbedPane;
 public final class BassReflexPanel extends javax.swing.JPanel implements ISpeakerPanel
 {
     private final MainWindow main;
+    private final Graph box;
+    private final Component graph;
     private Speaker speaker;
     private boolean listen;
-    private Graph box;
     
     public BassReflexPanel(final MainWindow main)
     {
+        listen = false;
         this.main = main;
+        box = new Graph("Hz", "dB");
+        box.setYRange(-30, 10);
+        graph = box.getPanel();
         
         initComponents();
         
@@ -238,6 +244,8 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
     @Override
     public void simulate()
     {
+        box.clear();
+        
         BassReflexSimulation sim = (BassReflexSimulation) speaker.getSimulation();
         
         double[] enclosure = new double[main.freq.length];
@@ -252,19 +260,31 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
             port[i] = sim.dBmagPort(f);
         }
         
-        box = new Graph("Hz", "dB");
         box.add("Enclosure", main.freq, enclosure);
         box.add("Cone", main.freq, cone);
         box.add("Port", main.freq, port);
         
-        box.setYRange(-30, 10);
         box.addYMark(0, "");
     }
     
     @Override
-    public void addGraphs(final JTabbedPane tabs)
+    public void addTabs(final JTabbedPane tabs)
     {
-        tabs.addTab("Enclosure", box.getGraph());
+        int tab = tabs.indexOfTab("Enclosure");
+        if (tab < 0)
+        {
+            tabs.addTab("Enclosure", graph);
+        }
+        else
+        {
+            tabs.setComponentAt(tab, graph);
+        }
+    }
+    
+    @Override
+    public void removeTabs(final JTabbedPane tabs)
+    {
+        tabs.remove(graph);
     }
 
     @SuppressWarnings("unchecked")

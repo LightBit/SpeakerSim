@@ -17,6 +17,7 @@
 package SpeakerSim.GUI;
 
 import SpeakerSim.*;
+import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JTabbedPane;
@@ -24,14 +25,18 @@ import javax.swing.JTabbedPane;
 public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPanel
 {
     private final MainWindow main;
+    private final Graph box;
+    private final Component graph;
     private Speaker speaker;
     private boolean listen;
-    private Graph box;
     
     public ClosedPanel(final MainWindow main)
     {
         listen = false;
         this.main = main;
+        box = new Graph("Hz", "dB");
+        box.setYRange(-30, 10);
+        graph = box.getPanel();
         
         initComponents();
         
@@ -93,6 +98,8 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
     @Override
     public void simulate()
     {
+        box.clear();
+        
         ClosedBoxSimulation sim = (ClosedBoxSimulation) speaker.getSimulation();
         
         double[] enclosure = new double[main.freq.length];
@@ -103,17 +110,29 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
             enclosure[i] = sim.dBmag(f);
         }
         
-        box = new Graph("Hz", "dB");
         box.add("Enclosure", main.freq, enclosure);
         
-        box.setYRange(-30, 10);
         box.addYMark(0, "");
     }
     
     @Override
-    public void addGraphs(final JTabbedPane tabs)
+    public void addTabs(final JTabbedPane tabs)
     {
-        tabs.addTab("Enclosure", box.getGraph());
+        int tab = tabs.indexOfTab("Enclosure");
+        if (tab < 0)
+        {
+            tabs.addTab("Enclosure", graph);
+        }
+        else
+        {
+            tabs.setComponentAt(tab, graph);
+        }
+    }
+    
+    @Override
+    public void removeTabs(final JTabbedPane tabs)
+    {
+        tabs.remove(graph);
     }
     
     @SuppressWarnings("unchecked")

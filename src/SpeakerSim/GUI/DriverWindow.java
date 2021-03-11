@@ -42,6 +42,10 @@ public class DriverWindow extends javax.swing.JDialog
     private final Driver drv;
     private boolean result;
     private boolean valid;
+    private final Graph spl;
+    private final Graph phase;
+    private final Graph impedance;
+    private final Graph impedancePhase;
     
     private void load(Driver driver)
     {
@@ -125,6 +129,21 @@ public class DriverWindow extends javax.swing.JDialog
         origDriver = driver;
         drv = driver.copy();
         result = false;
+        
+        spl = new Graph("Hz", "dB");
+        phase = new Graph("Hz", "");
+        impedance = new Graph("Hz", "Ω");
+        impedancePhase = new Graph("Hz", "");
+        
+        spl.setYRange(project.Settings.MinSPL, project.Settings.MaxSPL);
+        phase.setYRange(-180, 180);
+        impedance.setYRange(0, project.Settings.MaxImpedance);
+        impedancePhase.setYRange(-180, 180);
+        
+        tabs.addTab("SPL at 2.83V", spl.getPanel());
+        tabs.addTab("Phase", phase.getPanel());
+        tabs.addTab("Impedance", impedance.getPanel());
+        tabs.addTab("Impedance phase", impedancePhase.getPanel());
         
         load(drv);
         
@@ -488,31 +507,30 @@ public class DriverWindow extends javax.swing.JDialog
     
     private void renderGraphs()
     {
-        String selectedTab = UI.getSelectedTab(tabs);
         boolean cross = !closedCheckBox.isSelected();
-        tabs.removeAll();
         
-        Graph spl = new Graph("SPL at 2.83V", "Hz", "dB");
-        Graph phase = new Graph("Phase", "Hz", "");
-        Graph impedance = new Graph("Impedance", "Hz", "Ω");
-        Graph impedancePhase = new Graph("Impedance phase", "Hz", "");
+        spl.clear();
+        phase.clear();
+        impedance.clear();
+        impedancePhase.clear();
+        
+        spl.addSeries("SPL at 2.83V");
+        phase.addSeries("Phase");
+        impedance.addSeries("Impedance");
+        impedancePhase.addSeries("Impedance phase");
         
         for (double f = project.Settings.StartFrequency; f <= project.Settings.EndFrequency; f *= project.Settings.multiplier())
         {
             Complex r = cross ? drv.normResponse(f) : drv.response(f);
-            spl.add(Fnc.toDecibels(r.abs()), f);
-            phase.add(Math.toDegrees(r.phase()), f);
+            spl.add(0, f, Fnc.toDecibels(r.abs()));
+            phase.add(0, f, Math.toDegrees(r.phase()));
             
             Complex z = drv.impedance(f);
-            impedance.add(z.abs(), f);
-            impedancePhase.add(Math.toDegrees(z.phase()), f);
+            impedance.add(0, f, z.abs());
+            impedancePhase.add(0, f, Math.toDegrees(z.phase()));
         }
         
-        spl.setYRange(project.Settings.MinSPL, project.Settings.MaxSPL);
-        phase.setYRange(-180, 180);
         phase.addYMark(0, "");
-        impedance.setYRange(0, project.Settings.MaxImpedance);
-        impedancePhase.setYRange(-180, 180);
         impedancePhase.addYMark(0, "");
         
         if (cross)
@@ -523,13 +541,6 @@ public class DriverWindow extends javax.swing.JDialog
             phase.addXMark(UI.getDouble(CrossStartField), "Cross start");
             phase.addXMark(UI.getDouble(CrossEndField), "Cross end");
         }
-        
-        tabs.addTab("SPL at 2.83V", spl.getGraph());
-        tabs.addTab("Phase", phase.getGraph());
-        tabs.addTab("Impedance", impedance.getGraph());
-        tabs.addTab("Impedance phase", impedancePhase.getGraph());
-        
-        UI.setSelectedTab(tabs, selectedTab);
     }
     
     private void refresh()

@@ -51,10 +51,11 @@ public final class Graph
     private final NumberAxis yAxis;
     private final XYSeriesCollection series;
     private final XYPlot plot;
-    private ChartPanel chartPanel;
-    private Crosshair xCrosshair;
-    private Crosshair yCrosshair;
-    private List<Crosshair> yCrosshairs;
+    private final ChartPanel chartPanel;
+    private final CrosshairOverlay crosshairOverlay;
+    private final Crosshair xCrosshair;
+    private final Crosshair yCrosshair;
+    private final List<Crosshair> yCrosshairs;
     
     private class IdString implements Comparable<IdString>
     {
@@ -140,95 +141,9 @@ public final class Graph
                 x += step;
             }
         }
-    }
-    
-    public Graph(String title, String xAxis, String yAxis) // remove this
-    {
-        this(xAxis, yAxis);
         
-        series.addSeries(new XYSeries(new IdString(title, 0)));
-        yCrosshairs.add(new GraphCrosshair());
-    }
-    
-    public Graph(String title, String xAxis, double[] x, String yAxis, double[] y) // remove this
-    {
-        this(xAxis, yAxis);
-        
-        add(title, x, y);
-    }
-    
-    public void clear()
-    {
-        yCrosshairs.clear();
-        series.removeAllSeries();
-        plot.clearRangeMarkers();
-    }
-    
-    public void add(String title, double[] x, double[] y)
-    {
-        XYSeries s = new XYSeries(new IdString(title, series.getSeriesCount()));
-        
-        for (int i = 0; i < x.length; i++)
-        {
-            if (Double.isFinite(x[i]) && Double.isFinite(y[i]))
-            {
-                s.add(x[i], y[i]);
-            }
-        }
-        
-        series.addSeries(s);
-        yCrosshairs.add(new GraphCrosshair());
-    }
-    
-    public void add(double y, double x) // remove this
-    {
-        if (Double.isFinite(y) && Double.isFinite(x))
-        {
-            if (series.getSeriesCount() < 1)
-            {
-                series.addSeries(new XYSeries(new IdString("", 0)));
-            }
-
-            series.getSeries(0).add(x, y);
-        }
-    }
-    
-    public void addXMark(double x, String label)
-    {
-        final Marker mark = new ValueMarker(x);
-        mark.setPaint(Color.BLUE);
-        mark.setLabel(label);
-        mark.setLabelPaint(Color.BLUE);
-        mark.setLabelAnchor(RectangleAnchor.TOP_LEFT);
-        mark.setLabelTextAnchor(TextAnchor.TOP_LEFT);
-        plot.addDomainMarker(mark);
-    }
-    
-    public void addYMark(double y, String label)
-    {
-        final Marker mark = new ValueMarker(y);
-        mark.setPaint(Color.BLUE);
-        mark.setLabel(label);
-        mark.setLabelPaint(Color.BLUE);
-        mark.setLabelAnchor(RectangleAnchor.TOP_LEFT);
-        mark.setLabelTextAnchor(TextAnchor.TOP_LEFT);
-        plot.addRangeMarker(mark);
-    }
-    
-    public void setXRange(double min, double max)
-    {
-        xAxis.setRange(min, max);
-    }
-    
-    public void setYRange(double min, double max)
-    {
-        yAxis.setRange(min, max);
-    }
-    
-    public Component getGraph()
-    {
-        plot.setDomainAxis(xAxis);
-        plot.setRangeAxis(yAxis);
+        plot.setDomainAxis(this.xAxis);
+        plot.setRangeAxis(this.yAxis);
         plot.setDataset(series);
         
         JFreeChart chart = new JFreeChart(null, plot);
@@ -313,17 +228,108 @@ public final class Graph
             }
         });
 
-        
-        CrosshairOverlay crosshairOverlay = new CrosshairOverlay();
+        crosshairOverlay = new CrosshairOverlay();
         crosshairOverlay.addDomainCrosshair(xCrosshair);
         crosshairOverlay.addRangeCrosshair(yCrosshair);
-        for (Crosshair crosshair : yCrosshairs)
-        {
-            crosshairOverlay.addRangeCrosshair(crosshair);
-        }
         chartPanel.addOverlay(crosshairOverlay);
         chartPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+    }
+    
+    public void clear()
+    {
+        for (Crosshair crosshair : yCrosshairs)
+        {
+            crosshairOverlay.removeRangeCrosshair(crosshair);
+        }
+        yCrosshairs.clear();
+        series.removeAllSeries();
+        plot.clearRangeMarkers();
+        plot.clearDomainMarkers();
         
+        for (int x = 1, step = 1; x < 100000; step *= 10)
+        {
+            for (int i = 1; i < 10; i++)
+            {
+                plot.addDomainMarker(new ValueMarker(x));
+                x += step;
+            }
+        }
+    }
+    
+    private void addCrosshair()
+    {
+        Crosshair crosshair = new GraphCrosshair();
+        crosshairOverlay.addRangeCrosshair(crosshair);
+        yCrosshairs.add(crosshair);
+    }
+    
+    public void add(String title, double[] x, double[] y)
+    {
+        XYSeries s = new XYSeries(new IdString(title, series.getSeriesCount()));
+        
+        for (int i = 0; i < x.length; i++)
+        {
+            if (Double.isFinite(x[i]) && Double.isFinite(y[i]))
+            {
+                s.add(x[i], y[i]);
+            }
+        }
+        
+        series.addSeries(s);
+        addCrosshair();
+    }
+    
+    public void addSeries(String title)
+    {
+        XYSeries s = new XYSeries(new IdString(title, series.getSeriesCount()));
+        series.addSeries(s);
+        addCrosshair();
+    }
+    
+    public void add(int series, double x, double y)
+    {
+        XYSeries s = this.series.getSeries(series);
+        
+        if (Double.isFinite(x) && Double.isFinite(y))
+        {
+            s.add(x, y);
+        }
+    }
+    
+    public void addXMark(double x, String label)
+    {
+        final Marker mark = new ValueMarker(x);
+        mark.setPaint(Color.BLUE);
+        mark.setLabel(label);
+        mark.setLabelPaint(Color.BLUE);
+        mark.setLabelAnchor(RectangleAnchor.TOP_LEFT);
+        mark.setLabelTextAnchor(TextAnchor.TOP_LEFT);
+        plot.addDomainMarker(mark);
+    }
+    
+    public void addYMark(double y, String label)
+    {
+        final Marker mark = new ValueMarker(y);
+        mark.setPaint(Color.BLUE);
+        mark.setLabel(label);
+        mark.setLabelPaint(Color.BLUE);
+        mark.setLabelAnchor(RectangleAnchor.TOP_LEFT);
+        mark.setLabelTextAnchor(TextAnchor.TOP_LEFT);
+        plot.addRangeMarker(mark);
+    }
+    
+    public void setXRange(double min, double max)
+    {
+        xAxis.setRange(min, max);
+    }
+    
+    public void setYRange(double min, double max)
+    {
+        yAxis.setRange(min, max);
+    }
+    
+    public Component getPanel()
+    {
         return chartPanel;
     }
 }

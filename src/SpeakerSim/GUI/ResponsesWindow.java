@@ -29,12 +29,26 @@ public class ResponsesWindow extends JDialog
 {
     private final Driver drv;
     private final SortedListModel<ResponseData> model;
+    private final Graph spl;
+    private final Graph phase;
    
     public ResponsesWindow(java.awt.Frame parent, Driver driver)
     {
         super(parent, true);
         initComponents();
         setLocationRelativeTo(parent);
+        
+        spl = new Graph("Hz", "dB");
+        phase = new Graph("Hz", "");
+        
+        spl.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
+        phase.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
+        
+        spl.setYRange(Settings.getInstance().MinSPL, Settings.getInstance().MaxSPL);
+        phase.setYRange(-180, 180);
+        
+        tabs.addTab("Frequency response", spl.getPanel());
+        tabs.addTab("Phase", phase.getPanel());
        
         drv = driver;
        
@@ -257,31 +271,24 @@ public class ResponsesWindow extends JDialog
    
     private void renderGraphs()
     {
-        String selectedTab = UI.getSelectedTab(tabs);
-        tabs.removeAll();
-       
+        spl.clear();
+        phase.clear();
+        
         ResponseData frd = list.getSelectedValue();
         if (frd != null)
         {
-            Graph spl = new Graph("Frequency response", "Hz", "dB");
-            Graph phase = new Graph("Phase", "Hz", "");
+            spl.addSeries("Frequency response");
+            phase.addSeries("Phase");
 
-            for (double f = Project.getInstance().Settings.StartFrequency; f <= Project.getInstance().Settings.EndFrequency; f *= Project.getInstance().Settings.multiplier())
+            for (double f = Settings.getInstance().StartFrequency; f <= Settings.getInstance().EndFrequency; f *= Settings.getInstance().multiplier())
             {
                 Complex r = frd.response(f, drv.SPL_2_83V - drv.SPL_1W);
-                spl.add(Fnc.toDecibels(r.abs()), f);
-                phase.add(Math.toDegrees(r.phase()), f);
+                spl.add(0, f, Fnc.toDecibels(r.abs()));
+                phase.add(0, f, Math.toDegrees(r.phase()));
             }
-
-            spl.setYRange(Project.getInstance().Settings.MinSPL, Project.getInstance().Settings.MaxSPL);
-            phase.setYRange(-180, 180);
-            phase.addYMark(0, "");
-
-            tabs.addTab("Frequency response", spl.getGraph());
-            tabs.addTab("Phase", phase.getGraph());
-
-            UI.setSelectedTab(tabs, selectedTab);
         }
+        
+        phase.addYMark(0, "");
     }
     
     public static ResponseData importFRD()

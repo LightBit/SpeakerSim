@@ -33,6 +33,7 @@ public class PortCalculator extends javax.swing.JDialog
     protected final BassReflex box;
     private final BassReflexSimulation sim;
     private boolean result;
+    private final Graph airSpeed;
     
     public PortCalculator(final java.awt.Frame parent, final Project project, final BassReflex box, final BassReflexSimulation sim)
     {
@@ -45,6 +46,9 @@ public class PortCalculator extends javax.swing.JDialog
         this.box = box;
         this.sim = sim;
         result = false;
+        
+        airSpeed = new Graph("Hz", "m/s");
+        graphPanel.add(airSpeed.getPanel());
 
         DefaultComboBoxModel<String> shapeModel = new DefaultComboBoxModel<String>();
         for (String item : BassReflex.SHAPES)
@@ -127,21 +131,17 @@ public class PortCalculator extends javax.swing.JDialog
         volumeField.setValue(BassReflexSimulation.calcPortVolume(Lv, Dv + UI.getDouble(thicknessField) / 1000 * 2, Np) * 1000);
         resonanceField.setValue(project.Environment.SpeedOfSound / (2 * Lv));
         
-        Graph airSpeed = new Graph("Air speed", "Hz", "m/s");
+        airSpeed.clear();
+        airSpeed.addSeries("Air speed");
         
         for (double f = project.Settings.StartFrequency; f <= project.Settings.EndFrequency; f *= project.Settings.multiplier())
         {
-            airSpeed.add(sim.portVelocity(f, Dv, Np), f);
+            airSpeed.add(0, f, sim.portVelocity(f, Dv, Np));
         }
         
         airSpeed.setYRange(0, 40);
         airSpeed.addYMark(project.Environment.SpeedOfSound * 0.05, "5% speed of sound");
         airSpeed.addYMark(project.Environment.SpeedOfSound * 0.1, "10% speed of sound");
-        
-        graphPanel.removeAll();
-        graphPanel.add(airSpeed.getGraph());
-        graphPanel.revalidate();
-        graphPanel.repaint();
     }
     
     public boolean showDialog()

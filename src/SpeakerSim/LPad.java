@@ -93,9 +93,9 @@ public class LPad extends Filter
             return 0;
         }
         
-        double f = Project.getInstance().Settings.StartFrequency;
-        double m = Project.getInstance().Settings.multiplier();
-        double[] z = new double[Project.getInstance().Settings.Points - 1];
+        double f = Settings.getInstance().StartFrequency;
+        double m = Settings.getInstance().multiplier();
+        double[] z = new double[Settings.getInstance().Points - 1];
         
         for (int i = 0; i < z.length; i++)
         {
@@ -103,7 +103,7 @@ public class LPad extends Filter
             f *= m;
         }
         
-        z = Fnc.smooth(z, (int)Math.round(Project.getInstance().Settings.pointsPerOctave()));
+        z = Fnc.smooth(z, (int)Math.round(Settings.getInstance().pointsPerOctave()));
         
         return Fnc.min(z);
     }

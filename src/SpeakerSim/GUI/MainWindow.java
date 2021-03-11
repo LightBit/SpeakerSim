@@ -1724,8 +1724,8 @@ public final class MainWindow extends javax.swing.JFrame
         impedance = new double[freq.length];
         impedancePhase = new double[freq.length];
 
-        double f = Project.getInstance().Settings.StartFrequency;
-        double m = Project.getInstance().Settings.multiplier();
+        double f = Settings.getInstance().StartFrequency;
+        double m = Settings.getInstance().multiplier();
         for (int i = 0; i < freq.length; i++)
         {
             freq[i] = f;
@@ -1768,7 +1768,7 @@ public final class MainWindow extends javax.swing.JFrame
                 bafflePanel = new BafflePanel(this);
                 propertiesPanel.add(bafflePanel);
             }
-            bafflePanel.setVisible(Project.getInstance().Settings.BaffleSimulation);
+            bafflePanel.setVisible(Settings.getInstance().BaffleSimulation);
             
             if (driverPositionPanel == null)
             {
@@ -1864,8 +1864,8 @@ public final class MainWindow extends javax.swing.JFrame
     private Complex totalResponse(IItem item, double f)
     {
         Complex r = item.response(f);
-        Complex baffleResponse = Project.getInstance().Settings.BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
-        Complex roomResponse = Project.getInstance().Settings.RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
+        Complex baffleResponse = Settings.getInstance().BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
+        Complex roomResponse = Settings.getInstance().RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
         return r.multiply(baffleResponse).multiply(roomResponse);
     }
     
@@ -1981,8 +1981,8 @@ public final class MainWindow extends javax.swing.JFrame
                             double f = freq[i];
 
                             Complex r = item.response(f);
-                            Complex baffleResponse = Project.getInstance().Settings.BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
-                            Complex roomResponse = Project.getInstance().Settings.RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
+                            Complex baffleResponse = Settings.getInstance().BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
+                            Complex roomResponse = Settings.getInstance().RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
                             r = r.multiply(baffleResponse).multiply(roomResponse);
                             response[i] = Fnc.toDecibels(r.abs());
                             
@@ -2012,11 +2012,11 @@ public final class MainWindow extends javax.swing.JFrame
                             room[i] = Fnc.toDecibels(roomResponse.abs());
                         }
                         
-                        double delay = Fnc.min(Fnc.smooth(groupDelay, (int)Math.round(Project.getInstance().Settings.pointsPerOctave()))) / 1000;
+                        double delay = Fnc.min(Fnc.smooth(groupDelay, (int)Math.round(Settings.getInstance().pointsPerOctave()))) / 1000;
                         
-                        if (Project.getInstance().Settings.Smoothing > 0)
+                        if (Settings.getInstance().Smoothing > 0)
                         {
-                            int points = (int)Math.round(Project.getInstance().Settings.pointsPerOctave()) / Project.getInstance().Settings.Smoothing;
+                            int points = (int)Math.round(Settings.getInstance().pointsPerOctave()) / Settings.getInstance().Smoothing;
 
                             response = Fnc.smooth(response, points);
                             for (int j = 0; j < subitems.size(); j++)
@@ -2086,13 +2086,13 @@ public final class MainWindow extends javax.swing.JFrame
                         final Graph graphRoom = new Graph("Room", "Hz", freq, "dB", room);
                         final Graph graphImpedance = new Graph("Impedance", "Hz", freq, "Ω", impedance);
 
-                        graphResponse.setYRange(Project.getInstance().Settings.MinSPL, Project.getInstance().Settings.MaxSPL);
+                        graphResponse.setYRange(Settings.getInstance().MinSPL, Settings.getInstance().MaxSPL);
                         graphFilters.setYRange(-30, 10);
                         graphFilters.addYMark(0, "");
-                        graphDirectivity.setYRange(0, Project.getInstance().Settings.MaxSPL);
-                        graphMaxSPL.setYRange(0, Project.getInstance().Settings.MaxSPL + 30);
-                        graphMaxPower.setYRange(0, Project.getInstance().Settings.MaxPower);
-                        graphExcursion.setYRange(0, Project.getInstance().Settings.MaxExcursion);
+                        graphDirectivity.setYRange(0, Settings.getInstance().MaxSPL);
+                        graphMaxSPL.setYRange(0, Settings.getInstance().MaxSPL + 30);
+                        graphMaxPower.setYRange(0, Settings.getInstance().MaxPower);
+                        graphExcursion.setYRange(0, Settings.getInstance().MaxExcursion);
                         graphPhase.setYRange(-180, 180);
                         graphPhase.addYMark(0, "");
                         
@@ -2105,7 +2105,7 @@ public final class MainWindow extends javax.swing.JFrame
                         graphBaffle.addYMark(0, "");
                         graphRoom.setYRange(-10, 20);
                         graphRoom.addYMark(0, "");
-                        graphImpedance.setYRange(0, Project.getInstance().Settings.MaxImpedance);
+                        graphImpedance.setYRange(0, Settings.getInstance().MaxImpedance);
                         
                         if (enclosurePanel != null)
                         {
@@ -2127,13 +2127,13 @@ public final class MainWindow extends javax.swing.JFrame
                                 tabs.addTab("Max power", graphMaxPower.getGraph());
                                 tabs.addTab("Excursion", graphExcursion.getGraph());
                                 tabs.addTab("Group delay", graphGroupDelay.getGraph());
-
-                                if (Project.getInstance().Settings.BaffleSimulation)
+                                
+                                if (Settings.getInstance().BaffleSimulation)
                                 {
                                     tabs.addTab("Baffle", graphBaffle.getGraph());
                                 }
 
-                                if (Project.getInstance().Settings.RoomSimulation)
+                                if (Settings.getInstance().RoomSimulation)
                                 {
                                     tabs.addTab("Room", graphRoom.getGraph());
                                 }
@@ -2220,6 +2220,8 @@ public final class MainWindow extends javax.swing.JFrame
         {
             showNode(node);
         }
+        
+        System.gc();
     }
     
     private void addChildren(DefaultMutableTreeNode node, List<IItem> children)

@@ -36,6 +36,11 @@ public class Settings implements JSONable
     public boolean RoomSimulation;
     public PowerFilter PowerFilter;
     
+    public static Settings getInstance()
+    {
+        return Project.getInstance().Settings;
+    }
+    
     public double pointsPerOctave()
     {
         return (Points - 1) / (Math.log((double)EndFrequency / (double)StartFrequency) / Math.log(2));

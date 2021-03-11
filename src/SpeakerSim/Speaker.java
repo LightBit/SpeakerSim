@@ -227,7 +227,7 @@ public class Speaker extends Item
     {
         Complex superZ = super.itemImpedance(f);
         Complex thisZ = simulation.impedance(f);
-        return Math.min(super.itemMaxPower(f) / superZ.divide(superZ.add(thisZ)).abs(), Project.getInstance().Settings.PowerFilter.toFiltered(simulation.maxPower(f), f) / thisZ.divide(thisZ.add(superZ)).abs());
+        return Math.min(super.itemMaxPower(f) / superZ.divide(superZ.add(thisZ)).abs(), Settings.getInstance().PowerFilter.toFiltered(simulation.maxPower(f), f) / thisZ.divide(thisZ.add(superZ)).abs());
     }
     
     @Override

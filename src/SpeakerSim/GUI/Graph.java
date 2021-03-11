@@ -99,7 +99,14 @@ public final class Graph
         }
     }
     
-    private final static Stroke dashedStroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{10}, 0);
+    private final static Stroke dashedStroke = new BasicStroke(
+        1,
+        BasicStroke.CAP_BUTT,
+        BasicStroke.JOIN_BEVEL,
+        0,
+        new float[]{10},
+        0
+    );
     
     public Graph(String xAxis, String yAxis)
     {
@@ -135,7 +142,7 @@ public final class Graph
         }
     }
     
-    public Graph(String title, String xAxis, String yAxis)
+    public Graph(String title, String xAxis, String yAxis) // remove this
     {
         this(xAxis, yAxis);
         
@@ -143,11 +150,18 @@ public final class Graph
         yCrosshairs.add(new GraphCrosshair());
     }
     
-    public Graph(String title, String xAxis, double[] x, String yAxis, double[] y)
+    public Graph(String title, String xAxis, double[] x, String yAxis, double[] y) // remove this
     {
         this(xAxis, yAxis);
         
         add(title, x, y);
+    }
+    
+    public void clear()
+    {
+        yCrosshairs.clear();
+        series.removeAllSeries();
+        plot.clearRangeMarkers();
     }
     
     public void add(String title, double[] x, double[] y)
@@ -166,7 +180,7 @@ public final class Graph
         yCrosshairs.add(new GraphCrosshair());
     }
     
-    public void add(double y, double x)
+    public void add(double y, double x) // remove this
     {
         if (Double.isFinite(y) && Double.isFinite(x))
         {
@@ -201,6 +215,11 @@ public final class Graph
         plot.addRangeMarker(mark);
     }
     
+    public void setXRange(double min, double max)
+    {
+        xAxis.setRange(min, max);
+    }
+    
     public void setYRange(double min, double max)
     {
         yAxis.setRange(min, max);
@@ -226,14 +245,24 @@ public final class Graph
             public void chartMouseMoved(ChartMouseEvent event)
             {
                 Rectangle2D dataArea = chartPanel.getScreenDataArea();
-                double x = plot.getDomainAxis().java2DToValue(event.getTrigger().getX(), dataArea, RectangleEdge.BOTTOM);
+                
+                double x = plot.getDomainAxis().java2DToValue(
+                    event.getTrigger().getX(),
+                    dataArea,
+                    RectangleEdge.BOTTOM
+                );
                 xCrosshair.setValue(x);
                 
-                double y = plot.getRangeAxis().java2DToValue(event.getTrigger().getY(), dataArea, RectangleEdge.LEFT);
+                double y = plot.getRangeAxis().java2DToValue(
+                    event.getTrigger().getY(),
+                    dataArea,
+                    RectangleEdge.LEFT
+                );
                 yCrosshair.setValue(y);
                 
                 XYItemRenderer renderer = plot.getRenderer();
                 XYDataset d = plot.getDataset();
+                
                 int i = 0;
                 for (Crosshair crosshair : yCrosshairs)
                 {

@@ -19,7 +19,7 @@ package SpeakerSim.GUI;
 import SpeakerSim.*;
 import io.sentry.Sentry;
 import java.awt.Component;
-import java.awt.LayoutManager;
+import java.awt.Cursor;
 import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.*;
@@ -29,6 +29,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.*;
@@ -84,6 +85,10 @@ public final class MainWindow extends javax.swing.JFrame
         
         initComponents();
         setLocationRelativeTo(null);
+
+        messageLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        messageLabel.setBackground(UIManager.getColor("inactiveCaptionBorder"));
+        messageLabel.setVisible(false);
         
         graphResponse = new Graph("Hz", "dB");
         graphPhase = new Graph("Hz", "");
@@ -1949,6 +1954,10 @@ public final class MainWindow extends javax.swing.JFrame
     
     private void showNode(final DefaultMutableTreeNode node)
     {
+        // show message
+        messageLabel.setVisible(true);
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
         // stop worker, if running
         stopWorker();
         
@@ -2230,6 +2239,17 @@ public final class MainWindow extends javax.swing.JFrame
                         
                         graphImpedance.add("Impedance", freq, impedance);
                     }
+                    
+                    SwingUtilities.invokeLater(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            // hide message
+                            messageLabel.setVisible(false);
+                            setCursor(null);
+                        }
+                    });
                 }
                 catch (final Throwable e)
                 {
@@ -2260,8 +2280,6 @@ public final class MainWindow extends javax.swing.JFrame
         {
             showNode(node);
         }
-        
-        System.gc();
     }
     
     private void addChildren(DefaultMutableTreeNode node, List<IItem> children)
@@ -2307,7 +2325,9 @@ public final class MainWindow extends javax.swing.JFrame
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         listeningPosZField = UI.decimalField(0);
+        layeredPane = new javax.swing.JLayeredPane();
         tabs = new javax.swing.JTabbedPane();
+        messageLabel = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuFileNew = new javax.swing.JMenuItem();
@@ -2408,7 +2428,18 @@ public final class MainWindow extends javax.swing.JFrame
         propertiesScrollPane.setViewportView(propertiesPanel);
 
         rightPanel.add(propertiesScrollPane, java.awt.BorderLayout.PAGE_START);
-        rightPanel.add(tabs, java.awt.BorderLayout.CENTER);
+
+        layeredPane.setLayout(new javax.swing.OverlayLayout(layeredPane));
+        layeredPane.add(tabs);
+
+        messageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        messageLabel.setText("Simulating ...");
+        messageLabel.setAlignmentX(0.5F);
+        messageLabel.setOpaque(true);
+        layeredPane.setLayer(messageLabel, javax.swing.JLayeredPane.MODAL_LAYER);
+        layeredPane.add(messageLabel);
+
+        rightPanel.add(layeredPane, java.awt.BorderLayout.CENTER);
 
         split.setRightComponent(rightPanel);
 
@@ -2690,6 +2721,7 @@ public final class MainWindow extends javax.swing.JFrame
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLayeredPane layeredPane;
     private javax.swing.JPanel listeningPanel;
     private javax.swing.JFormattedTextField listeningPosXField;
     private javax.swing.JFormattedTextField listeningPosYField;
@@ -2709,6 +2741,7 @@ public final class MainWindow extends javax.swing.JFrame
     private javax.swing.JRadioButtonMenuItem menuSimulatorBassReflex;
     private javax.swing.JRadioButtonMenuItem menuSimulatorClosedBox;
     private javax.swing.JRadioButtonMenuItem menuSimulatorOpenBaffle;
+    private javax.swing.JLabel messageLabel;
     private javax.swing.JPanel propertiesPanel;
     private javax.swing.JScrollPane propertiesScrollPane;
     private javax.swing.JPanel rightPanel;

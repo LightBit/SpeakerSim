@@ -274,11 +274,14 @@ public class ResponsesWindow extends JDialog
         spl.clear();
         phase.clear();
         
+        phase.addYMark(0, "");
+        
         ResponseData frd = list.getSelectedValue();
         if (frd != null)
         {
-            spl.addSeries("Frequency response");
-            phase.addSeries("Phase");
+            String title = frd.toString();
+            spl.addSeries(title);
+            phase.addSeries(title);
 
             for (double f = Settings.getInstance().StartFrequency; f <= Settings.getInstance().EndFrequency; f *= Settings.getInstance().multiplier())
             {
@@ -287,8 +290,6 @@ public class ResponsesWindow extends JDialog
                 phase.add(0, f, Math.toDegrees(r.phase()));
             }
         }
-        
-        phase.addYMark(0, "");
     }
     
     public static ResponseData importFRD()

@@ -45,6 +45,21 @@ public final class MainWindow extends javax.swing.JFrame
     private double[] responsePhase;
     private double[] impedance;
     private double[] impedancePhase;
+    private double[] filter;
+    private double[] listeningWindow;
+    private double[] power;
+    private double[] directivity;
+    private double[] maxSPL;
+    private double[] maxPower;
+    private double[] excursion;
+    private double[] groupDelay;
+    private double[] baffle;
+    private double[] room;
+    private double[][] responses;
+    private double[][] phases;
+    private double[][] filters;
+    private double[][] excursions;
+    
     private JPanel enclosurePanel;
     private BafflePanel bafflePanel;
     private DriverPositionPanel driverPositionPanel;
@@ -61,6 +76,66 @@ public final class MainWindow extends javax.swing.JFrame
     final Graph graphBaffle;
     final Graph graphRoom;
     final Graph graphImpedance;
+    
+    private void createTables()
+    {
+        if (freq == null
+            || freq.length != Settings.getInstance().Points - 1
+            || freq[0] != Settings.getInstance().StartFrequency
+            || freq[freq.length - 1] != Settings.getInstance().EndFrequency
+        )
+        {
+            freq = new double[Settings.getInstance().Points - 1];
+            response = new double[freq.length];
+            responsePhase = new double[freq.length];
+            impedance = new double[freq.length];
+            impedancePhase = new double[freq.length];
+            filter = new double[freq.length];
+            listeningWindow = new double[freq.length];
+            power = new double[freq.length];
+            directivity = new double[freq.length];
+            maxSPL = new double[freq.length];
+            maxPower = new double[freq.length];
+            excursion = new double[freq.length];
+            groupDelay = new double[freq.length];
+            baffle = new double[freq.length];
+            room = new double[freq.length];
+
+            double f = Settings.getInstance().StartFrequency;
+            double m = Settings.getInstance().multiplier();
+            for (int i = 0; i < freq.length; i++)
+            {
+                freq[i] = f;
+                f *= m;
+            }
+        }
+    }
+    
+    private void setRanges()
+    {
+        graphResponse.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
+        graphPhase.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
+        graphFilters.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
+        graphExcursion.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
+        graphDirectivity.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
+        graphMaxSPL.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
+        graphMaxPower.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
+        graphGroupDelay.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
+        graphBaffle.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
+        graphRoom.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
+        graphImpedance.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
+        
+        graphResponse.setYRange(Settings.getInstance().MinSPL, Settings.getInstance().MaxSPL);
+        graphPhase.setYRange(-180, 180);
+        graphFilters.setYRange(-30, 10);
+        graphExcursion.setYRange(0, Settings.getInstance().MaxExcursion);
+        graphDirectivity.setYRange(0, Settings.getInstance().MaxSPL);
+        graphMaxSPL.setYRange(0, Settings.getInstance().MaxSPL + 30);
+        graphMaxPower.setYRange(0, Settings.getInstance().MaxPower);
+        graphBaffle.setYRange(-10, 10);
+        graphRoom.setYRange(-10, 20);
+        graphImpedance.setYRange(0, Settings.getInstance().MaxImpedance);
+    }
     
     public MainWindow(String arg) throws IOException
     {
@@ -101,17 +176,6 @@ public final class MainWindow extends javax.swing.JFrame
         graphBaffle = new Graph("Hz", "dB");
         graphRoom = new Graph("Hz", "dB");
         graphImpedance = new Graph("Hz", "Ω");
-        
-        graphResponse.setYRange(Settings.getInstance().MinSPL, Settings.getInstance().MaxSPL);
-        graphPhase.setYRange(-180, 180);
-        graphFilters.setYRange(-30, 10);
-        graphExcursion.setYRange(0, Settings.getInstance().MaxExcursion);
-        graphDirectivity.setYRange(0, Settings.getInstance().MaxSPL);
-        graphMaxSPL.setYRange(0, Settings.getInstance().MaxSPL + 30);
-        graphMaxPower.setYRange(0, Settings.getInstance().MaxPower);
-        graphBaffle.setYRange(-10, 10);
-        graphRoom.setYRange(-10, 20);
-        graphImpedance.setYRange(0, Settings.getInstance().MaxImpedance);
         
         tabs.addTab("SPL at 2.83V", graphResponse.getPanel());
         tabs.addTab("Directivity", graphDirectivity.getPanel());
@@ -1766,23 +1830,6 @@ public final class MainWindow extends javax.swing.JFrame
         }
     }
     
-    private void createTables()
-    {
-        freq = new double[Project.getInstance().Settings.Points - 1];
-        response = new double[freq.length];
-        responsePhase = new double[freq.length];
-        impedance = new double[freq.length];
-        impedancePhase = new double[freq.length];
-
-        double f = Settings.getInstance().StartFrequency;
-        double m = Settings.getInstance().multiplier();
-        for (int i = 0; i < freq.length; i++)
-        {
-            freq[i] = f;
-            f *= m;
-        }
-    }
-    
     private void changeSimulator()
     {                                                  
         Speaker speaker = (Speaker) getSelectedItem();
@@ -1998,45 +2045,6 @@ public final class MainWindow extends javax.swing.JFrame
         propertiesPanel.revalidate();
         propertiesPanel.repaint();
         
-        // Baffle tab
-        int tab = tabs.indexOfComponent(graphBaffle.getPanel());
-        if (tab < 0 && Settings.getInstance().BaffleSimulation)
-        {
-            tabs.addTab("Baffle", graphBaffle.getPanel());
-        }
-        else if (tab >= 0 && !Settings.getInstance().BaffleSimulation)
-        {
-            tabs.remove(tab);
-        }
-        
-        // Room tab
-        tab = tabs.indexOfComponent(graphRoom.getPanel());
-        if (tab < 0 && Settings.getInstance().RoomSimulation)
-        {
-            tabs.addTab("Room", graphRoom.getPanel());
-        }
-        else if (tab >= 0 && !Settings.getInstance().RoomSimulation)
-        {
-            tabs.remove(tab);
-        }
-
-        // Impedance tab
-        tab = tabs.indexOfComponent(graphImpedance.getPanel());
-        if (tab < 0 && !(item instanceof Project))
-        {
-            tabs.addTab("Impedance", graphImpedance.getPanel());
-        }
-        else if (tab >= 0 && (item instanceof Project))
-        {
-            tabs.remove(tab);
-        }
-
-        // Enclosure tab
-        if (enclosurePanel != null)
-        {
-            ((ISpeakerPanel) enclosurePanel).addTabs(tabs);
-        }
-        
         final Component parent = this;
         
         worker = new Thread()
@@ -2048,26 +2056,14 @@ public final class MainWindow extends javax.swing.JFrame
                 
                 try
                 {
-                    final IItem item = (IItem) node.getUserObject();
                     final List<IItem> subitems = item.getChildren();
-                    final List<Speaker> speakers = getSpeakers(node);
                     
                     if (!speakers.isEmpty())
                     {
-                        double[] filter = new double[freq.length];
-                        double[] listeningWindow = new double[freq.length];
-                        double[] power = new double[freq.length];
-                        double[] directivity = new double[freq.length];
-                        double[] maxSPL = new double[freq.length];
-                        double[] maxPower = new double[freq.length];
-                        double[] excursion = new double[freq.length];
-                        double[] groupDelay = new double[freq.length];
-                        double[] baffle = new double[freq.length];
-                        double[] room = new double[freq.length];
-                        double[][] responses = new double[subitems.size()][freq.length];
-                        double[][] phases = new double[subitems.size()][freq.length];
-                        double[][] filters = new double[subitems.size()][freq.length];
-                        double[][] excursions = new double[subitems.size()][freq.length];
+                        responses = new double[subitems.size()][freq.length];
+                        phases = new double[subitems.size()][freq.length];
+                        filters = new double[subitems.size()][freq.length];
+                        excursions = new double[subitems.size()][freq.length];
 
                         for (int i = 0; i < freq.length; i++)
                         {
@@ -2109,6 +2105,7 @@ public final class MainWindow extends javax.swing.JFrame
                         
                         double delay = Fnc.min(Fnc.smooth(groupDelay, (int)Math.round(Settings.getInstance().pointsPerOctave()))) / 1000;
                         
+                        // smoothing
                         if (Settings.getInstance().Smoothing > 0)
                         {
                             int points = (int)Math.round(Settings.getInstance().pointsPerOctave()) / Settings.getInstance().Smoothing;
@@ -2142,6 +2139,7 @@ public final class MainWindow extends javax.swing.JFrame
                             responsePhase[i] = Math.toDegrees(Complex.toComplex(1, responsePhase[i]).multiply(d).phase());
                         }
                         
+                        // get minimum phase of subitems
                         for (int j = 0; j < subitems.size(); j++)
                         {
                             for (int i = 0; i < freq.length; i++)
@@ -2155,78 +2153,13 @@ public final class MainWindow extends javax.swing.JFrame
                         {
                             ((ISpeakerPanel) enclosurePanel).simulate();
                         }
-                        
-                        // clear graphs
-                        graphResponse.clear();
-                        graphPhase.clear();
-                        graphFilters.clear();
-                        graphExcursion.clear();
-                        graphDirectivity.clear();
-                        graphMaxSPL.clear();
-                        graphMaxPower.clear();
-                        graphGroupDelay.clear();
-                        graphBaffle.clear();
-                        graphRoom.clear();
-                        graphImpedance.clear();
-                        
-                        // add new data
-                        graphResponse.add(item.toString(), freq, response);
-                        graphFilters.add(item.toString(), freq, filter);
-                        graphExcursion.add("Excursion", freq, excursion);
-                        
-                        if (subitems.size() < 1)
-                        {
-                            graphPhase.add("Phase", freq, responsePhase);
-                        }
-                        else
-                        {
-                            for (int j = 0; j < subitems.size(); j++)
-                            {
-                                String subitem = subitems.get(j).toString();
-
-                                graphResponse.add(subitem, freq, responses[j]);
-                                graphFilters.add(subitem, freq, filters[j]);
-                                graphExcursion.add(subitem, freq, excursions[j]);
-                                graphPhase.add(subitem, freq, phases[j]);
-                            }
-                        }
-                        
-                        graphDirectivity.add("Listening window", freq, listeningWindow);
-                        graphDirectivity.add("Power response", freq, power);
-                        graphDirectivity.add("Directivity", freq, directivity);
-                        
-                        graphMaxSPL.add("Max SPL", freq, maxSPL);
-                        graphMaxPower.add("Max power", freq, maxPower);
-                        graphGroupDelay.add("Group delay", freq, groupDelay);
-                        graphBaffle.add("Baffle", freq, baffle);
-                        graphRoom.add("Room", freq, room);
-                        graphImpedance.add("Impedance", freq, impedance);
-
-                        graphFilters.addYMark(0, "");
-                        graphPhase.addYMark(0, "");
-                        
-                        for (Speaker s : speakers)
-                        {
-                            graphExcursion.addYMark(s.Driver.Xmax * 1000, s.Driver.Name);
-                        }
-                        
-                        graphBaffle.addYMark(0, "");
-                        graphRoom.addYMark(0, "");
                     }
                     else
                     {
-                        // clear graphs
-                        graphResponse.clear();
-                        graphPhase.clear();
-                        graphFilters.clear();
-                        graphExcursion.clear();
-                        graphDirectivity.clear();
-                        graphMaxSPL.clear();
-                        graphMaxPower.clear();
-                        graphGroupDelay.clear();
-                        graphBaffle.clear();
-                        graphRoom.clear();
-                        graphImpedance.clear();
+                        responses = null;
+                        phases = null;
+                        filters = null;
+                        excursions = null;
                         
                         for (int i = 0; i < freq.length; i++)
                         {
@@ -2236,20 +2169,127 @@ public final class MainWindow extends javax.swing.JFrame
                             impedance[i] = z.abs();
                             impedancePhase[i] = z.phase();
                         }
-                        
-                        graphImpedance.add("Impedance", freq, impedance);
                     }
                     
-                    SwingUtilities.invokeLater(new Runnable()
+                    SwingUtilities.invokeAndWait(new Runnable()
                     {
                         @Override
                         public void run()
                         {
+                            if (thread.isInterrupted()) return;
+                            
+                            // clear graphs
+                            graphResponse.clear();
+                            graphPhase.clear();
+                            graphFilters.clear();
+                            graphExcursion.clear();
+                            graphDirectivity.clear();
+                            graphMaxSPL.clear();
+                            graphMaxPower.clear();
+                            graphGroupDelay.clear();
+                            graphBaffle.clear();
+                            graphRoom.clear();
+                            graphImpedance.clear();
+                            
+                            graphFilters.addYMark(0, "");
+                            graphPhase.addYMark(0, "");
+                            graphBaffle.addYMark(0, "");
+                            graphRoom.addYMark(0, "");
+                            
+                            // Baffle tab
+                            int tab = tabs.indexOfComponent(graphBaffle.getPanel());
+                            if (tab < 0 && Settings.getInstance().BaffleSimulation)
+                            {
+                                tabs.addTab("Baffle", graphBaffle.getPanel());
+                            }
+                            else if (tab >= 0 && !Settings.getInstance().BaffleSimulation)
+                            {
+                                tabs.remove(tab);
+                            }
+
+                            // Room tab
+                            tab = tabs.indexOfComponent(graphRoom.getPanel());
+                            if (tab < 0 && Settings.getInstance().RoomSimulation)
+                            {
+                                tabs.addTab("Room", graphRoom.getPanel());
+                            }
+                            else if (tab >= 0 && !Settings.getInstance().RoomSimulation)
+                            {
+                                tabs.remove(tab);
+                            }
+
+                            // Impedance tab
+                            tab = tabs.indexOfComponent(graphImpedance.getPanel());
+                            if (tab < 0 && !(item instanceof Project))
+                            {
+                                tabs.addTab("Impedance", graphImpedance.getPanel());
+                            }
+                            else if (tab >= 0 && (item instanceof Project))
+                            {
+                                tabs.remove(tab);
+                            }
+
+                            // Enclosure tab
+                            if (enclosurePanel != null)
+                            {
+                                ((ISpeakerPanel) enclosurePanel).addTabs(tabs);
+                            }
+                            
+                            if (!speakers.isEmpty())
+                            {
+                                // add new data
+                                graphResponse.add(item.toString(), freq, response);
+                                graphFilters.add(item.toString(), freq, filter);
+                                graphExcursion.add("Excursion", freq, excursion);
+
+                                if (subitems.size() < 1)
+                                {
+                                    graphPhase.add("Phase", freq, responsePhase);
+                                }
+                                else
+                                {
+                                    for (int j = 0; j < subitems.size(); j++)
+                                    {
+                                        String subitem = subitems.get(j).toString();
+
+                                        graphResponse.add(subitem, freq, responses[j]);
+                                        graphFilters.add(subitem, freq, filters[j]);
+                                        graphExcursion.add(subitem, freq, excursions[j]);
+                                        graphPhase.add(subitem, freq, phases[j]);
+                                    }
+                                }
+
+                                graphDirectivity.add("Listening window", freq, listeningWindow);
+                                graphDirectivity.add("Power response", freq, power);
+                                graphDirectivity.add("Directivity", freq, directivity);
+
+                                graphMaxSPL.add("Max SPL", freq, maxSPL);
+                                graphMaxPower.add("Max power", freq, maxPower);
+                                graphGroupDelay.add("Group delay", freq, groupDelay);
+                                graphBaffle.add("Baffle", freq, baffle);
+                                graphRoom.add("Room", freq, room);
+                                graphImpedance.add("Impedance", freq, impedance);
+
+                                for (Speaker s : speakers)
+                                {
+                                    graphExcursion.addYMark(s.Driver.Xmax * 1000, s.Driver.Name);
+                                }
+                            }
+                            else
+                            {
+                                // add only impedance
+                                graphImpedance.add("Impedance", freq, impedance);
+                            }
+                            
                             // hide message
                             messageLabel.setVisible(false);
                             setCursor(null);
                         }
                     });
+                }
+                catch (final InterruptedException e)
+                {
+                    // ignore
                 }
                 catch (final Throwable e)
                 {
@@ -2295,6 +2335,7 @@ public final class MainWindow extends javax.swing.JFrame
     private void load()
     {
         createTables();
+        setRanges();
         
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(Project.getInstance());
         addChildren(rootNode, Project.getInstance().getChildren());
@@ -2708,6 +2749,7 @@ public final class MainWindow extends javax.swing.JFrame
         if (new SettingsWindow(this, Project.getInstance().Settings).showDialog())
         {
             createTables();
+            setRanges();
             refresh();
         }
     }//GEN-LAST:event_menuSettingsActionPerformed

@@ -40,6 +40,7 @@ public class PassFilterWindow extends javax.swing.JDialog
         initComponents();
         setLocationRelativeTo(parent);
         setTitle(filter.name());
+        getRootPane().setDefaultButton(okButton);
         
         try
         {

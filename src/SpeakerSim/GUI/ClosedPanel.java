@@ -101,16 +101,17 @@ public final class ClosedPanel extends javax.swing.JPanel implements ISpeakerPan
         box.clear();
         
         ClosedBoxSimulation sim = (ClosedBoxSimulation) speaker.getSimulation();
+        double[] freq = Settings.getInstance().freq;
         
-        double[] enclosure = new double[main.freq.length];
+        double[] enclosure = new double[freq.length];
         
-        for (int i = 0; i < main.freq.length; i++)
+        for (int i = 0; i < freq.length; i++)
         {
-            double f = main.freq[i];
+            double f = freq[i];
             enclosure[i] = sim.dBmag(f);
         }
         
-        box.add("Enclosure", main.freq, enclosure);
+        box.add("Enclosure", freq, enclosure);
         
         box.addYMark(0, "");
     }

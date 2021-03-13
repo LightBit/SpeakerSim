@@ -41,6 +41,7 @@ public class PortCalculator extends javax.swing.JDialog
         ((JPanel)this.getContentPane()).setBorder(new EmptyBorder(5, 5, 5, 5));
         initComponents();
         setLocationRelativeTo(parent);
+        getRootPane().setDefaultButton(okButton);
         
         this.project = project;
         this.box = box;

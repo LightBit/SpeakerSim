@@ -36,6 +36,8 @@ public class Settings implements JSONable
     public boolean RoomSimulation;
     public PowerFilter PowerFilter;
     
+    public double[] freq;
+    
     public static Settings getInstance()
     {
         return Project.getInstance().Settings;
@@ -49,6 +51,25 @@ public class Settings implements JSONable
     public double multiplier()
     {
         return Math.pow(2, 1 / pointsPerOctave());
+    }
+    
+    public void Refresh()
+    {
+        if (freq == null || freq.length != Points - 1)
+        {
+            freq = new double[Points - 1];
+        }
+        
+        if (freq[0] != StartFrequency || freq[freq.length - 1] != EndFrequency)
+        {
+            double f = StartFrequency;
+            double m = multiplier();
+            for (int i = 0; i < freq.length; i++)
+            {
+                freq[i] = f;
+                f *= m;
+            }
+        }
     }
     
     public Settings()
@@ -66,6 +87,8 @@ public class Settings implements JSONable
         BaffleSimulation = true;
         RoomSimulation = false;
         PowerFilter = new PowerFilter();
+        
+        Refresh();
     }
     
     public Settings(JsonValue json)
@@ -85,6 +108,8 @@ public class Settings implements JSONable
         BaffleSimulation = JSON.getBoolean(jsonObj, "BaffleSimulationEnabled", false);
         RoomSimulation = JSON.getBoolean(jsonObj, "RoomSimulationEnabled", false);
         PowerFilter = new PowerFilter(jsonObj.get("PowerFilter"));
+        
+        Refresh();
     }
 
     @Override

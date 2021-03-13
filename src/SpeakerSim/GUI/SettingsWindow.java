@@ -34,6 +34,7 @@ public class SettingsWindow extends javax.swing.JDialog
         ((JPanel)this.getContentPane()).setBorder(new EmptyBorder(5, 5, 5, 5));
         initComponents();
         setLocationRelativeTo(parent);
+        getRootPane().setDefaultButton(okButton);
         
         this.settings = settings;
         result = false;
@@ -337,6 +338,7 @@ public class SettingsWindow extends javax.swing.JDialog
             settings.RoomSimulation = simulateRoomCheckBox.isSelected();
             settings.BaffleSimulation = simulateBaffleCheckBox.isSelected();
             settings.PowerFilter.setType(PowerFilter.valueOf(powerFilterComboBox.getSelectedItem().toString()));
+            settings.Refresh();
             
             dispose();
         }

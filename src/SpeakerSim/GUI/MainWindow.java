@@ -40,7 +40,6 @@ public final class MainWindow extends javax.swing.JFrame
     private final FileSelector fc;
     private boolean listen = true;
     
-    public double[] freq;
     private double[] response;
     private double[] responsePhase;
     private double[] impedance;
@@ -79,35 +78,23 @@ public final class MainWindow extends javax.swing.JFrame
     
     private void createTables()
     {
-        if (freq == null
-            || freq.length != Settings.getInstance().Points - 1
-            || freq[0] != Settings.getInstance().StartFrequency
-            || freq[freq.length - 1] != Settings.getInstance().EndFrequency
-        )
+        int len = Settings.getInstance().freq.length;
+        if (response == null || response.length != len)
         {
-            freq = new double[Settings.getInstance().Points - 1];
-            response = new double[freq.length];
-            responsePhase = new double[freq.length];
-            impedance = new double[freq.length];
-            impedancePhase = new double[freq.length];
-            filter = new double[freq.length];
-            listeningWindow = new double[freq.length];
-            power = new double[freq.length];
-            directivity = new double[freq.length];
-            maxSPL = new double[freq.length];
-            maxPower = new double[freq.length];
-            excursion = new double[freq.length];
-            groupDelay = new double[freq.length];
-            baffle = new double[freq.length];
-            room = new double[freq.length];
-
-            double f = Settings.getInstance().StartFrequency;
-            double m = Settings.getInstance().multiplier();
-            for (int i = 0; i < freq.length; i++)
-            {
-                freq[i] = f;
-                f *= m;
-            }
+            response = new double[len];
+            responsePhase = new double[len];
+            impedance = new double[len];
+            impedancePhase = new double[len];
+            filter = new double[len];
+            listeningWindow = new double[len];
+            power = new double[len];
+            directivity = new double[len];
+            maxSPL = new double[len];
+            maxPower = new double[len];
+            excursion = new double[len];
+            groupDelay = new double[len];
+            baffle = new double[len];
+            room = new double[len];
         }
     }
     
@@ -132,6 +119,7 @@ public final class MainWindow extends javax.swing.JFrame
         graphDirectivity.setYRange(0, Settings.getInstance().MaxSPL);
         graphMaxSPL.setYRange(0, Settings.getInstance().MaxSPL + 30);
         graphMaxPower.setYRange(0, Settings.getInstance().MaxPower);
+        graphGroupDelay.setYRange(0, 50);
         graphBaffle.setYRange(-10, 10);
         graphRoom.setYRange(-10, 20);
         graphImpedance.setYRange(0, Settings.getInstance().MaxImpedance);
@@ -1617,6 +1605,7 @@ public final class MainWindow extends javax.swing.JFrame
                 
                 try (PrintWriter writer = new PrintWriter(fs.getSelectedFile(), "UTF-8"))
                 {
+                    double[] freq = Settings.getInstance().freq;
                     for (int i = 0; i < freq.length; i++)
                     {
                         double a = response[i];
@@ -1649,6 +1638,7 @@ public final class MainWindow extends javax.swing.JFrame
                 
                 try (PrintWriter writer = new PrintWriter(fs.getSelectedFile(), "UTF-8"))
                 {
+                    double[] freq = Settings.getInstance().freq;
                     for (int i = 0; i < freq.length; i++)
                     {
                         double a = impedance[i];
@@ -1961,14 +1951,6 @@ public final class MainWindow extends javax.swing.JFrame
         }
     }
     
-    private Complex totalResponse(IItem item, double f)
-    {
-        Complex r = item.response(f);
-        Complex baffleResponse = Settings.getInstance().BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
-        Complex roomResponse = Settings.getInstance().RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
-        return r.multiply(baffleResponse).multiply(roomResponse);
-    }
-    
     private void stopWorker()
     {
         if (worker != null && worker.isAlive())
@@ -1999,6 +1981,14 @@ public final class MainWindow extends javax.swing.JFrame
         }
     }
     
+    private Complex totalResponse(IItem item, double f)
+    {
+        Complex r = item.response(f);
+        Complex baffleResponse = Settings.getInstance().BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
+        Complex roomResponse = Settings.getInstance().RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
+        return r.multiply(baffleResponse).multiply(roomResponse);
+    }
+    
     private void showNode(final DefaultMutableTreeNode node)
     {
         // show message
@@ -2008,15 +1998,23 @@ public final class MainWindow extends javax.swing.JFrame
         // stop worker, if running
         stopWorker();
         
-        // calculate center of all speakers
-        List<Speaker> speakers = getSpeakers(node);
+        // calculate center of all speakers and delay
+        final List<Speaker> speakers = getSpeakers(node);
         Project.getInstance().CenterPosition = new Position(0, 0, 0);
+        double min_distance = Double.MAX_VALUE;
 
         for (Speaker speaker : speakers)
         {
             Project.getInstance().CenterPosition = Project.getInstance().CenterPosition.add(speaker.Position);
+            
+            double distance = speaker.Position.distance(Project.getInstance().ListeningPosition);
+            if (distance < min_distance)
+            {
+                min_distance = distance;
+            }
         }
         Project.getInstance().CenterPosition = Project.getInstance().CenterPosition.divide(speakers.size());
+        final double delay = min_distance / Environment.getInstance().SpeedOfSound;
 
         // refresh item
         final IItem item = (IItem) node.getUserObject();
@@ -2057,6 +2055,7 @@ public final class MainWindow extends javax.swing.JFrame
                 try
                 {
                     final List<IItem> subitems = item.getChildren();
+                    double[] freq = Settings.getInstance().freq;
                     
                     if (!speakers.isEmpty())
                     {
@@ -2098,60 +2097,59 @@ public final class MainWindow extends javax.swing.JFrame
                             maxPower[i] = item.maxPower(f);
                             maxSPL[i] = Fnc.toDecibels(item.response1W(f).multiply(baffleResponse).multiply(roomResponse).abs()) + Fnc.powerToDecibels(maxPower[i]);
                             excursion[i] = item.excursion(f, Double.MAX_VALUE);
-                            groupDelay[i] = Math.abs((Math.abs(Math.toDegrees(totalResponse(item, f + 0.1).phase())) - Math.abs(Math.toDegrees(responsePhase[i]))) / (360 * 0.1)) * 1000;
                             baffle[i] = Fnc.toDecibels(baffleResponse.abs());
                             room[i] = Fnc.toDecibels(roomResponse.abs());
                         }
                         
-                        double delay = Fnc.min(Fnc.smooth(groupDelay, (int)Math.round(Settings.getInstance().pointsPerOctave()))) / 1000;
+                        // simulate enclousure
+                        if (enclosurePanel != null)
+                        {
+                            ((ISpeakerPanel) enclosurePanel).simulate();
+                        }
+                        
+                        // remove distance delay from phase to get minimum phase
+                        // convert to degress
+                        for (int i = 0; i < freq.length; i++)
+                        {
+                            Complex d = Complex.toComplex(1, 2 * Math.PI * freq[i] * delay);
+                            responsePhase[i] = Math.toDegrees(Complex.toComplex(1, responsePhase[i]).multiply(d).phase());
+                            
+                            for (int j = 0; j < subitems.size(); j++)
+                            {
+                                phases[j][i] = Math.toDegrees(Complex.toComplex(1, phases[j][i]).multiply(d).phase());
+                            }
+                        }
+                        
+                        // calculate group delay
+                        Fnc.calcGroupDelay(freq, responsePhase, groupDelay);
                         
                         // smoothing
                         if (Settings.getInstance().Smoothing > 0)
                         {
                             int points = (int)Math.round(Settings.getInstance().pointsPerOctave()) / Settings.getInstance().Smoothing;
 
-                            response = Fnc.smooth(response, points);
+                            Fnc.smooth(response, points);
+                            //Fnc.unwrapPhase(responsePhase);
+                            //Fnc.smooth(responsePhase, points);
+                            Fnc.smooth(filter, points);
+                            Fnc.smooth(listeningWindow, points);
+                            Fnc.smooth(power, points);
+                            Fnc.smooth(directivity, points);
+                            Fnc.smooth(maxSPL, points);
+                            Fnc.smooth(maxPower, points);
+                            Fnc.smooth(groupDelay, points);
+                            Fnc.smooth(baffle, points);
+                            Fnc.smooth(room, points);
+                            //Fnc.smooth(impedance, points);
+                            
                             for (int j = 0; j < subitems.size(); j++)
                             {
-                                responses[j] = Fnc.smooth(responses[j], points);
-                                filters[j] = Fnc.smooth(filters[j], points);
-                                excursions[j] = Fnc.smooth(excursions[j], points);
-                                //phases[j] = Fnc.unwrapPhase(freq, phases[j]);
-                                //phases[j] = Fnc.smooth(phases[j], points);
+                                Fnc.smooth(responses[j], points);
+                                Fnc.smooth(filters[j], points);
+                                Fnc.smooth(excursions[j], points);
+                                //Fnc.unwrapPhase(phases[j]);
+                                //Fnc.smooth(phases[j], points);
                             }
-                            //responsePhase = Fnc.unwrapPhase(freq, responsePhase);
-                            //responsePhase = Fnc.smooth(responsePhase, points);
-                            filter = Fnc.smooth(filter, points);
-                            listeningWindow = Fnc.smooth(listeningWindow, points);
-                            power = Fnc.smooth(power, points);
-                            directivity = Fnc.smooth(directivity, points);
-                            maxSPL = Fnc.smooth(maxSPL, points);
-                            maxPower = Fnc.smooth(maxPower, points);
-                            groupDelay = Fnc.smooth(groupDelay, points);
-                            baffle = Fnc.smooth(baffle, points);
-                            room = Fnc.smooth(room, points);
-                        }
-                        
-                        // remove distance delay from phase to get minimum phase
-                        for (int i = 0; i < freq.length; i++)
-                        {
-                            Complex d = Complex.toComplex(1, 2 * Math.PI * freq[i] * delay);
-                            responsePhase[i] = Math.toDegrees(Complex.toComplex(1, responsePhase[i]).multiply(d).phase());
-                        }
-                        
-                        // get minimum phase of subitems
-                        for (int j = 0; j < subitems.size(); j++)
-                        {
-                            for (int i = 0; i < freq.length; i++)
-                            {
-                                Complex d = Complex.toComplex(1, 2 * Math.PI * freq[i] * delay);
-                                phases[j][i] = Math.toDegrees(Complex.toComplex(1, phases[j][i]).multiply(d).phase());
-                            }
-                        }
-                        
-                        if (enclosurePanel != null)
-                        {
-                            ((ISpeakerPanel) enclosurePanel).simulate();
                         }
                     }
                     else
@@ -2242,7 +2240,7 @@ public final class MainWindow extends javax.swing.JFrame
                                 graphFilters.add(item.toString(), freq, filter);
                                 graphExcursion.add("Excursion", freq, excursion);
 
-                                if (subitems.size() < 1)
+                                if (subitems.size() <= 1)
                                 {
                                     graphPhase.add("Phase", freq, responsePhase);
                                 }

@@ -152,22 +152,23 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         box.clear();
         
         BassReflexSimulation sim = (BassReflexSimulation) speaker.getSimulation();
+        double[] freq = Settings.getInstance().freq;
         
-        double[] enclosure = new double[main.freq.length];
-        double[] cone = new double[main.freq.length];
-        double[] port = new double[main.freq.length];
+        double[] enclosure = new double[freq.length];
+        double[] cone = new double[freq.length];
+        double[] port = new double[freq.length];
         
-        for (int i = 0; i < main.freq.length; i++)
+        for (int i = 0; i < freq.length; i++)
         {
-            double f = main.freq[i];
+            double f = freq[i];
             enclosure[i] = sim.dBmag(f);
             cone[i] = sim.dBmagCone(f);
             port[i] = sim.dBmagPort(f);
         }
         
-        box.add("Enclosure", main.freq, enclosure);
-        box.add("Cone", main.freq, cone);
-        box.add("Vent", main.freq, port);
+        box.add("Enclosure", freq, enclosure);
+        box.add("Cone", freq, cone);
+        box.add("Vent", freq, port);
         
         box.addYMark(0, "");
     }

@@ -124,6 +124,7 @@ public class DriverWindow extends javax.swing.JDialog
         ((JPanel)this.getContentPane()).setBorder(new EmptyBorder(10, 10, 10, 10));
         initComponents();
         setLocationRelativeTo(parent);
+        getRootPane().setDefaultButton(OKButton);
         
         this.project = project;
         origDriver = driver;

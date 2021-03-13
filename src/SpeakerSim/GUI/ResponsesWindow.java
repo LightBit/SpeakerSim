@@ -37,6 +37,7 @@ public class ResponsesWindow extends JDialog
         super(parent, true);
         initComponents();
         setLocationRelativeTo(parent);
+        getRootPane().setDefaultButton(okButton);
         
         spl = new Graph("Hz", "dB");
         phase = new Graph("Hz", "");

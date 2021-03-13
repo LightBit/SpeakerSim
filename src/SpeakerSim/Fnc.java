@@ -151,37 +151,34 @@ public final class Fnc
         return x > 180 ? x - 360 : x;
     }
     
-    public static double[] averageSmooth(double[] values, int points)
+    public static void averageSmooth(double[] x, int points)
     {
-        double[] r = new double[values.length];
         int half = points / 2;
         
-        for (int i = 0; i < values.length; i++)
+        for (int i = 0; i < x.length; i++)
         {
             int start = i - Math.min(half, i);
-            if (values.length - start < points)
+            if (x.length - start < points)
             {
-                start = values.length - points;
+                start = x.length - points;
             }
             
             double sum = 0;
             
             for (int p = 0; p < points; p++)
             {
-                sum += values[start + p];
+                sum += x[start + p];
             }
             
-            r[i] = sum / points;
+            x[i] = sum / points;
         }
-        
-        return r;
     }
     
-    public static double[] smooth(double[] values, int points)
+    public static void smooth(double[] x, int points)
     {
-        double[] r = averageSmooth(values, points);
-        r = averageSmooth(r, points);
-        return averageSmooth(r, points);
+        averageSmooth(x, points);
+        averageSmooth(x, points);
+        averageSmooth(x, points);
     }
     
     public static double besselJn(int n, double x)
@@ -379,33 +376,60 @@ public final class Fnc
         return phase;
     }
     
-    /*public static double[] unwrapPhase(double[] f, double[] phase)
+    public static void calcGroupDelay(double[] freq, double[] phase, double[] groupDelay)
     {
-        double[] unwrapped = new double[phase.length];
+        double prev_f = 360 * freq[0];
+        double prev_p = phase[0];
+        double prev_abs = phase[0];
+        double x = 0;
+        
+        for (int i = 1; i < freq.length; i++)
+        {
+            double f = 360 * freq[i];
+            
+            if (prev_p < -90 && phase[i] > 90)
+            {
+                x -= 360;
+            }
+            else if (prev_p > 90 && phase[i] < -90)
+            {
+                x += 360;
+            }
+            
+            double abs = phase[i] + x;
+            groupDelay[i] = 1000 * (prev_abs - abs) / (f - prev_f);
+            prev_abs = abs;
+            prev_p = phase[i];
+            prev_f = f;
+        }
+        
+        groupDelay[0] = groupDelay[1];
+    }
+    
+    /*public static void unwrapPhase(double[] phase)
+    {
         double prev = 0;
         double x = 0;
         
-        for (int i = 0; i < f.length; i++)
+        for (int i = 0; i < phase.length; i++)
         {
             double p = phase[i];
             
             if (i > 0)
             {
-                if (prev < -Math.PI / 2 && p > Math.PI / 2)
+                if (prev < -90 && p > 90)
                 {
-                    x -= 2 * Math.PI;
+                    x -= 360;
                 }
-                else if (prev > Math.PI / 2 && p < -Math.PI / 2)
+                else if (prev > 90 && p < -90)
                 {
-                    x += 2 * Math.PI;
+                    x += 360;
                 }
                 
-                unwrapped[i] = p + x;
+                phase[i] = p + x;
             }
             
             prev = p;
         }
-        
-        return unwrapped;
     }*/
 }

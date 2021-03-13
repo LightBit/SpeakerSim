@@ -93,17 +93,15 @@ public class LPad extends Filter
             return 0;
         }
         
-        double f = Settings.getInstance().StartFrequency;
-        double m = Settings.getInstance().multiplier();
-        double[] z = new double[Settings.getInstance().Points - 1];
+        double[] freq = Settings.getInstance().freq;
+        double[] z = new double[freq.length];
         
-        for (int i = 0; i < z.length; i++)
+        for (int i = 0; i < freq.length; i++)
         {
-            z[i] = super.itemImpedance(f).abs();
-            f *= m;
+            z[i] = super.itemImpedance(freq[i]).abs();
         }
         
-        z = Fnc.smooth(z, (int)Math.round(Settings.getInstance().pointsPerOctave()));
+        Fnc.smooth(z, (int)Math.round(Settings.getInstance().pointsPerOctave()));
         
         return Fnc.min(z);
     }

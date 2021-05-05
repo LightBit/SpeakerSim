@@ -82,18 +82,6 @@ public class Main
         {
             // ignore
         }
-
-        try
-        {
-            if (System.getProperty("os.name").contains("Windows"))
-            {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            }
-        }
-        catch (Exception ex)
-        {
-            // ignore - non critical
-        }
         
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener("permanentFocusOwner", new PropertyChangeListener()
         {

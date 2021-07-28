@@ -76,6 +76,15 @@ public class Main
         
         try
         {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        }
+        catch (Exception ex)
+        {
+            // ignore
+        }
+        
+        try
+        {
             Sentry.getContext().addTag("machine_id", Base64.getEncoder().encodeToString(UI.machineId()));
         }
         catch (Exception ex)

@@ -16,6 +16,7 @@
 
 package SpeakerSim.GUI;
 
+import SpeakerSim.Fnc;
 import SpeakerSim.HandledException;
 import SpeakerSim.Project;
 import io.sentry.Sentry;
@@ -39,20 +40,9 @@ import java.util.Enumeration;
 
 public final class UI
 {
-    private final static NumberFormat DECIMAL_FORMAT = NumberFormat.getNumberInstance();
-    private final static NumberFormat INTEGER_FORMAT = NumberFormat.getIntegerInstance();
-    
     private UI()
     {
         
-    }
-    
-    static
-    {
-        DECIMAL_FORMAT.setMaximumFractionDigits(10);
-        DECIMAL_FORMAT.setGroupingUsed(false);
-        
-        INTEGER_FORMAT.setGroupingUsed(false);
     }
     
     private static JFormattedTextField field(NumberFormat format, Comparable<?> min, Comparable<?> max)
@@ -84,27 +74,42 @@ public final class UI
     
     public static JFormattedTextField decimalField(double min, double max)
     {
-        return field(DECIMAL_FORMAT, min, max);
+        return field(Fnc.DECIMAL_FORMAT, min, max);
     }
     
     public static JFormattedTextField decimalField(double min)
     {
-        return field(DECIMAL_FORMAT, min);
+        return field(Fnc.DECIMAL_FORMAT, min);
     }
     
     public static JFormattedTextField decimalField()
     {
-        return field(DECIMAL_FORMAT);
+        return field(Fnc.DECIMAL_FORMAT);
+    }
+    
+    public static JFormattedTextField twoDecimalField(double min, double max)
+    {
+        return field(Fnc.TWO_DECIMAL_FORMAT, min, max);
+    }
+    
+    public static JFormattedTextField twoDecimalField(double min)
+    {
+        return field(Fnc.TWO_DECIMAL_FORMAT, min);
+    }
+    
+    public static JFormattedTextField twoDecimalField()
+    {
+        return field(Fnc.TWO_DECIMAL_FORMAT);
     }
     
     public static JFormattedTextField integerField(int min, int max)
     {
-        return field(INTEGER_FORMAT, min, max);
+        return field(Fnc.INTEGER_FORMAT, min, max);
     }
     
     public static JFormattedTextField integerField(int min)
     {
-        return field(INTEGER_FORMAT, min);
+        return field(Fnc.INTEGER_FORMAT, min);
     }
     
     public static double getDouble(JFormattedTextField field)

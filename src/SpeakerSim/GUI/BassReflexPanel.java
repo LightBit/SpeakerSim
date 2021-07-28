@@ -300,7 +300,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         jLabel12 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         portPositionZField = UI.decimalField(0);
-        portPositionDistanceField = UI.decimalField(0);
+        portPositionDistanceField = UI.twoDecimalField(0);
         jLabel16 = new javax.swing.JLabel();
         bassReflexPanel = new javax.swing.JPanel();
         fbField = UI.decimalField(1);

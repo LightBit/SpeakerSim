@@ -169,7 +169,7 @@ public class PortCalculator extends javax.swing.JDialog
         controlPanel = new javax.swing.JPanel();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        lengthField = UI.decimalField(0);
+        lengthField = UI.twoDecimalField(0);
         endsComboBox = new javax.swing.JComboBox<>();
         numberField = UI.integerField(1);
         jLabel13 = new javax.swing.JLabel();
@@ -177,9 +177,9 @@ public class PortCalculator extends javax.swing.JDialog
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         thicknessField = UI.decimalField(0);
-        volumeField = UI.decimalField(0);
+        volumeField = UI.twoDecimalField(0);
         jLabel16 = new javax.swing.JLabel();
-        resonanceField = UI.decimalField(0);
+        resonanceField = UI.twoDecimalField(0);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Port calculator");

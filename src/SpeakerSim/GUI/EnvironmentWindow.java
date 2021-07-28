@@ -17,6 +17,7 @@
 package SpeakerSim.GUI;
 
 import SpeakerSim.Environment;
+import SpeakerSim.Fnc;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import javax.swing.JPanel;
@@ -76,14 +77,13 @@ public class EnvironmentWindow extends javax.swing.JDialog
     public final void calculateFields()
     {
         pressureField.setValue(Environment.calcAirPressure(UI.getDouble(tempField), UI.getDouble(altitudeField)));
-        densityField.setValue(Environment.calcAirDensity(UI.getDouble(tempField), UI.getDouble(humidityField) / 100, UI.getDouble(pressureField)));
-        speedField.setValue(Environment.calcSpeedOfSound(UI.getDouble(pressureField), UI.getDouble(densityField)));
+        densityField.setValue(Fnc.round(Environment.calcAirDensity(UI.getDouble(tempField), UI.getDouble(humidityField) / 100, UI.getDouble(pressureField)), 2));
+        speedField.setValue(Fnc.round(Environment.calcSpeedOfSound(UI.getDouble(pressureField), UI.getDouble(densityField)), 2));
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel7 = new javax.swing.JLabel();
@@ -95,7 +95,7 @@ public class EnvironmentWindow extends javax.swing.JDialog
         jLabel6 = new javax.swing.JLabel();
         altitudeField = UI.decimalField(0);
         jLabel3 = new javax.swing.JLabel();
-        pressureField = UI.decimalField(0);
+        pressureField = UI.twoDecimalField(0);
         jLabel4 = new javax.swing.JLabel();
         speedField = UI.decimalField(1);
         jLabel5 = new javax.swing.JLabel();
@@ -239,20 +239,16 @@ public class EnvironmentWindow extends javax.swing.JDialog
         getContentPane().add(densityField, gridBagConstraints);
 
         okButton.setText("Save");
-        okButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
         controlPanel.add(okButton);
 
         cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });

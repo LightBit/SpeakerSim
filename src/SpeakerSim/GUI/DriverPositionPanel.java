@@ -147,7 +147,7 @@ public class DriverPositionPanel extends javax.swing.JPanel
         relativeHorizontalAngleField = UI.decimalField(-180, 180);
         relativeVerticalAngleField = UI.decimalField(-180, 180);
         jLabel16 = new javax.swing.JLabel();
-        distanceField = UI.decimalField(0);
+        distanceField = UI.twoDecimalField(0);
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Driver position"));
         java.awt.GridBagLayout layout = new java.awt.GridBagLayout();

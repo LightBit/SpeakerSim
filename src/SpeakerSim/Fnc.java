@@ -18,11 +18,14 @@ package SpeakerSim;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public final class Fnc
 {
-    private final static NumberFormat DECIMAL_FORMAT = NumberFormat.getNumberInstance();
-    private final static NumberFormat DECIMAL_FORMAT2 = NumberFormat.getNumberInstance();
+    public final static NumberFormat DECIMAL_FORMAT = NumberFormat.getNumberInstance();
+    public final static NumberFormat TWO_DECIMAL_FORMAT = NumberFormat.getNumberInstance();
+    public final static NumberFormat INTEGER_FORMAT = NumberFormat.getIntegerInstance();
     
     private Fnc()
     {
@@ -31,16 +34,26 @@ public final class Fnc
     
     static
     {
-        DECIMAL_FORMAT.setMaximumFractionDigits(Integer.MAX_VALUE);
+        //DECIMAL_FORMAT.setMaximumFractionDigits(Integer.MAX_VALUE);
+        DECIMAL_FORMAT.setMaximumFractionDigits(12);
         DECIMAL_FORMAT.setGroupingUsed(false);
         
-        DECIMAL_FORMAT2.setMaximumFractionDigits(2);
-        DECIMAL_FORMAT2.setGroupingUsed(false);
+        TWO_DECIMAL_FORMAT.setMaximumFractionDigits(2);
+        TWO_DECIMAL_FORMAT.setGroupingUsed(false);
+        
+        INTEGER_FORMAT.setGroupingUsed(false);
+    }
+    
+    public static double round(double value, int places)
+    {
+        BigDecimal x = BigDecimal.valueOf(value);
+        x = x.setScale(places, RoundingMode.HALF_UP);
+        return x.doubleValue();
     }
 
     public static String twoDecimalFormat(double x)
     {
-        return DECIMAL_FORMAT2.format(x);
+        return TWO_DECIMAL_FORMAT.format(x);
     }
     
     public static String decimalFormat(double x)

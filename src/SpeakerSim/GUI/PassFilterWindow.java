@@ -17,6 +17,7 @@
 package SpeakerSim.GUI;
 
 import SpeakerSim.PassFilter;
+import SpeakerSim.Fnc;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -142,10 +143,10 @@ public class PassFilterWindow extends javax.swing.JDialog
         }
         else if (!filter.getChildren().isEmpty())
         {
-            C1Field.setValue(filter.calcC1(t, f) * 1000000);
-            C2Field.setValue(filter.calcC2(t, f) * 1000000);
-            L1Field.setValue(filter.calcL1(t, f) * 1000);
-            L2Field.setValue(filter.calcL2(t, f) * 1000);
+            C1Field.setValue(Fnc.round(filter.calcC1(t, f) * 1000000, 2));
+            C2Field.setValue(Fnc.round(filter.calcC2(t, f) * 1000000, 2));
+            L1Field.setValue(Fnc.round(filter.calcL1(t, f) * 1000, 2));
+            L2Field.setValue(Fnc.round(filter.calcL2(t, f) * 1000, 2));
         }
         
         events = true;

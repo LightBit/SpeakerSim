@@ -1152,9 +1152,9 @@ public final class MainWindow extends javax.swing.JFrame
                             ParallelNotchFilter f = (ParallelNotchFilter) filter;
                             f = f.calculate(UI.getDouble(f1), UI.getDouble(f2));
 
-                            l.setValue(f.L * 1000);
-                            c.setValue(f.C * 1000000);
-                            r.setValue(f.R);
+                            l.setValue(Fnc.round(f.L * 1000, 2));
+                            c.setValue(Fnc.round(f.C * 1000000, 2));
+                            r.setValue(Fnc.round(f.R, 2));
                         }
                     }
                     else if (filter instanceof SerialNotchFilter)
@@ -1173,9 +1173,9 @@ public final class MainWindow extends javax.swing.JFrame
                             SerialNotchFilter f = (SerialNotchFilter) filter;
                             f = f.calculate(UI.getDouble(f1), UI.getDouble(f2), UI.getDouble(z));
 
-                            l.setValue(f.L * 1000);
-                            c.setValue(f.C * 1000000);
-                            r.setValue(f.R);
+                            l.setValue(Fnc.round(f.L * 1000, 2));
+                            c.setValue(Fnc.round(f.C * 1000000, 2));
+                            r.setValue(Fnc.round(f.R, 2));
                         }
                     }
                 }
@@ -1221,8 +1221,8 @@ public final class MainWindow extends javax.swing.JFrame
                         listen = false;
                         
                         double a = Fnc.toAmplitude(UI.getDouble(e));
-                        s.setValue(Z * ((a - 1) / a));
-                        p.setValue(Z * (1 / (a - 1)));
+                        s.setValue(Fnc.round(Z * ((a - 1) / a), 2));
+                        p.setValue(Fnc.round(Z * (1 / (a - 1)), 2));
                         
                         listen = true;
                     }
@@ -1250,7 +1250,7 @@ public final class MainWindow extends javax.swing.JFrame
                         
                         if (Z != 0)
                         {
-                            attenuation.setValue(Math.abs(Fnc.toDecibels(z)));
+                            attenuation.setValue(Fnc.round(Math.abs(Fnc.toDecibels(z)), 2));
                         }
                         
                         listen = true;
@@ -1310,8 +1310,8 @@ public final class MainWindow extends javax.swing.JFrame
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    c.setValue(Zobel.calcC(R, Le) * 1000000);
-                    r.setValue(R);
+                    c.setValue(Fnc.round(Zobel.calcC(R, Le) * 1000000, 2));
+                    r.setValue(Fnc.round(R, 2));
                 }
             });
             

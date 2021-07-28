@@ -745,8 +745,8 @@ public class DriverWindow extends javax.swing.JDialog
         scrollPane.setMinimumSize(new java.awt.Dimension(380, 400));
         scrollPane.setPreferredSize(new java.awt.Dimension(380, 700));
 
-        propertiesPanel.setMinimumSize(new java.awt.Dimension(300, 780));
-        propertiesPanel.setPreferredSize(new java.awt.Dimension(300, 700));
+        propertiesPanel.setMinimumSize(new java.awt.Dimension(300, 720));
+        propertiesPanel.setPreferredSize(new java.awt.Dimension(300, 720));
         java.awt.GridBagLayout propertiesPanelLayout = new java.awt.GridBagLayout();
         propertiesPanelLayout.columnWidths = new int[] {0, 5, 0, 5, 0, 5, 0};
         propertiesPanelLayout.rowHeights = new int[] {0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0};

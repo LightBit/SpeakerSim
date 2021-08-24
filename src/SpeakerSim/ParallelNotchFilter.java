@@ -58,7 +58,7 @@ public class ParallelNotchFilter extends NotchFilter
     {
         ParallelNotchFilter filter = new ParallelNotchFilter();
         
-        double b = Math.abs(f2 - f1);
+        double b = Math.abs(f2 - f1) + 0.0000001;
         double f = f1 + b / 2;
 
         filter.C = 0.03003 / f;

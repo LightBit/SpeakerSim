@@ -58,12 +58,12 @@ public class Environment implements JSONable
     
     public Environment()
     {
-        SpeedOfSound = 345.92;
-        AirDensity = 1.15;
-        AirPressure = 97878;
-        Altitude = 300;
+        SpeedOfSound = 344;
+        AirDensity = 1.2;
+        AirPressure = 101325;
+        Altitude = 0;
         Humidity = 0.50;
-        Temperature = 23;
+        Temperature = 20;
         RoomX = 7;
         RoomY = 5;
         RoomZ = 2.5;
@@ -73,12 +73,12 @@ public class Environment implements JSONable
     {
         JsonObject jsonObj = json.asObject();
 
-        SpeedOfSound = JSON.getDouble(jsonObj, "SpeedOfSound", 345.92);
-        AirDensity = JSON.getDouble(jsonObj, "AirDensity", 1.15);
-        AirPressure = JSON.getDouble(jsonObj, "AirPressure", 97878);
-        Altitude = JSON.getDouble(jsonObj, "Altitude", 300);
+        SpeedOfSound = JSON.getDouble(jsonObj, "SpeedOfSound", 344);
+        AirDensity = JSON.getDouble(jsonObj, "AirDensity", 1.2);
+        AirPressure = JSON.getDouble(jsonObj, "AirPressure", 101325);
+        Altitude = JSON.getDouble(jsonObj, "Altitude", 0);
         Humidity = JSON.getDouble(jsonObj, "Humidity", 0.5);
-        Temperature = JSON.getDouble(jsonObj, "Temperature", 23);
+        Temperature = JSON.getDouble(jsonObj, "Temperature", 20);
         
         if (Project.getInstance().Version.compareTo(Project.parseVersion("2019-08-16")) < 0)
         {

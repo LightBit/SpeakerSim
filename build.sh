@@ -29,7 +29,7 @@ fi
 makensis ./SpeakerSimSetup.nsi
 
 # Recompress jar
-#rm -rf ./jar
+rm -rf ./jar
 unzip ./SpeakerSim.jar -d ./jar
 rm ./SpeakerSim.jar
 cd ./jar

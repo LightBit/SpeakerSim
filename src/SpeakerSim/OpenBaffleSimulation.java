@@ -34,7 +34,7 @@ public class OpenBaffleSimulation implements ISimulation
         this.driver = driver;
         this.distance = new DistanceSimulation(driverPos, listeningPos, env);
         this.baffle = new BaffleSimulation(baffle, driver, driverPos, listeningPos, env, true);
-        this.room = new RoomSimulation(baffle, driver, driverPos, listeningPos, env, true);
+        this.room = new RoomSimulation(driver, driverPos, env, baffle, true);
         this.powerResponse = new PowerResponseSimulation(baffle, driver, driverPos, centerPos, env, true);
         this.listeningWindow = new ListeningWindowSimulation(baffle, driver, driverPos, centerPos, env, true);
         horizontalAngle = driverPos.horizontalAngle(listeningPos);

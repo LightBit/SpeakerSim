@@ -20,115 +20,71 @@ public class RoomSimulation
 {
     private final double[] wall;
     private final BaffleSimulation[] wallSource;
-    /*private final PositionSimulation[] s;
-    private final DistanceSimulation[] reflection;
+    private final double speedOfSound;
     
-    private static double reflectionPoint(double a1, double a2, double b1, double b2)
-    {
-        return b1 * Math.abs(a1 - a2) / (b1 + b2) + Math.min(a1, a2);
-    }*/
-    
-    public RoomSimulation(final Baffle baffle, final ISource source, final Position sourcePos, final Position listeningPos, final Environment env, boolean dipole)
+    public RoomSimulation(final ISource source, final Position sourcePos, final Environment env, final Baffle baffle, boolean dipole)
     {
         // boundary reinforcement
-        wall = new double[6];
+        wall = new double[24];
+        speedOfSound = env.SpeedOfSound;
+        
+        wall[0] = sourcePos.X;
+        wall[1] = sourcePos.Y;
+        wall[2] = sourcePos.Z;
+        wall[3] = env.RoomX - sourcePos.X;
+        wall[4] = env.RoomY - sourcePos.Y;
+        wall[5] = env.RoomZ - sourcePos.Z;
+        
+        wall[6] = Math.hypot(sourcePos.X, sourcePos.Y);
+        wall[7] = Math.hypot(sourcePos.X, sourcePos.Z);
+        wall[8] = Math.hypot(sourcePos.X, wall[3]);
+        wall[9] = Math.hypot(sourcePos.X, wall[4]);
+        wall[10] = Math.hypot(sourcePos.X, wall[5]);
+        wall[11] = Math.hypot(sourcePos.Z, sourcePos.Y);
+        wall[12] = Math.hypot(sourcePos.Z, wall[3]);
+        wall[13] = Math.hypot(sourcePos.Z, wall[4]);
+        wall[14] = Math.hypot(sourcePos.Z, wall[5]);
+        wall[15] = Math.hypot(sourcePos.Y, wall[3]);
+        wall[16] = Math.hypot(sourcePos.Y, wall[4]);
+        wall[17] = Math.hypot(sourcePos.Y, wall[5]);
+        wall[18] = Math.hypot(wall[3], wall[4]);
+        wall[19] = Math.hypot(wall[3], wall[5]);
+        wall[20] = Math.hypot(wall[5], wall[4]);
+        
+        wall[21] = Math.hypot(sourcePos.X, wall[11]);
+        wall[22] = Math.hypot(wall[3], wall[20]);
+        
+        wall[23] = Math.hypot(wall[21], wall[22]);
+        
+        for (int i = 0; i < wall.length; i++)
+        {
+            wall[i] *= 4 * Math.PI;
+        }
+        
         wallSource = new BaffleSimulation[6];
-        
-        double lambda = 4 * Math.PI / env.SpeedOfSound;
-        wall[0] = lambda * sourcePos.X;
-        wall[1] = lambda * sourcePos.Y;
-        wall[2] = lambda * sourcePos.Z;
-        wall[3] = lambda * (env.RoomX - sourcePos.X);
-        wall[4] = lambda * (env.RoomY - sourcePos.Y);
-        wall[5] = lambda * (env.RoomZ - sourcePos.Z);
-        
         wallSource[0] = new BaffleSimulation(baffle, source, sourcePos, sourcePos.addX(-sourcePos.X), env, dipole);
         wallSource[1] = new BaffleSimulation(baffle, source, sourcePos, sourcePos.addY(-sourcePos.Y), env, dipole);
         wallSource[2] = new BaffleSimulation(baffle, source, sourcePos, sourcePos.addZ(-sourcePos.Z), env, dipole);
         wallSource[3] = new BaffleSimulation(baffle, source, sourcePos, sourcePos.addX(env.RoomX - sourcePos.X), env, dipole);
         wallSource[4] = new BaffleSimulation(baffle, source, sourcePos, sourcePos.addY(env.RoomY - sourcePos.Y), env, dipole);
         wallSource[5] = new BaffleSimulation(baffle, source, sourcePos, sourcePos.addZ(env.RoomZ - sourcePos.Z), env, dipole);
-        
-        // first reflections
-        /*s = new PositionSimulation[6];
-        reflection = new DistanceSimulation[6];
-        Position pos;
-        
-        // X (front wall)
-        pos = new Position
-        (
-            0,
-            reflectionPoint(listeningPos.Y, sourcePos.Y, listeningPos.X, sourcePos.X),
-            reflectionPoint(listeningPos.Z, sourcePos.Z, listeningPos.X, sourcePos.X)
-        );
-        s[0] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
-        reflection[0] = new DistanceSimulation(pos.distance(listeningPos), env);
-        
-        // RoomX (back wall)
-        pos = new Position
-        (
-            env.RoomX,
-            reflectionPoint(listeningPos.Y, sourcePos.Y, env.RoomX - listeningPos.X, env.RoomX - sourcePos.X),
-            reflectionPoint(listeningPos.Z, sourcePos.Z, env.RoomX - listeningPos.X, env.RoomX - sourcePos.X)
-        );
-        s[1] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
-        reflection[1] = new DistanceSimulation(pos.distance(listeningPos), env);
-        
-        // Y (left wall)
-        pos = new Position
-        (
-            reflectionPoint(listeningPos.X, sourcePos.X, listeningPos.Y, sourcePos.Y),
-            0,
-            reflectionPoint(listeningPos.Z, sourcePos.Z, listeningPos.Y, sourcePos.Y)
-        );
-        s[2] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
-        reflection[2] = new DistanceSimulation(pos.distance(listeningPos), env);
-        
-        // RoomY (right wall)
-        pos = new Position
-        (
-            reflectionPoint(listeningPos.X, sourcePos.X, env.RoomY - listeningPos.Y, env.RoomY - sourcePos.Y),
-            env.RoomY,
-            reflectionPoint(listeningPos.Z, sourcePos.Z, env.RoomY - listeningPos.Y, env.RoomY - sourcePos.Y)
-        );
-        s[3] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
-        reflection[3] = new DistanceSimulation(pos.distance(listeningPos), env);
-       
-        // Z (floor)
-        pos = new Position
-        (
-            reflectionPoint(listeningPos.X, sourcePos.X, listeningPos.Z, sourcePos.Z),
-            reflectionPoint(listeningPos.Y, sourcePos.Y, listeningPos.Z, sourcePos.Z),
-            0
-        );
-        s[4] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
-        reflection[4] = new DistanceSimulation(pos.distance(listeningPos), env);
-        
-        // RoomZ (ceiling)
-        pos = new Position
-        (
-            reflectionPoint(listeningPos.X, sourcePos.X, env.RoomZ - listeningPos.Z, env.RoomZ - sourcePos.Z),
-            reflectionPoint(listeningPos.Y, sourcePos.Y, env.RoomZ - listeningPos.Z, env.RoomZ - sourcePos.Z),
-            env.RoomZ
-        );
-        s[5] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
-        reflection[5] = new DistanceSimulation(pos.distance(listeningPos), env);*/
     }
-   
+    
     public Complex response(double f)
     {
         Complex r = new Complex(1);
         
-        for (int i = 0; i < wall.length; i++)
+        for (int i = 0; i < wallSource.length; i++)
         {
-            double x = wall[i] * f;
+            double x = wall[i] / (speedOfSound / f);
             r = r.add(wallSource[i].response(f).multiply(Math.sin(x) / x));
         }
         
-        /*for (int i = 0; i < reflection.length; i++)
+        for (int i = wallSource.length - 1; i < wall.length; i++)
         {
-            r = r.add(s[i].response(f).multiply(reflection[i].response(f)));
-        }*/
+            double x = wall[i] / (speedOfSound / f);
+            r = r.add(Math.sin(x) / x);
+        }
         
         return r;
     }

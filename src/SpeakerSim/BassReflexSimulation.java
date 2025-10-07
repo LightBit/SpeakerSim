@@ -82,8 +82,8 @@ public class BassReflexSimulation implements ISimulation
         this.bafflePort = baffle.Enabled ? 2 : 1;
         this.distanceCone = new DistanceSimulation(driverPos, listeningPos, env);
         this.distancePort = new DistanceSimulation(box.PortPosition.distance(listeningPos), env);
-        this.roomCone = new RoomSimulation(baffle, driver, driverPos, listeningPos, env, false);
-        this.roomPort = new RoomSimulation(null, port, box.PortPosition, listeningPos, env, false);
+        this.roomCone = new RoomSimulation(driver, driverPos, env, baffle, false);
+        this.roomPort = new RoomSimulation(port, box.PortPosition, env, null, false);
         this.powerResponseCone = new PowerResponseSimulation(baffle, driver, driverPos, centerPos, env, false);
         this.powerResponsePort = new PowerResponseSimulation(baffle, port, box.PortPosition, centerPos, env, false);
         this.listeningWindowCone = new ListeningWindowSimulation(baffle, driver, driverPos, centerPos, env, false);

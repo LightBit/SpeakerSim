@@ -40,6 +40,7 @@ public final class MainWindow extends javax.swing.JFrame
     private final FileSelector fc;
     private boolean listen = true;
     
+    private double[] systemResponse;
     private double[] response;
     private double[] responsePhase;
     private double[] impedance;
@@ -79,8 +80,9 @@ public final class MainWindow extends javax.swing.JFrame
     private void createTables()
     {
         int len = Settings.getInstance().freq.length;
-        if (response == null || response.length != len)
+        if (systemResponse == null || systemResponse.length != len)
         {
+            systemResponse = new double[len];
             response = new double[len];
             responsePhase = new double[len];
             impedance = new double[len];
@@ -2070,11 +2072,20 @@ public final class MainWindow extends javax.swing.JFrame
 
                             double f = freq[i];
 
-                            Complex r = item.response(f);
-                            Complex baffleResponse = Settings.getInstance().BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
-                            Complex roomResponse = Settings.getInstance().RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
+                            Complex r = Project.getInstance().response(f);
+                            Complex baffleResponse = Settings.getInstance().BaffleSimulation ? Project.getInstance().responseWithBaffle(f).divide(r) : new Complex(1);
+                            Complex roomResponse = Settings.getInstance().RoomSimulation ? Project.getInstance().responseWithRoom(f).divide(r) : new Complex(1);
                             r = r.multiply(baffleResponse).multiply(roomResponse);
-                            response[i] = Fnc.toDecibels(r.abs());
+                            systemResponse[i] = Fnc.toDecibels(r.abs());
+                            
+                            if (item != Project.getInstance())
+                            {
+                                r = item.response(f);
+                                baffleResponse = Settings.getInstance().BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
+                                roomResponse = Settings.getInstance().RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
+                                r = r.multiply(baffleResponse).multiply(roomResponse);
+                                response[i] = Fnc.toDecibels(r.abs());
+                            }
                             
                             for (int j = 0; j < subitems.size(); j++)
                             {
@@ -2128,6 +2139,7 @@ public final class MainWindow extends javax.swing.JFrame
                         {
                             int points = (int)Math.round(Settings.getInstance().pointsPerOctave()) / Settings.getInstance().Smoothing;
 
+                            Fnc.smooth(systemResponse, points);
                             Fnc.smooth(response, points);
                             //Fnc.unwrapPhase(responsePhase);
                             //Fnc.smooth(responsePhase, points);
@@ -2140,7 +2152,6 @@ public final class MainWindow extends javax.swing.JFrame
                             Fnc.smooth(groupDelay, points);
                             Fnc.smooth(baffle, points);
                             Fnc.smooth(room, points);
-                            //Fnc.smooth(impedance, points);
                             
                             for (int j = 0; j < subitems.size(); j++)
                             {
@@ -2236,7 +2247,11 @@ public final class MainWindow extends javax.swing.JFrame
                             if (!speakers.isEmpty())
                             {
                                 // add new data
-                                graphResponse.add(item.toString(), freq, response);
+                                graphResponse.add("System", freq, systemResponse);
+                                if (item != Project.getInstance())
+                                {
+                                    graphResponse.add(item.toString(), freq, response);
+                                }
                                 graphFilters.add(item.toString(), freq, filter);
                                 graphExcursion.add("Excursion", freq, excursion);
 

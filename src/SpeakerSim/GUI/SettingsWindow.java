@@ -92,7 +92,7 @@ public class SettingsWindow extends javax.swing.JDialog
         jLabel14 = new javax.swing.JLabel();
         smoothingComboBox = new javax.swing.JComboBox<>();
         jLabel15 = new javax.swing.JLabel();
-        powerFilterComboBox = new javax.swing.JComboBox(PowerFilter.FILTERS);
+        powerFilterComboBox = new javax.swing.JComboBox<>(PowerFilter.FILTERS);
         jLabel16 = new javax.swing.JLabel();
         maxExcursionField = UI.integerField(3);
         jLabel17 = new javax.swing.JLabel();

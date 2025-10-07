@@ -14,22 +14,22 @@ mv ./target/SpeakerSim-jar-with-dependencies.jar ./SpeakerSim.jar
 7za a -tzip -mx=9 SpeakerSim.zip SpeakerSim.jar
 
 # Download JRE for Windows 32-bit
-OPENJDK_WINDOWS_PATH=https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u292-b10
-OPENJDK_WINDOWS_FILE=OpenJDK8U-jre_x86-32_windows_hotspot_8u292b10.zip
+OPENJDK_WINDOWS_URL=https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u462-b08/OpenJDK8U-jre_x86-32_windows_hotspot_8u462b08.zip
+OPENJDK_WINDOWS_FILE=OpenJDK8U-jre_x86-32_windows_hotspot_8u462b08.zip
 if [ ! -d ./jre ]; then
 	if [ ! -f $OPENJDK_WINDOWS_FILE ]; then
-		wget $OPENJDK_WINDOWS_PATH/$OPENJDK_WINDOWS_FILE
+		wget $OPENJDK_WINDOWS_URL
 	fi
 	
 	unzip $OPENJDK_WINDOWS_FILE
-	mv ./jdk8u292-b10-jre ./jre
+	mv ./jdk8u462-b08-jre ./jre
 fi
 
 # Windows setup
 makensis ./SpeakerSimSetup.nsi
 
 # Recompress jar
-rm -rf ./jar
+#rm -rf ./jar
 unzip ./SpeakerSim.jar -d ./jar
 rm ./SpeakerSim.jar
 cd ./jar

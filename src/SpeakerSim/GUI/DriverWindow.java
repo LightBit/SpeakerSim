@@ -676,8 +676,8 @@ public class DriverWindow extends javax.swing.JDialog
         PeFField = UI.decimalField(0);
         lblPeF = new javax.swing.JLabel();
         lblPe = new javax.swing.JLabel();
-        powerFilterComboBox = new javax.swing.JComboBox(PowerFilter.FILTERS);
-        shapeComboBox = new javax.swing.JComboBox(Driver.Shape.values());
+        powerFilterComboBox = new javax.swing.JComboBox<>(PowerFilter.FILTERS);
+        shapeComboBox = new javax.swing.JComboBox<>(Driver.Shape.values());
         lblShape = new javax.swing.JLabel();
         HeightField = UI.decimalField(0);
         lblHeight = new javax.swing.JLabel();
@@ -2027,7 +2027,7 @@ public class DriverWindow extends javax.swing.JDialog
     private javax.swing.JPanel propertiesPanel;
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JSpinner seriesSpin;
-    private javax.swing.JComboBox<String> shapeComboBox;
+    private javax.swing.JComboBox<Driver.Shape> shapeComboBox;
     private javax.swing.JTabbedPane tabs;
     // End of variables declaration//GEN-END:variables
 }

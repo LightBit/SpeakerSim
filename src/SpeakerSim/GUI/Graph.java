@@ -93,6 +93,8 @@ public final class Graph
         }
     }
     
+    private final static Stroke solidStroke = new BasicStroke(1);
+    
     private final static Stroke dashedStroke = new BasicStroke(
         1,
         BasicStroke.CAP_BUTT,
@@ -103,7 +105,7 @@ public final class Graph
     );
     
     private final static Stroke dottedStroke = new BasicStroke(
-        2,
+        1,
         BasicStroke.CAP_BUTT,
         BasicStroke.JOIN_BEVEL,
         0,
@@ -315,7 +317,7 @@ public final class Graph
         
         XYItemRenderer renderer = plot.getRenderer();
         renderer.setSeriesVisibleInLegend(index, true);
-        renderer.setSeriesStroke(index, new BasicStroke(1));
+        renderer.setSeriesStroke(index, solidStroke);
         renderer.setSeriesPaint(index, generateColor(colorIndex++));
     }
     
@@ -328,7 +330,7 @@ public final class Graph
         
         XYItemRenderer renderer = plot.getRenderer();
         renderer.setSeriesVisibleInLegend(index, true);
-        renderer.setSeriesStroke(index, new BasicStroke(1));
+        renderer.setSeriesStroke(index, solidStroke);
         renderer.setSeriesPaint(index, generateColor(colorIndex++));
     }
     

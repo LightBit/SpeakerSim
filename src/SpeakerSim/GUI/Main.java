@@ -22,12 +22,6 @@ import SpeakerSim.Project;
 import java.awt.*;
 import java.beans.*;
 import javax.swing.*;
-import java.util.Base64;
-import io.sentry.Sentry;
-import io.sentry.DefaultSentryClientFactory;
-import io.sentry.context.ContextManager;
-import io.sentry.context.SingletonContextManager;
-import io.sentry.dsn.Dsn;
 import java.io.File;
 
 public class Main
@@ -46,21 +40,6 @@ public class Main
             }
         });
         
-        Sentry.init(new DefaultSentryClientFactory()
-        {
-            @Override
-            protected ContextManager getContextManager(Dsn dsn)
-            {
-                return new SingletonContextManager();
-            }
-        });
-        Sentry.getContext().addTag("version", Project.currentVersionString());
-        Sentry.getContext().addTag("arch", System.getProperty("os.arch"));
-        Sentry.getContext().addTag("os", System.getProperty("os.name"));
-        Sentry.getContext().addTag("os_version", System.getProperty("os.version"));
-        Sentry.getContext().addTag("java_runtime", System.getProperty("java.runtime.name"));
-        Sentry.getContext().addTag("java_version", System.getProperty("java.runtime.version"));
-        
         try
         {
             if (Integer.parseInt(System.getProperty("java.specification.version")) < 8)
@@ -77,15 +56,6 @@ public class Main
         try
         {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        }
-        catch (Exception ex)
-        {
-            // ignore
-        }
-        
-        try
-        {
-            Sentry.getContext().addTag("machine_id", Base64.getEncoder().encodeToString(UI.machineId()));
         }
         catch (Exception ex)
         {

@@ -558,7 +558,7 @@ public final class AmplifierWindow extends javax.swing.JDialog
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_editButtonActionPerformed
     {//GEN-HEADEREND:event_editButtonActionPerformed
         int index = list.getSelectedIndex();
-        IActiveFilter item = edit((IActiveFilter) model.get(index));
+        IActiveFilter item = edit(model.get(index));
         if (item != null)
         {
             model.setElementAt(item, index);

@@ -19,7 +19,6 @@ package SpeakerSim.GUI;
 import SpeakerSim.Fnc;
 import SpeakerSim.HandledException;
 import SpeakerSim.Project;
-import io.sentry.Sentry;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -173,8 +172,6 @@ public final class UI
     
     private static void exception(Component parent, Throwable e)
     {
-        Sentry.capture(e);
-        
         String stackTrace = "SpeakerSim " + Project.currentVersionString()
                 + "\r\n" + System.getProperty("java.runtime.name")
                 + " " + System.getProperty("java.runtime.version")

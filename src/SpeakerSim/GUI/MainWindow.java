@@ -17,7 +17,6 @@
 package SpeakerSim.GUI;
 
 import SpeakerSim.*;
-import io.sentry.Sentry;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Rectangle;
@@ -39,6 +38,7 @@ public final class MainWindow extends javax.swing.JFrame
     private File file;
     private final FileSelector fc;
     private boolean listen = true;
+    private DefaultMutableTreeNode prevNode = null;
     
     private double[] systemResponse;
     private double[] response;
@@ -410,7 +410,6 @@ public final class MainWindow extends javax.swing.JFrame
                 }
                 catch (Exception ex)
                 {
-                    Sentry.capture(ex);
                 }
             }
         }).start();
@@ -2180,6 +2179,9 @@ public final class MainWindow extends javax.swing.JFrame
                         }
                     }
                     
+                    boolean clearAll = node != prevNode;
+                    prevNode = node;
+                    
                     SwingUtilities.invokeAndWait(new Runnable()
                     {
                         @Override
@@ -2188,17 +2190,17 @@ public final class MainWindow extends javax.swing.JFrame
                             if (thread.isInterrupted()) return;
                             
                             // clear graphs
-                            graphResponse.clear();
-                            graphPhase.clear();
-                            graphFilters.clear();
-                            graphExcursion.clear();
-                            graphDirectivity.clear();
-                            graphMaxSPL.clear();
-                            graphMaxPower.clear();
-                            graphGroupDelay.clear();
-                            graphBaffle.clear();
-                            graphRoom.clear();
-                            graphImpedance.clear();
+                            graphResponse.clear(clearAll);
+                            graphPhase.clear(clearAll);
+                            graphFilters.clear(clearAll);
+                            graphExcursion.clear(clearAll);
+                            graphDirectivity.clear(clearAll);
+                            graphMaxSPL.clear(clearAll);
+                            graphMaxPower.clear(clearAll);
+                            graphGroupDelay.clear(clearAll);
+                            graphBaffle.clear(clearAll);
+                            graphRoom.clear(clearAll);
+                            graphImpedance.clear(clearAll);
                             
                             graphFilters.addYMark(0, "");
                             graphPhase.addYMark(0, "");

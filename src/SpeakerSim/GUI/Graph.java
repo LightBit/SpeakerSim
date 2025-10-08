@@ -29,7 +29,6 @@ import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.axis.LogAxis;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.labels.CrosshairLabelGenerator;
 import org.jfree.chart.panel.CrosshairOverlay;
 import org.jfree.chart.plot.Crosshair;
 import org.jfree.chart.plot.Marker;
@@ -56,6 +55,7 @@ public final class Graph
     private final Crosshair xCrosshair;
     private final Crosshair yCrosshair;
     private final List<Crosshair> yCrosshairs;
+    private int colorIndex;
     
     private class IdString implements Comparable<IdString>
     {
@@ -89,14 +89,7 @@ public final class Graph
             setLabelVisible(true);
             setLabelBackgroundPaint(Color.BLACK);
             setLabelPaint(Color.WHITE);
-            setLabelGenerator(new CrosshairLabelGenerator()
-            {
-                @Override
-                public String generateLabel(Crosshair crosshair)
-                {
-                    return String.format(" %.2f ", crosshair.getValue());
-                }
-            });
+            setLabelGenerator((Crosshair crosshair) -> String.format(" %.2f ", crosshair.getValue()));
         }
     }
     
@@ -109,23 +102,38 @@ public final class Graph
         0
     );
     
-    public Graph(String xAxis, String yAxis)
-    {
-        this.xAxis = new LogAxis(xAxis);
-        this.xAxis.setNumberFormatOverride(NumberFormat.getInstance());
-        this.xAxis.setBase(10);
-        this.xAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-        this.xAxis.setLowerMargin(0);
-        this.xAxis.setUpperMargin(0);
+    private final static Stroke dottedStroke = new BasicStroke(
+        2,
+        BasicStroke.CAP_BUTT,
+        BasicStroke.JOIN_BEVEL,
+        0,
+        new float[]{1, 5},
+        0
+    );
     
-        this.yAxis = new NumberAxis(yAxis);
+    private static Color generateColor(int n)
+    {
+        return Color.getHSBColor((n * 0.17f) % 1f, 1f, 0.8f);
+    }
+    
+    public Graph(String x, String y)
+    {
+        xAxis = new LogAxis(x);
+        xAxis.setNumberFormatOverride(NumberFormat.getInstance());
+        xAxis.setBase(10);
+        xAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        xAxis.setLowerMargin(0);
+        xAxis.setUpperMargin(0);
+    
+        yAxis = new NumberAxis(y);
         
         series = new XYSeriesCollection();
         xCrosshair = new GraphCrosshair();
         xCrosshair.setStroke(dashedStroke);
         yCrosshair = new GraphCrosshair();
         yCrosshair.setStroke(dashedStroke);
-        yCrosshairs = new ArrayList<Crosshair>();
+        yCrosshairs = new ArrayList<>();
+        colorIndex = 0;
         
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
         renderer.setDefaultShapesVisible(false);
@@ -133,17 +141,17 @@ public final class Graph
         plot = new XYPlot();
         plot.setRenderer(renderer);
         
-        for (int x = 1, step = 1; x < 100000; step *= 10)
+        for (int i = 1, step = 1; i < 100000; step *= 10)
         {
-            for (int i = 1; i < 10; i++)
+            for (int j = 1; j < 10; j++)
             {
-                plot.addDomainMarker(new ValueMarker(x));
-                x += step;
+                plot.addDomainMarker(new ValueMarker(i));
+                i += step;
             }
         }
         
-        plot.setDomainAxis(this.xAxis);
-        plot.setRangeAxis(this.yAxis);
+        plot.setDomainAxis(xAxis);
+        plot.setRangeAxis(yAxis);
         plot.setDataset(series);
         
         JFreeChart chart = new JFreeChart(null, plot);
@@ -235,25 +243,51 @@ public final class Graph
         chartPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
     }
     
-    public void clear()
+    public void clear(boolean all)
     {
         for (Crosshair crosshair : yCrosshairs)
         {
             crosshairOverlay.removeRangeCrosshair(crosshair);
         }
         yCrosshairs.clear();
-        series.removeAllSeries();
+        
         plot.clearRangeMarkers();
         plot.clearDomainMarkers();
         
-        for (int x = 1, step = 1; x < 100000; step *= 10)
+        for (int i = 1, step = 1; i < 100000; step *= 10)
         {
-            for (int i = 1; i < 10; i++)
+            for (int j = 1; j < 10; j++)
             {
-                plot.addDomainMarker(new ValueMarker(x));
-                x += step;
+                plot.addDomainMarker(new ValueMarker(i));
+                i += step;
             }
         }
+        
+        if (all)
+        {
+            series.removeAllSeries();
+        }
+        else
+        {
+            XYItemRenderer renderer = plot.getRenderer();
+        
+            for (int i = 0; i < series.getSeriesCount() - colorIndex; )
+            {
+                series.removeSeries(i);
+            }
+            
+            for (int i = 0; i < series.getSeriesCount(); i++)
+            {
+                renderer.setSeriesVisibleInLegend(i, false);
+                renderer.setSeriesStroke(i, dottedStroke);
+            }
+        }
+        colorIndex = 0;
+    }
+    
+    public void clear()
+    {
+        clear(true);
     }
     
     private void addCrosshair()
@@ -265,7 +299,8 @@ public final class Graph
     
     public void add(String title, double[] x, double[] y)
     {
-        XYSeries s = new XYSeries(new IdString(title, series.getSeriesCount()));
+        int index = series.getSeriesCount();
+        XYSeries s = new XYSeries(new IdString(title, index));
         
         for (int i = 0; i < x.length; i++)
         {
@@ -277,13 +312,24 @@ public final class Graph
         
         series.addSeries(s);
         addCrosshair();
+        
+        XYItemRenderer renderer = plot.getRenderer();
+        renderer.setSeriesVisibleInLegend(index, true);
+        renderer.setSeriesStroke(index, new BasicStroke(1));
+        renderer.setSeriesPaint(index, generateColor(colorIndex++));
     }
     
     public void addSeries(String title)
     {
-        XYSeries s = new XYSeries(new IdString(title, series.getSeriesCount()));
+        int index = series.getSeriesCount();
+        XYSeries s = new XYSeries(new IdString(title, index));
         series.addSeries(s);
         addCrosshair();
+        
+        XYItemRenderer renderer = plot.getRenderer();
+        renderer.setSeriesVisibleInLegend(index, true);
+        renderer.setSeriesStroke(index, new BasicStroke(1));
+        renderer.setSeriesPaint(index, generateColor(colorIndex++));
     }
     
     public void add(int series, double x, double y)

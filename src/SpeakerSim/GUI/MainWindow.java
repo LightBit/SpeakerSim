@@ -2016,10 +2016,12 @@ public final class MainWindow extends javax.swing.JFrame
         }
         Project.getInstance().CenterPosition = Project.getInstance().CenterPosition.divide(speakers.size());
         final double delay = min_distance / Environment.getInstance().SpeedOfSound;
+        
+        // refresh simulation
+        Project.getInstance().refresh();
 
-        // refresh item
+        // get item
         final IItem item = (IItem) node.getUserObject();
-        item.refresh();
         
         // update properties panel
         showPanels(item);

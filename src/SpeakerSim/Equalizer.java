@@ -79,30 +79,21 @@ public class Equalizer implements IActiveFilter
         return Fnc.toDecibels(a);
     }
     
-    private double phase(double f)
-    {
-        if (isLinearPhase())
-        {
-            return 0;
-        }
-        else
-        {
-            double fn = f / this.F;
-            return -Math.atan(((1 - fn * fn) * 2 * c * fn * (a - 1)) / (Math.pow(1 - fn * fn, 2) + 4 * c * c * fn * 2 * a));
-        }
-    }
-    
-    private double amplitude(double f)
-    {
-        double fn = f / this.F;
-        fn *= fn;
-        return Math.sqrt((fn * fn - 2 * fn + 4 * a * a * c * c * fn + 1) / (fn * fn - 2 * fn + 4 * c * c * fn + 1));
-    }
-    
     @Override
     public Complex response(double f)
     {
-        return Complex.toComplex(amplitude(f), phase(f));
+        double fn = f / this.F;
+        double r = 1 - fn * fn;
+        Complex num = new Complex(r, 2 * a * c * fn);
+        Complex den = new Complex(r, 2 * c * fn);
+        Complex h = num.divide(den);
+        
+        if (isLinearPhase())
+        {
+            return new Complex(h.abs());
+        }
+        
+        return h;
     }
     
     @Override

@@ -50,7 +50,6 @@ public final class MainWindow extends javax.swing.JFrame
     private double[] power;
     private double[] directivity;
     private double[] maxSPL;
-    private double[] maxPower;
     private double[] excursion;
     private double[] groupDelay;
     private double[] baffle;
@@ -74,7 +73,6 @@ public final class MainWindow extends javax.swing.JFrame
     final Graph graphExcursion;
     final Graph graphDirectivity;
     final Graph graphMaxSPL;
-    final Graph graphMaxPower;
     final Graph graphGroupDelay;
     final Graph graphBaffle;
     final Graph graphRoom;
@@ -95,7 +93,6 @@ public final class MainWindow extends javax.swing.JFrame
             power = new double[len];
             directivity = new double[len];
             maxSPL = new double[len];
-            maxPower = new double[len];
             excursion = new double[len];
             groupDelay = new double[len];
             baffle = new double[len];
@@ -111,7 +108,6 @@ public final class MainWindow extends javax.swing.JFrame
         graphExcursion.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
         graphDirectivity.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
         graphMaxSPL.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
-        graphMaxPower.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
         graphGroupDelay.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
         graphBaffle.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
         graphRoom.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
@@ -123,7 +119,6 @@ public final class MainWindow extends javax.swing.JFrame
         graphExcursion.setYRange(0, Settings.getInstance().MaxExcursion);
         graphDirectivity.setYRange(0, Settings.getInstance().MaxSPL);
         graphMaxSPL.setYRange(0, Settings.getInstance().MaxSPL + 30);
-        graphMaxPower.setYRange(0, Settings.getInstance().MaxPower);
         graphGroupDelay.setYRange(0, 50);
         graphBaffle.setYRange(-10, 10);
         graphRoom.setYRange(-10, 20);
@@ -164,7 +159,6 @@ public final class MainWindow extends javax.swing.JFrame
         graphExcursion = new Graph("Hz", "mm");
         graphDirectivity = new Graph("Hz", "dB");
         graphMaxSPL = new Graph("Hz", "dB");
-        graphMaxPower = new Graph("Hz", "W");
         graphGroupDelay = new Graph("Hz", "ms");
         graphBaffle = new Graph("Hz", "dB");
         graphRoom = new Graph("Hz", "dB");
@@ -218,7 +212,6 @@ public final class MainWindow extends javax.swing.JFrame
         tabs.addTab("Phase", graphPhase.getPanel());
         tabs.addTab("Filters", graphFilters.getPanel());
         tabs.addTab("Max SPL", graphMaxSPL.getPanel());
-        tabs.addTab("Max power", graphMaxPower.getPanel());
         tabs.addTab("Excursion", graphExcursion.getPanel());
         tabs.addTab("Group delay", graphGroupDelay.getPanel());
         
@@ -2152,8 +2145,7 @@ public final class MainWindow extends javax.swing.JFrame
                             Complex z = item.impedance(f);
                             impedance[i] = z.abs();
                             impedancePhase[i] = z.phase();
-                            maxPower[i] = item.maxPower(f);
-                            maxSPL[i] = Fnc.toDecibels(item.response1W(f).multiply(baffleResponse).multiply(roomResponse).abs()) + Fnc.powerToDecibels(maxPower[i]);
+                            maxSPL[i] = Fnc.toDecibels(item.response1W(f).multiply(baffleResponse).multiply(roomResponse).abs()) + Fnc.powerToDecibels(item.maxPower(f));
                             excursion[i] = item.excursion(f, Double.MAX_VALUE);
                             baffle[i] = Fnc.toDecibels(baffleResponse.abs());
                             room[i] = Fnc.toDecibels(roomResponse.abs());
@@ -2195,7 +2187,6 @@ public final class MainWindow extends javax.swing.JFrame
                             Fnc.smooth(power, points);
                             Fnc.smooth(directivity, points);
                             Fnc.smooth(maxSPL, points);
-                            Fnc.smooth(maxPower, points);
                             Fnc.smooth(groupDelay, points);
                             Fnc.smooth(baffle, points);
                             Fnc.smooth(room, points);
@@ -2248,7 +2239,6 @@ public final class MainWindow extends javax.swing.JFrame
                             graphExcursion.clear(clearAll);
                             graphDirectivity.clear(clearAll);
                             graphMaxSPL.clear(clearAll);
-                            graphMaxPower.clear(clearAll);
                             graphGroupDelay.clear(clearAll);
                             graphBaffle.clear(clearAll);
                             graphRoom.clear(clearAll);
@@ -2331,7 +2321,6 @@ public final class MainWindow extends javax.swing.JFrame
                                 graphDirectivity.add("Directivity", freq, directivity);
 
                                 graphMaxSPL.add("Max SPL", freq, maxSPL);
-                                graphMaxPower.add("Max power", freq, maxPower);
                                 graphGroupDelay.add("Group delay", freq, groupDelay);
                                 graphBaffle.add("Baffle", freq, baffle);
                                 graphRoom.add("Room", freq, room);

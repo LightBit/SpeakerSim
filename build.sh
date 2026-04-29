@@ -14,15 +14,15 @@ mv ./target/SpeakerSim-jar-with-dependencies.jar ./SpeakerSim.jar
 7za a -tzip -mx=9 SpeakerSim.zip SpeakerSim.jar
 
 # Download JRE for Windows 32-bit
-OPENJDK_WINDOWS_URL=https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u462-b08/OpenJDK8U-jre_x86-32_windows_hotspot_8u462b08.zip
-OPENJDK_WINDOWS_FILE=OpenJDK8U-jre_x86-32_windows_hotspot_8u462b08.zip
+OPENJDK_WINDOWS_URL=https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.17%2B10/OpenJDK17U-jre_x86-32_windows_hotspot_17.0.17_10.zip
+OPENJDK_WINDOWS_FILE=OpenJDK17U-jre_x86-32_windows_hotspot_17.0.17_10.zip
 if [ ! -d ./jre ]; then
 	if [ ! -f $OPENJDK_WINDOWS_FILE ]; then
 		wget $OPENJDK_WINDOWS_URL
 	fi
 	
 	unzip $OPENJDK_WINDOWS_FILE
-	mv ./jdk8u462-b08-jre ./jre
+	mv ./jdk-17.0.17+10-jre ./jre
 fi
 
 # Windows setup

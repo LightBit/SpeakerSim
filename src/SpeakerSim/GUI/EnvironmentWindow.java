@@ -28,7 +28,7 @@ public class EnvironmentWindow extends javax.swing.JDialog
     private final Environment env;
     private boolean result;
     
-    public EnvironmentWindow(java.awt.Frame parent, final Environment env, boolean roomEnabled)
+    public EnvironmentWindow(java.awt.Frame parent, final Environment env)
     {
         super(parent, true);
         ((JPanel)this.getContentPane()).setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -39,19 +39,12 @@ public class EnvironmentWindow extends javax.swing.JDialog
         this.env = env;
         result = false;
 
-        roomXField.setValue(env.RoomX);
-        roomYField.setValue(env.RoomY);
-        roomZField.setValue(env.RoomZ);
         tempField.setValue(env.Temperature);
         humidityField.setValue(env.Humidity * 100);
         altitudeField.setValue(env.Altitude);
         pressureField.setValue(env.AirPressure);
         densityField.setValue(env.AirDensity);
         speedField.setValue(env.SpeedOfSound);
-        
-        roomXField.setEnabled(roomEnabled);
-        roomYField.setEnabled(roomEnabled);
-        roomZField.setEnabled(roomEnabled);
         
         PropertyChangeListener calc = new PropertyChangeListener()
         {
@@ -86,8 +79,6 @@ public class EnvironmentWindow extends javax.swing.JDialog
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jLabel7 = new javax.swing.JLabel();
-        roomYField = UI.decimalField(1);
         jLabel1 = new javax.swing.JLabel();
         tempField = UI.decimalField(-273.15);
         jLabel2 = new javax.swing.JLabel();
@@ -103,10 +94,6 @@ public class EnvironmentWindow extends javax.swing.JDialog
         controlPanel = new javax.swing.JPanel();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        roomZField = UI.decimalField(1);
-        jLabel9 = new javax.swing.JLabel();
-        roomXField = UI.decimalField(1);
-        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Environment");
@@ -117,23 +104,6 @@ public class EnvironmentWindow extends javax.swing.JDialog
         layout.columnWidths = new int[] {0, 5, 0};
         layout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
         getContentPane().setLayout(layout);
-
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel7.setText("Room X (m):");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        getContentPane().add(jLabel7, gridBagConstraints);
-
-        roomYField.setMinimumSize(new java.awt.Dimension(80, 19));
-        roomYField.setPreferredSize(new java.awt.Dimension(80, 19));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        getContentPane().add(roomYField, gridBagConstraints);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Temperature (°C):");
@@ -261,40 +231,6 @@ public class EnvironmentWindow extends javax.swing.JDialog
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         getContentPane().add(controlPanel, gridBagConstraints);
 
-        roomZField.setMinimumSize(new java.awt.Dimension(80, 19));
-        roomZField.setPreferredSize(new java.awt.Dimension(80, 19));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        getContentPane().add(roomZField, gridBagConstraints);
-
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel9.setText("Room Z (m):");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        getContentPane().add(jLabel9, gridBagConstraints);
-
-        roomXField.setMinimumSize(new java.awt.Dimension(80, 19));
-        roomXField.setPreferredSize(new java.awt.Dimension(80, 19));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        getContentPane().add(roomXField, gridBagConstraints);
-
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel10.setText("Room Y (m):");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        getContentPane().add(jLabel10, gridBagConstraints);
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -306,9 +242,6 @@ public class EnvironmentWindow extends javax.swing.JDialog
     {//GEN-HEADEREND:event_okButtonActionPerformed
         result = true;
 
-        env.RoomX = ((Number) roomXField.getValue()).doubleValue();
-        env.RoomY = ((Number) roomYField.getValue()).doubleValue();
-        env.RoomZ = ((Number) roomZField.getValue()).doubleValue();
         env.Temperature = ((Number) tempField.getValue()).doubleValue();
         env.Humidity = ((Number) humidityField.getValue()).doubleValue() / 100;
         env.Altitude = ((Number) altitudeField.getValue()).doubleValue();
@@ -326,19 +259,13 @@ public class EnvironmentWindow extends javax.swing.JDialog
     private javax.swing.JFormattedTextField densityField;
     private javax.swing.JFormattedTextField humidityField;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JButton okButton;
     private javax.swing.JFormattedTextField pressureField;
-    private javax.swing.JFormattedTextField roomXField;
-    private javax.swing.JFormattedTextField roomYField;
-    private javax.swing.JFormattedTextField roomZField;
     private javax.swing.JFormattedTextField speedField;
     private javax.swing.JFormattedTextField tempField;
     // End of variables declaration//GEN-END:variables

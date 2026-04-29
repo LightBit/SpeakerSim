@@ -21,7 +21,6 @@ public class OpenBaffleSimulation implements ISimulation
     private final Driver driver;
     private final DistanceSimulation distance;
     private final BaffleSimulation baffle;
-    private final RoomSimulation room;
     private final PowerResponseSimulation powerResponse;
     private final ListeningWindowSimulation listeningWindow;
     private final double horizontalAngle;
@@ -34,7 +33,6 @@ public class OpenBaffleSimulation implements ISimulation
         this.driver = driver;
         this.distance = new DistanceSimulation(driverPos, listeningPos, env);
         this.baffle = new BaffleSimulation(baffle, driver, driverPos, listeningPos, env, true);
-        this.room = new RoomSimulation(driver, driverPos, env, baffle, true);
         this.powerResponse = new PowerResponseSimulation(baffle, driver, driverPos, centerPos, env, true);
         this.listeningWindow = new ListeningWindowSimulation(baffle, driver, driverPos, centerPos, env, true);
         horizontalAngle = driverPos.horizontalAngle(listeningPos);
@@ -115,16 +113,6 @@ public class OpenBaffleSimulation implements ISimulation
         x = x.divide(Math.sqrt(1 + Math.pow(listeningQuarterWave / f, 2)));
         //x = x.multiply(baffle.response(f).divide(Math.sqrt(1 + Math.pow(wavelength / f, 2))));
         x = x.multiply(baffle.response(f));
-        
-        return x.multiply(distance.response(f));
-    }
-
-    @Override
-    public Complex responseWithRoom(double f)
-    {
-        Complex x = driver.normResponse(f, horizontalAngle, verticalAngle, true);
-        x = x.multiply(driver.responseSimRelative(f));
-        x = x.multiply(room.response(f));
         
         return x.multiply(distance.response(f));
     }

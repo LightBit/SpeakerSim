@@ -55,12 +55,6 @@ public abstract class Filter extends Item implements IFilter
     }
     
     @Override
-    protected Complex itemResponseWithRoom(double f)
-    {
-        return super.itemResponseWithRoom(f).multiply(thisFilter(f));
-    }
-    
-    @Override
     protected double itemMaxPower(double f)
     {
         return super.itemMaxPower(f) / Math.pow(thisFilter(f).abs(), 2);

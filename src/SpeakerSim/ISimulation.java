@@ -23,7 +23,6 @@ public interface ISimulation
     public Complex listeningWindowResponse(double f);
     public Complex powerResponse(double f);
     public Complex responseWithBaffle(double f);
-    public Complex responseWithRoom(double f);
     public Complex impedance(double f);
     public double maxPower(double f);
     public double excursion(double f, double power);

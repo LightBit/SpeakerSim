@@ -53,7 +53,6 @@ public final class MainWindow extends javax.swing.JFrame
     private double[] excursion;
     private double[] groupDelay;
     private double[] baffle;
-    private double[] room;
     private double[][] responses;
     private double[][] phases;
     private double[][] filters;
@@ -75,7 +74,6 @@ public final class MainWindow extends javax.swing.JFrame
     final Graph graphMaxSPL;
     final Graph graphGroupDelay;
     final Graph graphBaffle;
-    final Graph graphRoom;
     final Graph graphImpedance;
     
     private void createTables()
@@ -96,7 +94,6 @@ public final class MainWindow extends javax.swing.JFrame
             excursion = new double[len];
             groupDelay = new double[len];
             baffle = new double[len];
-            room = new double[len];
         }
     }
     
@@ -110,7 +107,6 @@ public final class MainWindow extends javax.swing.JFrame
         graphMaxSPL.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
         graphGroupDelay.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
         graphBaffle.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
-        graphRoom.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
         graphImpedance.setXRange(Settings.getInstance().StartFrequency, Settings.getInstance().EndFrequency);
         
         graphResponse.setYRange(Settings.getInstance().MinSPL, Settings.getInstance().MaxSPL);
@@ -121,7 +117,6 @@ public final class MainWindow extends javax.swing.JFrame
         graphMaxSPL.setYRange(0, Settings.getInstance().MaxSPL + 30);
         graphGroupDelay.setYRange(0, 50);
         graphBaffle.setYRange(-10, 10);
-        graphRoom.setYRange(-10, 20);
         graphImpedance.setYRange(0, Settings.getInstance().MaxImpedance);
     }
     
@@ -161,7 +156,6 @@ public final class MainWindow extends javax.swing.JFrame
         graphMaxSPL = new Graph("Hz", "dB");
         graphGroupDelay = new Graph("Hz", "ms");
         graphBaffle = new Graph("Hz", "dB");
-        graphRoom = new Graph("Hz", "dB");
         graphImpedance = new Graph("Hz", "Ω");
         
         JPopupMenu graphPopup = graphResponse.getPanel().getPopupMenu();
@@ -2025,8 +2019,7 @@ public final class MainWindow extends javax.swing.JFrame
     {
         Complex r = item.response(f);
         Complex baffleResponse = Settings.getInstance().BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
-        Complex roomResponse = Settings.getInstance().RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
-        return r.multiply(baffleResponse).multiply(roomResponse);
+        return r.multiply(baffleResponse);
     }
     
     private void showNode(final DefaultMutableTreeNode node)
@@ -2114,16 +2107,14 @@ public final class MainWindow extends javax.swing.JFrame
 
                             Complex r = Project.getInstance().response(f);
                             Complex baffleResponse = Settings.getInstance().BaffleSimulation ? Project.getInstance().responseWithBaffle(f).divide(r) : new Complex(1);
-                            Complex roomResponse = Settings.getInstance().RoomSimulation ? Project.getInstance().responseWithRoom(f).divide(r) : new Complex(1);
-                            r = r.multiply(baffleResponse).multiply(roomResponse);
+                            r = r.multiply(baffleResponse);
                             systemResponse[i] = Fnc.toDecibels(r.abs());
                             
                             if (item != Project.getInstance())
                             {
                                 r = item.response(f);
                                 baffleResponse = Settings.getInstance().BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
-                                roomResponse = Settings.getInstance().RoomSimulation ? item.responseWithRoom(f).divide(r) : new Complex(1);
-                                r = r.multiply(baffleResponse).multiply(roomResponse);
+                                r = r.multiply(baffleResponse);
                                 response[i] = Fnc.toDecibels(r.abs());
                             }
                             
@@ -2145,10 +2136,9 @@ public final class MainWindow extends javax.swing.JFrame
                             Complex z = item.impedance(f);
                             impedance[i] = z.abs();
                             impedancePhase[i] = z.phase();
-                            maxSPL[i] = Fnc.toDecibels(item.response1W(f).multiply(baffleResponse).multiply(roomResponse).abs()) + Fnc.powerToDecibels(item.maxPower(f));
+                            maxSPL[i] = Fnc.toDecibels(item.response1W(f).multiply(baffleResponse).abs()) + Fnc.powerToDecibels(item.maxPower(f));
                             excursion[i] = item.excursion(f, Double.MAX_VALUE);
                             baffle[i] = Fnc.toDecibels(baffleResponse.abs());
-                            room[i] = Fnc.toDecibels(roomResponse.abs());
                         }
                         
                         // simulate enclousure
@@ -2189,7 +2179,6 @@ public final class MainWindow extends javax.swing.JFrame
                             Fnc.smooth(maxSPL, points);
                             Fnc.smooth(groupDelay, points);
                             Fnc.smooth(baffle, points);
-                            Fnc.smooth(room, points);
                             
                             for (int j = 0; j < subitems.size(); j++)
                             {
@@ -2241,13 +2230,11 @@ public final class MainWindow extends javax.swing.JFrame
                             graphMaxSPL.clear(clearAll);
                             graphGroupDelay.clear(clearAll);
                             graphBaffle.clear(clearAll);
-                            graphRoom.clear(clearAll);
                             graphImpedance.clear(clearAll);
                             
                             graphFilters.addYMark(0, "");
                             graphPhase.addYMark(0, "");
                             graphBaffle.addYMark(0, "");
-                            graphRoom.addYMark(0, "");
                             
                             // Baffle tab
                             int tab = tabs.indexOfComponent(graphBaffle.getPanel());
@@ -2256,17 +2243,6 @@ public final class MainWindow extends javax.swing.JFrame
                                 tabs.addTab("Baffle", graphBaffle.getPanel());
                             }
                             else if (tab >= 0 && !Settings.getInstance().BaffleSimulation)
-                            {
-                                tabs.remove(tab);
-                            }
-
-                            // Room tab
-                            tab = tabs.indexOfComponent(graphRoom.getPanel());
-                            if (tab < 0 && Settings.getInstance().RoomSimulation)
-                            {
-                                tabs.addTab("Room", graphRoom.getPanel());
-                            }
-                            else if (tab >= 0 && !Settings.getInstance().RoomSimulation)
                             {
                                 tabs.remove(tab);
                             }
@@ -2323,7 +2299,6 @@ public final class MainWindow extends javax.swing.JFrame
                                 graphMaxSPL.add("Max SPL", freq, maxSPL);
                                 graphGroupDelay.add("Group delay", freq, groupDelay);
                                 graphBaffle.add("Baffle", freq, baffle);
-                                graphRoom.add("Room", freq, room);
                                 graphImpedance.add("Impedance", freq, impedance);
 
                                 for (Speaker s : speakers)
@@ -2658,7 +2633,7 @@ public final class MainWindow extends javax.swing.JFrame
 
     private void menuEnvironmentActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_menuEnvironmentActionPerformed
     {//GEN-HEADEREND:event_menuEnvironmentActionPerformed
-        if (new EnvironmentWindow(this, Environment.getInstance(), Project.getInstance().Settings.RoomSimulation).showDialog())
+        if (new EnvironmentWindow(this, Environment.getInstance()).showDialog())
         {
             refresh();
         }

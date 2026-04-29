@@ -201,14 +201,6 @@ public class Speaker extends Item
     }
     
     @Override
-    protected Complex itemResponseWithRoom(double f)
-    {
-        Complex superZ = super.itemImpedance(f);
-        Complex thisZ = simulation.impedance(f);
-        return super.itemResponseWithRoom(f).multiply(superZ.divide(superZ.add(thisZ))).add(simulation.responseWithRoom(f).multiply(thisZ.divide(thisZ.add(superZ))));
-    }
-    
-    @Override
     protected Complex itemFilter(double f)
     {
         Complex superZ = super.itemImpedance(f);

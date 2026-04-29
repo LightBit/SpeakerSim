@@ -29,11 +29,8 @@ public class Settings implements JSONable
     public int MinSPL;
     public int MaxSPL;
     public int MaxImpedance;
-    public int MaxPower;
     public int MaxExcursion;
-    //public boolean PositionSimulation;
     public boolean BaffleSimulation;
-    public boolean RoomSimulation;
     public PowerFilter PowerFilter;
     
     public double[] freq;
@@ -81,11 +78,8 @@ public class Settings implements JSONable
         MinSPL = 40;
         MaxSPL = 110;
         MaxImpedance = 80;
-        MaxPower = 500;
         MaxExcursion = 30;
-        //PositionSimulation = true;
         BaffleSimulation = true;
-        RoomSimulation = false;
         PowerFilter = new PowerFilter();
         
         Refresh();
@@ -102,11 +96,8 @@ public class Settings implements JSONable
         MinSPL = JSON.getInt(jsonObj, "MinSPL", 40);
         MaxSPL = JSON.getInt(jsonObj, "MaxSPL", 110);
         MaxImpedance = JSON.getInt(jsonObj, "MaxImpedance", 80);
-        MaxPower = JSON.getInt(jsonObj, "MaxPower", 500);
         MaxExcursion = JSON.getInt(jsonObj, "MaxExcursion", 30);
-        //PositionSimulation = JSON.getBoolean(jsonObj, "PositionSimulationEnabled", true);
         BaffleSimulation = JSON.getBoolean(jsonObj, "BaffleSimulationEnabled", false);
-        RoomSimulation = JSON.getBoolean(jsonObj, "RoomSimulationEnabled", false);
         PowerFilter = new PowerFilter(jsonObj.get("PowerFilter"));
         
         Refresh();
@@ -124,11 +115,8 @@ public class Settings implements JSONable
         json.add("MinSPL", MinSPL);
         json.add("MaxSPL", MaxSPL);
         json.add("MaxImpedance", MaxImpedance);
-        json.add("MaxPower", MaxPower);
         json.add("MaxExcursion", MaxExcursion);
-        //json.add("PositionSimulationEnabled", PositionSimulation);
         json.add("BaffleSimulationEnabled", BaffleSimulation);
-        json.add("RoomSimulationEnabled", RoomSimulation);
         json.add("PowerFilter", PowerFilter.toJSON());
         
         return json;

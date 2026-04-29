@@ -29,10 +29,6 @@ public class Environment implements JSONable
     public double AirDensity;
     public double SpeedOfSound;
     
-    public double RoomX;
-    public double RoomY;
-    public double RoomZ;
-    
     public static Environment getInstance()
     {
         return Project.getInstance().Environment;
@@ -64,9 +60,6 @@ public class Environment implements JSONable
         Altitude = 0;
         Humidity = 0.50;
         Temperature = 20;
-        RoomX = 7;
-        RoomY = 5;
-        RoomZ = 2.5;
     }
     
     public Environment(JsonValue json)
@@ -79,18 +72,6 @@ public class Environment implements JSONable
         Altitude = JSON.getDouble(jsonObj, "Altitude", 0);
         Humidity = JSON.getDouble(jsonObj, "Humidity", 0.5);
         Temperature = JSON.getDouble(jsonObj, "Temperature", 20);
-        
-        if (Project.getInstance().Version.compareTo(Project.parseVersion("2019-08-16")) < 0)
-        {
-            RoomX = JSON.getDouble(jsonObj, "RoomY", 5);
-            RoomY = JSON.getDouble(jsonObj, "RoomX", 7);
-        }
-        else
-        {
-            RoomX = JSON.getDouble(jsonObj, "RoomX", 7);
-            RoomY = JSON.getDouble(jsonObj, "RoomY", 5);
-        }
-        RoomZ = JSON.getDouble(jsonObj, "RoomZ", 2.5);
     }
 
     @Override
@@ -104,9 +85,6 @@ public class Environment implements JSONable
         json.add("Altitude", Altitude);
         json.add("Humidity", Humidity);
         json.add("Temperature", Temperature);
-        json.add("RoomX", RoomX);
-        json.add("RoomY", RoomY);
-        json.add("RoomZ", RoomZ);
         
         return json;
     }

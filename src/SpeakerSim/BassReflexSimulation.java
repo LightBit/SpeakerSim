@@ -24,8 +24,6 @@ public class BassReflexSimulation implements ISimulation
     private final int bafflePort;
     private final DistanceSimulation distanceCone;
     private final DistanceSimulation distancePort;
-    private final RoomSimulation roomCone;
-    private final RoomSimulation roomPort;
     private final PowerResponseSimulation powerResponseCone;
     private final PowerResponseSimulation powerResponsePort;
     private final ListeningWindowSimulation listeningWindowCone;
@@ -82,8 +80,6 @@ public class BassReflexSimulation implements ISimulation
         this.bafflePort = baffle.Enabled ? 2 : 1;
         this.distanceCone = new DistanceSimulation(driverPos, listeningPos, env);
         this.distancePort = new DistanceSimulation(box.PortPosition.distance(listeningPos), env);
-        this.roomCone = new RoomSimulation(driver, driverPos, env, baffle, false);
-        this.roomPort = new RoomSimulation(port, box.PortPosition, env, null, false);
         this.powerResponseCone = new PowerResponseSimulation(baffle, driver, driverPos, centerPos, env, false);
         this.powerResponsePort = new PowerResponseSimulation(baffle, port, box.PortPosition, centerPos, env, false);
         this.listeningWindowCone = new ListeningWindowSimulation(baffle, driver, driverPos, centerPos, env, false);
@@ -175,15 +171,6 @@ public class BassReflexSimulation implements ISimulation
     {
         Complex c = cone(f).multiply(baffle.response(f).multiply(distanceCone.response(f)));
         Complex p = port(f).divide(this.bafflePort).multiply(distancePort.response(f));
-        
-        return driver.normResponse(f, horizontalAngle, verticalAngle, false).multiply(c.subtract(p));
-    }
-    
-    @Override
-    public Complex responseWithRoom(double f)
-    {
-        Complex c = cone(f).multiply(roomCone.response(f).multiply(distanceCone.response(f)));
-        Complex p = port(f).multiply(roomPort.response(f).multiply(distancePort.response(f)));
         
         return driver.normResponse(f, horizontalAngle, verticalAngle, false).multiply(c.subtract(p));
     }

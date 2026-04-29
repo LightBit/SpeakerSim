@@ -202,23 +202,6 @@ public abstract class Item implements IItem
         return sum;
     }
     
-    private Complex childrenResponseWithRoom(double f)
-    {
-        if (children.isEmpty())
-        {
-            return new Complex(1);
-        }
-        
-        Complex sum = new Complex();
-        
-        for (IItem item: children)
-        {
-            sum = sum.add(item.responseWithRoom(f));
-        }
-        
-        return sum;
-    }
-    
     private JsonValue childrenToJSON()
     {
         JsonArray array = Json.array().asArray();
@@ -346,11 +329,6 @@ public abstract class Item implements IItem
         return childrenResponseWithBaffle(f);
     }
     
-    protected Complex itemResponseWithRoom(double f)
-    {
-        return childrenResponseWithRoom(f);
-    }
-    
     protected Complex itemImpedance(double f)
     {
         return childrenImpedance(f);
@@ -438,20 +416,6 @@ public abstract class Item implements IItem
                 return childrenResponseWithBaffle(f);
             default:
                 return itemResponseWithBaffle(f);
-        }
-    }
-    
-    @Override
-    final public Complex responseWithRoom(double f)
-    {
-        switch (status)
-        {
-            case DISCONNECTED:
-                return new Complex(1);
-            case BYPASSED:
-                return childrenResponseWithRoom(f);
-            default:
-                return itemResponseWithRoom(f);
         }
     }
     

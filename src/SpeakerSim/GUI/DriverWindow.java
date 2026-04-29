@@ -1804,7 +1804,7 @@ public class DriverWindow extends javax.swing.JDialog
         {
             if (!drv.hasFRD())
             {
-                drv.FRD = ResponsesWindow.importFRD();
+                drv.FRD = UI.importFRD();
                 if (drv.hasFRD())
                 {
                     drv.FRD = ResponsesWindow.editDialog(this, drv.FRD, false);

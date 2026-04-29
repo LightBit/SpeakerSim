@@ -19,6 +19,7 @@ package SpeakerSim.GUI;
 import SpeakerSim.Fnc;
 import SpeakerSim.HandledException;
 import SpeakerSim.Project;
+import SpeakerSim.ResponseData;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -292,6 +293,27 @@ public final class UI
     {
         String[] opts = {"Save", "Cancel"};
         return JOptionPane.showOptionDialog(parent, content, title, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, opts, opts[0]) == 0;
+    }
+    
+    public static ResponseData importFRD()
+    {
+        FileSelector fc = new FileSelector(".frd");
+        fc.setFileFilter(new FileNameExtensionFilter("Frequency Response Data", "frd", "txt", "csv"));
+
+        if (fc.showOpenDialog(null) == FileSelector.APPROVE_OPTION)
+        {
+            try
+            {
+                ResponseData rd = new ResponseData(fc.getSelectedFile(), true);
+                return rd;
+            }
+            catch (IOException ex)
+            {
+                UI.throwable(null, ex);
+            }
+        }
+        
+        return null;
     }
     
     public static void openURL(String url)

@@ -220,7 +220,7 @@ public class ResponsesWindow extends JDialog
             @Override
             public void actionPerformed(ActionEvent evt)
             {
-                ResponseData rd = importFRD();
+                ResponseData rd = UI.importFRD();
                 if (rd != null)
                 {
                     rd = edit(rd, model.getSize() > 0, false);
@@ -291,27 +291,6 @@ public class ResponsesWindow extends JDialog
                 phase.add(0, f, Math.toDegrees(r.phase()));
             }
         }
-    }
-    
-    public static ResponseData importFRD()
-    {
-        FileSelector fc = new FileSelector(".frd");
-        fc.setFileFilter(new FileNameExtensionFilter("Frequency Response Data", "frd", "txt", "csv"));
-
-        if (fc.showOpenDialog(null) == FileSelector.APPROVE_OPTION)
-        {
-            try
-            {
-                ResponseData rd = new ResponseData(fc.getSelectedFile(), true);
-                return rd;
-            }
-            catch (IOException ex)
-            {
-                UI.throwable(null, ex);
-            }
-        }
-        
-        return null;
     }
    
     public static ResponseData editDialog(Component parent, ResponseData frd, boolean showAngles)

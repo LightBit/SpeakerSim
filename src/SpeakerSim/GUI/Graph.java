@@ -299,7 +299,7 @@ public final class Graph
         yCrosshairs.add(crosshair);
     }
     
-    public void add(String title, double[] x, double[] y)
+    private void addAll(String title, double[] x, double[] y)
     {
         int index = series.getSeriesCount();
         XYSeries s = new XYSeries(new IdString(title, index));
@@ -314,11 +314,28 @@ public final class Graph
         
         series.addSeries(s);
         addCrosshair();
+    }
+    
+    public void add(String title, double[] x, double[] y)
+    {
+        int index = series.getSeriesCount();
+        addAll(title, x, y);
         
         XYItemRenderer renderer = plot.getRenderer();
         renderer.setSeriesVisibleInLegend(index, true);
         renderer.setSeriesStroke(index, solidStroke);
         renderer.setSeriesPaint(index, generateColor(colorIndex++));
+    }
+    
+    public void addReference(String title, double[] x, double[] y)
+    {
+        int index = series.getSeriesCount();
+        addAll(title, x, y);
+        
+        XYItemRenderer renderer = plot.getRenderer();
+        renderer.setSeriesVisibleInLegend(index, true);
+        renderer.setSeriesStroke(index, solidStroke);
+        renderer.setSeriesPaint(index, Color.BLACK);
     }
     
     public void addSeries(String title)
@@ -376,7 +393,7 @@ public final class Graph
         yAxis.setRange(min, max);
     }
     
-    public Component getPanel()
+    public ChartPanel getPanel()
     {
         return chartPanel;
     }

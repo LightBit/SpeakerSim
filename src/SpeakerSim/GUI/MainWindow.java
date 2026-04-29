@@ -65,6 +65,9 @@ public final class MainWindow extends javax.swing.JFrame
     private DriverPositionPanel driverPositionPanel;
     private Thread worker;
     
+    private double[] referenceFreq;
+    private double[] referenceData;
+    
     final Graph graphResponse;
     final Graph graphPhase;
     final Graph graphFilters;
@@ -166,6 +169,49 @@ public final class MainWindow extends javax.swing.JFrame
         graphBaffle = new Graph("Hz", "dB");
         graphRoom = new Graph("Hz", "dB");
         graphImpedance = new Graph("Hz", "Ω");
+        
+        JPopupMenu graphPopup = graphResponse.getPanel().getPopupMenu();
+        if (graphPopup != null)
+        {
+            graphPopup.addSeparator();
+            
+            JMenuItem currentSystemAsReferenceItem = new JMenuItem("Current System as reference");
+            currentSystemAsReferenceItem.addActionListener((ActionEvent e) -> {
+                referenceFreq = null;
+                referenceData = null;
+                refresh();
+                
+                referenceFreq = Project.getInstance().Settings.freq.clone();
+                referenceData = systemResponse.clone();
+                graphResponse.addReference("Reference", referenceFreq, referenceData);
+            });
+            graphPopup.add(currentSystemAsReferenceItem);
+            
+            JMenuItem importReferenceItem = new JMenuItem("Import reference");
+            importReferenceItem.addActionListener((ActionEvent e) -> {
+                ResponseData rd = UI.importFRD();
+                if (rd != null)
+                {
+                    referenceFreq = new double[rd.data.length];
+                    referenceData = new double[rd.data.length];
+                    for (int i = 0; i < rd.data.length; i++)
+                    {
+                        referenceFreq[i] = rd.data[i].frequency;
+                        referenceData[i] = rd.data[i].amplitude;
+                    }
+                    graphResponse.addReference("Reference", referenceFreq, referenceData);
+                }
+            });
+            graphPopup.add(importReferenceItem);
+            
+            JMenuItem clearReferenceItem = new JMenuItem("Clear reference");
+            clearReferenceItem.addActionListener((ActionEvent e) -> {
+                referenceFreq = null;
+                referenceData = null;
+                refresh();
+            });
+            graphPopup.add(clearReferenceItem);
+        }
         
         tabs.addTab("SPL at 2.83V", graphResponse.getPanel());
         tabs.addTab("Directivity", graphDirectivity.getPanel());
@@ -1625,7 +1671,7 @@ public final class MainWindow extends javax.swing.JFrame
             UI.throwable(this, ex);
         }
     }
-
+    
     private void exportZMA()
     {
         try
@@ -2193,6 +2239,10 @@ public final class MainWindow extends javax.swing.JFrame
                             
                             // clear graphs
                             graphResponse.clear(clearAll);
+                            if (referenceFreq != null)
+                            {
+                                graphResponse.addReference("Reference", referenceFreq, referenceData);
+                            }
                             graphPhase.clear(clearAll);
                             graphFilters.clear(clearAll);
                             graphExcursion.clear(clearAll);

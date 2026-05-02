@@ -2771,6 +2771,12 @@ public final class MainWindow extends javax.swing.JFrame
             if (editItem(amp))
             {
                 addItem(amp, (DefaultMutableTreeNode) tree.getModel().getRoot());
+                
+                Speaker speaker = new Speaker();
+                if (editItem(speaker))
+                {
+                    addItem(speaker, (DefaultMutableTreeNode) tree.getModel().getChild((DefaultMutableTreeNode) tree.getModel().getRoot(), 0));
+                }
             }
         }
     }//GEN-LAST:event_menuFileNewActionPerformed

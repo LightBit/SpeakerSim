@@ -47,29 +47,29 @@ public class Speaker extends Item
         super.refresh();
         
         Project project = Project.getInstance();
-        
+
         if (Driver.Closed)
         {
-            simulation = new NullSimulation(project.Environment, Driver, Baffle, Position, project.CenterPosition, project.ListeningPosition);
+            simulation = new NullSimulation(project.Environment, Driver, Baffle, Position, project.powerPos, project.lwPos);
         }
         else
         {
             switch (Simulator)
             {
                 case CLOSED_BOX:
-                    simulation = new ClosedBoxSimulation(project.Environment, ClosedBox, Driver, Baffle, Position, project.CenterPosition, project.ListeningPosition);
+                    simulation = new ClosedBoxSimulation(project.Environment, ClosedBox, Driver, Baffle, Position, project.powerPos, project.lwPos);
                     break;
 
                 case BASS_REFLEX:
-                    simulation = new BassReflexSimulation(project.Environment, BassReflex, Driver, Baffle, Position, project.CenterPosition, project.ListeningPosition);
+                    simulation = new BassReflexSimulation(project.Environment, BassReflex, Driver, Baffle, Position, project.powerPos, project.lwPos);
                     break;
                 
                 case APERIODIC:
-                    simulation = new AperiodicSimulation(project.Environment, Aperiodic, Driver, Baffle, Position, project.CenterPosition, project.ListeningPosition);
+                    simulation = new AperiodicSimulation(project.Environment, Aperiodic, Driver, Baffle, Position, project.powerPos, project.lwPos);
                     break;
 
                 case OPEN_BAFFLE:
-                    simulation = new OpenBaffleSimulation(project.Environment, Driver, Baffle, Position, project.CenterPosition, project.ListeningPosition);
+                    simulation = new OpenBaffleSimulation(project.Environment, Driver, Baffle, Position, project.powerPos, project.lwPos);
                     break;
 
                 default:

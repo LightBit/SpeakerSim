@@ -22,6 +22,8 @@ import com.eclipsesource.json.JsonValue;
 
 public class Position implements JSONable
 {
+    public static final Position ORIGIN = new Position(0, 0, 0);
+    
     public double X; // meters
     public double Y; // meters
     public double Z; // meters
@@ -50,9 +52,9 @@ public class Position implements JSONable
         }
         else
         {
-            X = 1;
-            Y = 1;
-            Z = 1.1;
+            X = -1;
+            Y = 0;
+            Z = 0;
         }
     }
     
@@ -100,6 +102,11 @@ public class Position implements JSONable
         return Math.sqrt(x * x + y * y + z * z);
     }
     
+    public double distance()
+    {
+        return distance(ORIGIN);
+    }
+    
     public double horizontalAngle(Position p)
     {
         double x = p.X - X;
@@ -120,6 +127,11 @@ public class Position implements JSONable
         return Math.toDegrees(Math.atan2(b, a));
     }
     
+    public double horizontalAngle()
+    {
+        return horizontalAngle(ORIGIN);
+    }
+    
     public double verticalAngle(Position p)
     {
         double x = p.X - X;
@@ -138,6 +150,11 @@ public class Position implements JSONable
                 + z * Math.cos(beta);
         
         return Math.toDegrees(Math.atan2(c, a));
+    }
+    
+    public double verticalAngle()
+    {
+        return verticalAngle(ORIGIN);
     }
     
     public Position moveHorizontally(double distance, double angle)
@@ -177,6 +194,18 @@ public class Position implements JSONable
             Z + p.Z,
             HorizontalAngle + p.HorizontalAngle,
             VerticalAngle + p.VerticalAngle
+        );
+    }
+    
+    public Position subtract(Position p)
+    {
+        return new Position
+        (
+            X - p.X,
+            Y - p.Y,
+            Z - p.Z,
+            HorizontalAngle,
+            VerticalAngle
         );
     }
     

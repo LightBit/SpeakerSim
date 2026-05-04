@@ -41,14 +41,14 @@ public class BaffleSimulation
         }
     }
     
-    public BaffleSimulation(Baffle baffle, ISource source, Position sourcePos, Position listeningPos, Environment env, boolean dipole)
+    public BaffleSimulation(Baffle baffle, ISource source, Position sourcePos, Position targetPos, Environment env, boolean dipole)
     {
         this.source = source;
         this.dipole = dipole;
         
-        double distance = sourcePos.distance(listeningPos) + 0.0000001;
-        double horizontalAngle = sourcePos.horizontalAngle(listeningPos);
-        double verticalAngle = sourcePos.verticalAngle(listeningPos);
+        double distance = sourcePos.distance(targetPos) + 0.0000001;
+        double horizontalAngle = sourcePos.horizontalAngle(targetPos);
+        double verticalAngle = sourcePos.verticalAngle(targetPos);
         angle = Math.max(Math.abs(horizontalAngle), Math.abs(verticalAngle));
         
         if (baffle == null || !baffle.Enabled)

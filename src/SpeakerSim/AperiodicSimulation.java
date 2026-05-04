@@ -47,9 +47,9 @@ public class AperiodicSimulation extends BassReflexSimulation
         box.Vb = ClosedBoxSimulation.calcVb(0.707 + 1 / box.Qa, driver.Qts, driver.effectiveVas());
     }
     
-    public AperiodicSimulation(Environment env, Aperiodic box, Driver driver, Baffle baffle, Position driverPos, Position centerPos, Position listeningPos)
+    public AperiodicSimulation(Environment env, Aperiodic box, Driver driver, Baffle baffle, Position driverPos, Position powerPos, Position lwPos)
     {
-        super(env, convert(box, driver), driver, baffle, driverPos, centerPos, listeningPos);
+        super(env, convert(box, driver), driver, baffle, driverPos, powerPos, lwPos);
     }
     
     public double ventVelocity(double f, double Dv, double Np)

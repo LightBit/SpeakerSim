@@ -117,7 +117,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
                 if (listen)
                 {
                     speaker.BassReflex.PortPosition.X = UI.getDouble(e) / 100;
-                    portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
+                    portPositionDistanceField.setValue(speaker.BassReflex.PortPosition.distance() * 100);
                     main.refresh();
                 }
             }
@@ -131,7 +131,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
                 if (listen)
                 {
                     speaker.BassReflex.PortPosition.Y = UI.getDouble(e) / 100;
-                    portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
+                    portPositionDistanceField.setValue(speaker.BassReflex.PortPosition.distance() * 100);
                     main.refresh();
                 }
             }
@@ -145,7 +145,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
                 if (listen)
                 {
                     speaker.BassReflex.PortPosition.Z = UI.getDouble(e) / 100;
-                    portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
+                    portPositionDistanceField.setValue(speaker.BassReflex.PortPosition.distance() * 100);
                     main.refresh();
                 }
             }
@@ -236,7 +236,7 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
         portPositionXField.setValue(speaker.BassReflex.PortPosition.X * 100);
         portPositionYField.setValue(speaker.BassReflex.PortPosition.Y * 100);
         portPositionZField.setValue(speaker.BassReflex.PortPosition.Z * 100);
-        portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.BassReflex.PortPosition) * 100);
+        portPositionDistanceField.setValue(speaker.BassReflex.PortPosition.distance() * 100);
         
         listen = true;
     }
@@ -295,11 +295,11 @@ public final class BassReflexPanel extends javax.swing.JPanel implements ISpeake
 
         portPositionPanel = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        portPositionXField = UI.decimalField(0);
-        portPositionYField = UI.decimalField(0);
+        portPositionXField = UI.decimalField();
+        portPositionYField = UI.decimalField();
         jLabel12 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        portPositionZField = UI.decimalField(0);
+        portPositionZField = UI.decimalField();
         portPositionDistanceField = UI.twoDecimalField(0);
         jLabel16 = new javax.swing.JLabel();
         bassReflexPanel = new javax.swing.JPanel();

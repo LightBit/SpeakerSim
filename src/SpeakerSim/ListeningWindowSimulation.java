@@ -20,36 +20,36 @@ public class ListeningWindowSimulation
 {
     private final PositionSimulation[] s;
     
-    public ListeningWindowSimulation(Baffle baffle, ISource source, Position sourcePos, Position centerPos, Environment env, boolean dipole)
+    public ListeningWindowSimulation(Baffle baffle, ISource source, Position sourcePos, Position targerPos, Environment env, boolean dipole)
     {
         s = new PositionSimulation[9];
         Position pos;
         
-        pos = centerPos.moveVertically(2, 0);
+        pos = targerPos.moveVertically(2, 0);
         s[0] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
-        pos = centerPos.moveVertically(2, 10);
+        pos = targerPos.moveVertically(2, 10);
         s[1] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
-        pos = centerPos.moveVertically(2, -10);
+        pos = targerPos.moveVertically(2, -10);
         s[2] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
-        pos = centerPos.moveHorizontally(2, 10);
+        pos = targerPos.moveHorizontally(2, 10);
         s[3] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
-        pos = centerPos.moveHorizontally(2, -10);
+        pos = targerPos.moveHorizontally(2, -10);
         s[4] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
-        pos = centerPos.moveHorizontally(2, 20);
+        pos = targerPos.moveHorizontally(2, 20);
         s[5] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
-        pos = centerPos.moveHorizontally(2, -20);
+        pos = targerPos.moveHorizontally(2, -20);
         s[6] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
-        pos = centerPos.moveHorizontally(2, 30);
+        pos = targerPos.moveHorizontally(2, 30);
         s[7] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         
-        pos = centerPos.moveHorizontally(2, -30);
+        pos = targerPos.moveHorizontally(2, -30);
         s[8] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
     }
     

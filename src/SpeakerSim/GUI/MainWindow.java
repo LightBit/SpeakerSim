@@ -361,36 +361,6 @@ public final class MainWindow extends javax.swing.JFrame
 
         load();
         
-        listeningPosXField.addPropertyChangeListener("value", new PropertyChangeListener()
-        {
-            @Override
-            public void propertyChange(PropertyChangeEvent e)
-            {
-                Project.getInstance().ListeningPosition.X = UI.getDouble(e) / 100;
-                refresh();
-            }
-        });
-        
-        listeningPosYField.addPropertyChangeListener("value", new PropertyChangeListener()
-        {
-            @Override
-            public void propertyChange(PropertyChangeEvent e)
-            {
-                Project.getInstance().ListeningPosition.Y = UI.getDouble(e) / 100;
-                refresh();
-            }
-        });
-        
-        listeningPosZField.addPropertyChangeListener("value", new PropertyChangeListener()
-        {
-            @Override
-            public void propertyChange(PropertyChangeEvent e)
-            {
-                Project.getInstance().ListeningPosition.Z = UI.getDouble(e) / 100;
-                refresh();
-            }
-        });
-
         
         newerVersionCheck();
     }
@@ -2031,26 +2001,42 @@ public final class MainWindow extends javax.swing.JFrame
         // stop worker, if running
         stopWorker();
         
-        // calculate center of all speakers and delay
+        Project project = Project.getInstance();
+        
+        // calculate delay and positions
         final List<Speaker> speakers = getSpeakers(node);
-        Project.getInstance().CenterPosition = new Position(0, 0, 0);
         double min_distance = Double.MAX_VALUE;
+        project.powerPos = new Position(0, 0, 0);
+        project.lwPos = new Position(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 
         for (Speaker speaker : speakers)
         {
-            Project.getInstance().CenterPosition = Project.getInstance().CenterPosition.add(speaker.Position);
-            
-            double distance = speaker.Position.distance(Project.getInstance().ListeningPosition);
+            double distance = speaker.Position.distance();
             if (distance < min_distance)
             {
                 min_distance = distance;
             }
+            
+            project.powerPos = project.powerPos.add(speaker.Position);
+            
+            if (Math.abs(speaker.Position.X) < Math.abs(project.lwPos.X))
+            {
+                project.lwPos.X = speaker.Position.X;
+            }
+            if (Math.abs(speaker.Position.Y) < Math.abs(project.lwPos.Y))
+            {
+                project.lwPos.Y = speaker.Position.Y;
+            }
+            if (Math.abs(speaker.Position.Z) < Math.abs(project.lwPos.Z))
+            {
+                project.lwPos.Z = speaker.Position.Z;
+            }
         }
-        Project.getInstance().CenterPosition = Project.getInstance().CenterPosition.divide(speakers.size());
         final double delay = min_distance / Environment.getInstance().SpeedOfSound;
+        project.powerPos = project.powerPos.divide(speakers.size());
         
         // refresh simulation
-        Project.getInstance().refresh();
+        project.refresh();
 
         // get item
         final IItem item = (IItem) node.getUserObject();
@@ -2105,12 +2091,12 @@ public final class MainWindow extends javax.swing.JFrame
 
                             double f = freq[i];
 
-                            Complex r = Project.getInstance().response(f);
-                            Complex baffleResponse = Settings.getInstance().BaffleSimulation ? Project.getInstance().responseWithBaffle(f).divide(r) : new Complex(1);
+                            Complex r = project.response(f);
+                            Complex baffleResponse = Settings.getInstance().BaffleSimulation ? project.responseWithBaffle(f).divide(r) : new Complex(1);
                             r = r.multiply(baffleResponse);
                             systemResponse[i] = Fnc.toDecibels(r.abs());
                             
-                            if (item != Project.getInstance())
+                            if (item != project)
                             {
                                 r = item.response(f);
                                 baffleResponse = Settings.getInstance().BaffleSimulation ? item.responseWithBaffle(f).divide(r) : new Complex(1);
@@ -2268,7 +2254,7 @@ public final class MainWindow extends javax.swing.JFrame
                             {
                                 // add new data
                                 graphResponse.add("System", freq, systemResponse);
-                                if (item != Project.getInstance())
+                                if (item != project)
                                 {
                                     graphResponse.add(item.toString(), freq, response);
                                 }
@@ -2373,10 +2359,6 @@ public final class MainWindow extends javax.swing.JFrame
         tree.setModel(new DefaultTreeModel(rootNode));
         expandAllNodes(tree);
         tree.setSelectionPath(new TreePath(((DefaultMutableTreeNode) tree.getModel().getRoot()).getPath()));
-        
-        listeningPosXField.setValue(Project.getInstance().ListeningPosition.X * 100);
-        listeningPosYField.setValue(Project.getInstance().ListeningPosition.Y * 100);
-        listeningPosZField.setValue(Project.getInstance().ListeningPosition.Z * 100);
     }
     
     @SuppressWarnings("unchecked")
@@ -2390,13 +2372,6 @@ public final class MainWindow extends javax.swing.JFrame
         rightPanel = new javax.swing.JPanel();
         propertiesScrollPane = new javax.swing.JScrollPane();
         propertiesPanel = new javax.swing.JPanel();
-        listeningPanel = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
-        listeningPosXField = UI.decimalField(0);
-        listeningPosYField = UI.decimalField(0);
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        listeningPosZField = UI.decimalField(0);
         layeredPane = new javax.swing.JLayeredPane();
         tabs = new javax.swing.JTabbedPane();
         messageLabel = new javax.swing.JLabel();
@@ -2443,60 +2418,6 @@ public final class MainWindow extends javax.swing.JFrame
         java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.LEFT);
         flowLayout1.setAlignOnBaseline(true);
         propertiesPanel.setLayout(flowLayout1);
-
-        listeningPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Listening position"));
-        java.awt.GridBagLayout listeningPanelLayout = new java.awt.GridBagLayout();
-        listeningPanelLayout.columnWidths = new int[] {0, 5, 0};
-        listeningPanelLayout.rowHeights = new int[] {0, 5, 0, 5, 0};
-        listeningPanel.setLayout(listeningPanelLayout);
-
-        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel11.setText("X (cm):");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        listeningPanel.add(jLabel11, gridBagConstraints);
-
-        listeningPosXField.setMinimumSize(new java.awt.Dimension(140, 19));
-        listeningPosXField.setPreferredSize(new java.awt.Dimension(140, 19));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        listeningPanel.add(listeningPosXField, gridBagConstraints);
-
-        listeningPosYField.setMinimumSize(new java.awt.Dimension(140, 19));
-        listeningPosYField.setPreferredSize(new java.awt.Dimension(140, 19));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        listeningPanel.add(listeningPosYField, gridBagConstraints);
-
-        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel13.setText("Y (cm):");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        listeningPanel.add(jLabel13, gridBagConstraints);
-
-        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel14.setText("Z (cm):");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        listeningPanel.add(jLabel14, gridBagConstraints);
-
-        listeningPosZField.setMinimumSize(new java.awt.Dimension(140, 19));
-        listeningPosZField.setPreferredSize(new java.awt.Dimension(140, 19));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
-        listeningPanel.add(listeningPosZField, gridBagConstraints);
-
-        propertiesPanel.add(listeningPanel);
-
         propertiesScrollPane.setViewportView(propertiesPanel);
 
         rightPanel.add(propertiesScrollPane, java.awt.BorderLayout.PAGE_START);
@@ -2797,14 +2718,7 @@ public final class MainWindow extends javax.swing.JFrame
     }//GEN-LAST:event_menuSimulatorActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLayeredPane layeredPane;
-    private javax.swing.JPanel listeningPanel;
-    private javax.swing.JFormattedTextField listeningPosXField;
-    private javax.swing.JFormattedTextField listeningPosYField;
-    private javax.swing.JFormattedTextField listeningPosZField;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu menuEnclosure;
     private javax.swing.JMenuItem menuEnvironment;

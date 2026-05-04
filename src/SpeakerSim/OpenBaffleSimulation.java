@@ -28,18 +28,18 @@ public class OpenBaffleSimulation implements ISimulation
     //private final double wavelength;
     private final double listeningQuarterWave;
     
-    public OpenBaffleSimulation(Environment env, Driver driver, Baffle baffle, Position driverPos, Position centerPos, Position listeningPos)
+    public OpenBaffleSimulation(Environment env, Driver driver, Baffle baffle, Position driverPos, Position powerPos, Position lwPos)
     {
         this.driver = driver;
-        this.distance = new DistanceSimulation(driverPos, listeningPos, env);
-        this.baffle = new BaffleSimulation(baffle, driver, driverPos, listeningPos, env, true);
-        this.powerResponse = new PowerResponseSimulation(baffle, driver, driverPos, centerPos, env, true);
-        this.listeningWindow = new ListeningWindowSimulation(baffle, driver, driverPos, centerPos, env, true);
-        horizontalAngle = driverPos.horizontalAngle(listeningPos);
-        verticalAngle = driverPos.verticalAngle(listeningPos);
+        this.distance = new DistanceSimulation(driverPos, Position.ORIGIN, env);
+        this.baffle = new BaffleSimulation(baffle, driver, driverPos, Position.ORIGIN, env, true);
+        this.powerResponse = new PowerResponseSimulation(baffle, driver, driverPos, powerPos, env, true);
+        this.listeningWindow = new ListeningWindowSimulation(baffle, driver, driverPos, lwPos, env, true);
+        horizontalAngle = driverPos.horizontalAngle();
+        verticalAngle = driverPos.verticalAngle();
         
         //wavelength = env.SpeedOfSound / Math.min(baffle.Width, baffle.Height);
-        listeningQuarterWave = env.SpeedOfSound / driverPos.distance(listeningPos) / 4;
+        listeningQuarterWave = env.SpeedOfSound / driverPos.distance() / 4;
     }
     
     @Override

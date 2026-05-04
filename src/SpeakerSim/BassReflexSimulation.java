@@ -71,21 +71,21 @@ public class BassReflexSimulation implements ISimulation
         }
     }
     
-    public BassReflexSimulation(Environment env, BassReflex box, Driver driver, Baffle baffle, Position driverPos, Position centerPos, Position listeningPos)
+    public BassReflexSimulation(Environment env, BassReflex box, Driver driver, Baffle baffle, Position driverPos, Position powerPos, Position lwPos)
     {
         this.box = box;
         this.driver = driver;
         Port port = new Port(box.Dv);
-        this.baffle = new BaffleSimulation(baffle, driver, driverPos, listeningPos, env, false);
+        this.baffle = new BaffleSimulation(baffle, driver, driverPos, Position.ORIGIN, env, false);
         this.bafflePort = baffle.Enabled ? 2 : 1;
-        this.distanceCone = new DistanceSimulation(driverPos, listeningPos, env);
-        this.distancePort = new DistanceSimulation(box.PortPosition.distance(listeningPos), env);
-        this.powerResponseCone = new PowerResponseSimulation(baffle, driver, driverPos, centerPos, env, false);
-        this.powerResponsePort = new PowerResponseSimulation(baffle, port, box.PortPosition, centerPos, env, false);
-        this.listeningWindowCone = new ListeningWindowSimulation(baffle, driver, driverPos, centerPos, env, false);
-        this.listeningWindowPort = new ListeningWindowSimulation(baffle, port, box.PortPosition, centerPos, env, false);
-        horizontalAngle = driverPos.horizontalAngle(listeningPos);
-        verticalAngle = driverPos.verticalAngle(listeningPos);
+        this.distanceCone = new DistanceSimulation(driverPos, Position.ORIGIN, env);
+        this.distancePort = new DistanceSimulation(box.PortPosition.distance(), env);
+        this.powerResponseCone = new PowerResponseSimulation(baffle, driver, driverPos, powerPos, env, false);
+        this.powerResponsePort = new PowerResponseSimulation(baffle, port, box.PortPosition, powerPos, env, false);
+        this.listeningWindowCone = new ListeningWindowSimulation(baffle, driver, driverPos, lwPos, env, false);
+        this.listeningWindowPort = new ListeningWindowSimulation(baffle, port, box.PortPosition, lwPos, env, false);
+        horizontalAngle = driverPos.horizontalAngle();
+        verticalAngle = driverPos.verticalAngle();
         
         double Qp = box.Qp + 0.00000000000001;
         

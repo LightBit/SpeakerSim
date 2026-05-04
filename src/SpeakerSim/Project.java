@@ -29,8 +29,8 @@ public class Project extends Item
     public Date Version;
     public Settings Settings;
     public Environment Environment;
-    public Position CenterPosition;
-    public Position ListeningPosition;
+    public Position powerPos;
+    public Position lwPos;
     
     private boolean modified;
     
@@ -110,9 +110,6 @@ public class Project extends Item
         Version = currentVersion();
         Settings = new Settings();
         Environment = new Environment();
-        ListeningPosition = new Position();
-        ListeningPosition.X = 2;
-        ListeningPosition.Y = 1;
         
         modified = false;
     }
@@ -130,11 +127,17 @@ public class Project extends Item
             
             Settings = new Settings(jsonObj.get("Settings"));
             Environment = new Environment(jsonObj.get("Environment"));
-            ListeningPosition = new Position(jsonObj.get("ListeningPosition"));
 
             modified = false;
             
             super.fromJSON(json);
+            
+            // Convert old project files with absolute ListeningPosition to relative positions
+            JsonValue listeningPos = jsonObj.get("ListeningPosition");
+            if (listeningPos != null)
+            {
+                convertToRelativePositions(new Position(listeningPos));
+            }
         }
         catch (Exception e)
         {
@@ -169,7 +172,6 @@ public class Project extends Item
         json.add("Version", currentVersionString());
         json.add("Settings", Settings.toJSON());
         json.add("Environment", Environment.toJSON());
-        json.add("ListeningPosition", ListeningPosition.toJSON());
         
         return json;
     }
@@ -184,6 +186,27 @@ public class Project extends Item
     {
         JSON.save(toJSON(), file);
         modified = false;
+    }
+    
+    private void convertToRelativePositions(Position listeningPos)
+    {
+        convertItemPositions(this, listeningPos);
+    }
+    
+    private static void convertItemPositions(IItem item, Position listeningPos)
+    {
+        if (item instanceof Speaker)
+        {
+            Speaker speaker = (Speaker) item;
+            speaker.Position = speaker.Position.subtract(listeningPos);
+            speaker.BassReflex.PortPosition = speaker.BassReflex.PortPosition.subtract(listeningPos);
+            speaker.Aperiodic.VentPosition = speaker.Aperiodic.VentPosition.subtract(listeningPos);
+        }
+        
+        for (IItem child : item.getChildren())
+        {
+            convertItemPositions(child, listeningPos);
+        }
     }
     
     @Override

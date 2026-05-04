@@ -20,7 +20,7 @@ public class PowerResponseSimulation
 {
     private final PositionSimulation[] s;
     
-    public PowerResponseSimulation(Baffle baffle, ISource source, Position sourcePos, Position centerPos, Environment env, boolean dipole)
+    public PowerResponseSimulation(Baffle baffle, ISource source, Position sourcePos, Position targetPos, Environment env, boolean dipole)
     {
         s = new PositionSimulation[70];
         
@@ -29,10 +29,10 @@ public class PowerResponseSimulation
             Position pos;
             int angle = i * 10;
             
-            pos = centerPos.moveHorizontally(2, angle);
+            pos = targetPos.moveHorizontally(2, angle);
             s[i] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
             
-            pos = centerPos.moveVertically(2, angle);
+            pos = targetPos.moveVertically(2, angle);
             s[35 + i] = new PositionSimulation(env, source, baffle, sourcePos, pos, dipole);
         }
     }

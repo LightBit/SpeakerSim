@@ -26,15 +26,15 @@ public class NullSimulation implements ISimulation
     private final double horizontalAngle;
     private final double verticalAngle;
     
-    public NullSimulation(Environment env, Driver driver, Baffle baffle, Position driverPos, Position centerPos, Position listeningPos)
+    public NullSimulation(Environment env, Driver driver, Baffle baffle, Position driverPos, Position powerPos, Position lwPos)
     {
         this.driver = driver;
-        this.distance = new DistanceSimulation(driverPos, listeningPos, env);
-        this.baffle = new BaffleSimulation(baffle, driver, driverPos, listeningPos, env, false);
-        this.powerResponse = new PowerResponseSimulation(baffle, driver, driverPos, centerPos, env, false);
-        this.listeningWindow = new ListeningWindowSimulation(baffle, driver, driverPos, centerPos, env, false);
-        horizontalAngle = driverPos.horizontalAngle(listeningPos);
-        verticalAngle = driverPos.verticalAngle(listeningPos);
+        this.distance = new DistanceSimulation(driverPos, Position.ORIGIN, env);
+        this.baffle = new BaffleSimulation(baffle, driver, driverPos, Position.ORIGIN, env, false);
+        this.powerResponse = new PowerResponseSimulation(baffle, driver, driverPos, powerPos, env, false);
+        this.listeningWindow = new ListeningWindowSimulation(baffle, driver, driverPos, lwPos, env, false);
+        horizontalAngle = driverPos.horizontalAngle();
+        verticalAngle = driverPos.verticalAngle();
     }
     
     @Override

@@ -47,9 +47,9 @@ public class DistanceSimulation
         this(sourcePos.distance(listeningPos), speedOfSound);
     }
     
-    public DistanceSimulation(Position sourcePos, Position listeningPos, Environment env)
+    public DistanceSimulation(Position sourcePos, Position targetPos, Environment env)
     {
-        this(sourcePos.distance(listeningPos), env.SpeedOfSound);
+        this(sourcePos.distance(targetPos), env.SpeedOfSound);
     }
     
     public Complex response(double f)

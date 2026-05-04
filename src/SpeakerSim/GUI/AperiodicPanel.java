@@ -87,7 +87,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
                 if (listen)
                 {
                     speaker.Aperiodic.VentPosition.X = UI.getDouble(e) / 100;
-                    portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
+                    portPositionDistanceField.setValue(speaker.Aperiodic.VentPosition.distance() * 100);
                     main.refresh();
                 }
             }
@@ -101,7 +101,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
                 if (listen)
                 {
                     speaker.Aperiodic.VentPosition.Y = UI.getDouble(e) / 100;
-                    portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
+                    portPositionDistanceField.setValue(speaker.Aperiodic.VentPosition.distance() * 100);
                     main.refresh();
                 }
             }
@@ -115,7 +115,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
                 if (listen)
                 {
                     speaker.Aperiodic.VentPosition.Z = UI.getDouble(e) / 100;
-                    portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
+                    portPositionDistanceField.setValue(speaker.Aperiodic.VentPosition.distance() * 100);
                     main.refresh();
                 }
             }
@@ -141,7 +141,7 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
         portPositionXField.setValue(speaker.Aperiodic.VentPosition.X * 100);
         portPositionYField.setValue(speaker.Aperiodic.VentPosition.Y * 100);
         portPositionZField.setValue(speaker.Aperiodic.VentPosition.Z * 100);
-        portPositionDistanceField.setValue(Project.getInstance().ListeningPosition.distance(speaker.Aperiodic.VentPosition) * 100);
+        portPositionDistanceField.setValue(speaker.Aperiodic.VentPosition.distance() * 100);
         
         listen = true;
     }
@@ -200,11 +200,11 @@ public final class AperiodicPanel extends javax.swing.JPanel implements ISpeaker
 
         portPositionPanel = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        portPositionXField = UI.decimalField(0);
-        portPositionYField = UI.decimalField(0);
+        portPositionXField = UI.decimalField();
+        portPositionYField = UI.decimalField();
         jLabel12 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        portPositionZField = UI.decimalField(0);
+        portPositionZField = UI.decimalField();
         portPositionDistanceField = UI.decimalField(0);
         jLabel16 = new javax.swing.JLabel();
         bassReflexPanel = new javax.swing.JPanel();

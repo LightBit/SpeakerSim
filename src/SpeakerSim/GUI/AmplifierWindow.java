@@ -342,6 +342,108 @@ public final class AmplifierWindow extends javax.swing.JDialog
                 return filter;
             }
         }
+        else if (item instanceof ActiveShelfFilter)
+        {
+            ActiveShelfFilter filter = (ActiveShelfFilter) item;
+
+            JFormattedTextField frequencyField = UI.decimalField(1);
+            frequencyField.setValue(filter.getFrequency());
+
+            JFormattedTextField qField = UI.decimalField(0.000001);
+            qField.setValue(filter.getQ());
+
+            JFormattedTextField dbField = UI.decimalField();
+            dbField.setValue(filter.getDecibels());
+
+            JCheckBox linearPhaseCheckBox = new JCheckBox();
+            linearPhaseCheckBox.setText("Linear phase (FIR)");
+            linearPhaseCheckBox.setSelected(filter.isLinearPhase());
+
+            final JComponent[] inputs = new JComponent[]
+            {
+                new JLabel("Frequency (Hz): "), frequencyField,
+                new JLabel("Q: "), qField,
+                new JLabel("Amplitude (dB): "), dbField,
+                linearPhaseCheckBox
+            };
+
+            if (UI.dialog(this, filter.toString(), inputs))
+            {
+                filter.setFrequency(UI.getDouble(frequencyField));
+                filter.setQ(UI.getDouble(qField));
+                filter.setDecibels(UI.getDouble(dbField));
+                filter.setLinearPhase(linearPhaseCheckBox.isSelected());
+                return filter;
+            }
+        }
+        else if (item instanceof ActiveAllPassFilter)
+        {
+            ActiveAllPassFilter filter = (ActiveAllPassFilter) item;
+
+            JFormattedTextField frequencyField = UI.decimalField(1);
+            frequencyField.setValue(filter.getFrequency());
+
+            JFormattedTextField qField = UI.decimalField(0.000001);
+            qField.setValue(filter.getQ());
+
+            JCheckBox linearPhaseCheckBox = new JCheckBox();
+            linearPhaseCheckBox.setText("Linear phase (FIR)");
+            linearPhaseCheckBox.setSelected(filter.isLinearPhase());
+
+            final JComponent[] inputs = new JComponent[]
+            {
+                new JLabel("Frequency (Hz): "), frequencyField,
+                new JLabel("Q: "), qField,
+                linearPhaseCheckBox
+            };
+
+            if (UI.dialog(this, "All-pass filter", inputs))
+            {
+                filter.setFrequency(UI.getDouble(frequencyField));
+                filter.setQ(UI.getDouble(qField));
+                filter.setLinearPhase(linearPhaseCheckBox.isSelected());
+                return filter;
+            }
+        }
+        else if (item instanceof ActiveLinkwitzTransform)
+        {
+            ActiveLinkwitzTransform filter = (ActiveLinkwitzTransform) item;
+
+            JFormattedTextField sourceFrequencyField = UI.decimalField(0.000001);
+            sourceFrequencyField.setValue(filter.getSourceFrequency());
+
+            JFormattedTextField sourceQField = UI.decimalField(0.000001);
+            sourceQField.setValue(filter.getSourceQ());
+
+            JFormattedTextField targetFrequencyField = UI.decimalField(0.000001);
+            targetFrequencyField.setValue(filter.getTargetFrequency());
+
+            JFormattedTextField targetQField = UI.decimalField(0.000001);
+            targetQField.setValue(filter.getTargetQ());
+
+            JCheckBox linearPhaseCheckBox = new JCheckBox();
+            linearPhaseCheckBox.setText("Linear phase (FIR)");
+            linearPhaseCheckBox.setSelected(filter.isLinearPhase());
+
+            final JComponent[] inputs = new JComponent[]
+            {
+                new JLabel("Source Fc (Hz): "), sourceFrequencyField,
+                new JLabel("Source Qtc: "), sourceQField,
+                new JLabel("Target Fc (Hz): "), targetFrequencyField,
+                new JLabel("Target Qtc: "), targetQField,
+                linearPhaseCheckBox
+            };
+
+            if (UI.dialog(this, "Linkwitz Transform", inputs))
+            {
+                filter.setSourceFrequency(UI.getDouble(sourceFrequencyField));
+                filter.setSourceQ(UI.getDouble(sourceQField));
+                filter.setTargetFrequency(UI.getDouble(targetFrequencyField));
+                filter.setTargetQ(UI.getDouble(targetQField));
+                filter.setLinearPhase(linearPhaseCheckBox.isSelected());
+                return filter;
+            }
+        }
         else if (item instanceof ActivePassFilter)
         {
             ActivePassFilter filter = (ActivePassFilter) item;
@@ -504,6 +606,66 @@ public final class AmplifierWindow extends javax.swing.JDialog
             public void actionPerformed(ActionEvent e)
             {
                 ActiveHighPassFilter filter = new ActiveHighPassFilter();
+                if (edit(filter) != null)
+                {
+                    model.addElement(filter);
+                }
+            }
+        });
+        popup.add(mi);
+
+        mi = new JMenuItem("Low shelf filter");
+        mi.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                ActiveLowShelfFilter filter = new ActiveLowShelfFilter();
+                if (edit(filter) != null)
+                {
+                    model.addElement(filter);
+                }
+            }
+        });
+        popup.add(mi);
+
+        mi = new JMenuItem("High shelf filter");
+        mi.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                ActiveHighShelfFilter filter = new ActiveHighShelfFilter();
+                if (edit(filter) != null)
+                {
+                    model.addElement(filter);
+                }
+            }
+        });
+        popup.add(mi);
+
+        mi = new JMenuItem("All-pass filter");
+        mi.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                ActiveAllPassFilter filter = new ActiveAllPassFilter();
+                if (edit(filter) != null)
+                {
+                    model.addElement(filter);
+                }
+            }
+        });
+        popup.add(mi);
+
+        mi = new JMenuItem("Linkwitz Transform");
+        mi.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                ActiveLinkwitzTransform filter = new ActiveLinkwitzTransform();
                 if (edit(filter) != null)
                 {
                     model.addElement(filter);

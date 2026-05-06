@@ -35,7 +35,7 @@
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.release>8</maven.compiler.release>
         <maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
         <buildstamp>${maven.build.timestamp}</buildstamp>
     </properties>
@@ -125,12 +125,6 @@
                             <jre>
                                 <minVersion>1.8.0</minVersion>
                                 <path>jre</path>
-                                <opts>
-                                    <opt>-client</opt>
-                                    <opt>-XX:+IgnoreUnrecognizedVMOptions</opt>
-                                    <opt>-Xquickstart</opt>
-                                    <opt>-Xshareclasses</opt>
-                                </opts>
                             </jre>
                             <versionInfo>
                                 <fileVersion>0.0.0.0</fileVersion>

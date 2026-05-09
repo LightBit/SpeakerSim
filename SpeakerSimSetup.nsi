@@ -49,6 +49,13 @@ ShowInstDetails show
 !insertmacro MUI_LANGUAGE "English"
 
 Section
+  ; Remove previous installation if exists
+  ReadRegStr $0 HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "UninstallString"
+  StrCmp $0 "" done_uninstall
+    ExecWait '$0 /S _?=$INSTDIR'
+    Delete "$INSTDIR\uninstall.exe"
+  done_uninstall:
+
   SetOutPath "$INSTDIR"
   File "SpeakerSim.jar"
   File "SpeakerSim.exe"

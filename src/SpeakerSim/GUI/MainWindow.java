@@ -1929,9 +1929,12 @@ public final class MainWindow extends javax.swing.JFrame
                 ((ISpeakerPanel) enclosurePanel).removeTabs(tabs);
                 enclosurePanel = null;
             }
+            
+            propertiesScrollPane.setVisible(true);
         }
         else
         {
+            propertiesScrollPane.setVisible(false);
             menuEnclosure.setEnabled(false);
             
             if (enclosurePanel != null)
